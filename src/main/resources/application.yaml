@@ -1,3 +1,10 @@
 spring:
   application:
     name: kingfisher
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/kingfisher}
+    username: ${DB_USERNAME:kingfisher}
+    password: ${DB_PASSWORD:kingfisher}
+  jpa:
+    hibernate:
+      ddl-auto: none
