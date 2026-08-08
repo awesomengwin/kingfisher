@@ -14,7 +14,7 @@ public record Track(
         int durationMs
 ) {
     public String getDurationFormatted() {
-        int durationSeconds = durationMs / 1000;
+        long durationSeconds = Math.round(durationMs / 1000.0);
         return "%d:%02d".formatted(
                 durationSeconds / 60,
                 durationSeconds % 60
