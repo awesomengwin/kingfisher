@@ -4,5 +4,5 @@ import com.awesomengwin.kingfisher.spotify.valueobject.Page;
 import com.awesomengwin.kingfisher.spotify.valueobject.SavedTrack;
 
 public interface SpotifyService {
-    Page<SavedTrack> getUserSavedTracks(int limit, int offset);
+    Page<SavedTrack> getUserSavedTracks(String userId, int limit, int offset);
 }
