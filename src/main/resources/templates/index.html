@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1">
+    <title>kingfisher</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}">
+    <script th:src="@{/webjars/bootstrap/5.3.8/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/webjars/htmx.org/2.0.10/dist/htmx.min.js}"></script>
+</head>
+<body hx-boost="true">
+<div>
+    <img th:src="${#authentication.principal.attributes['images'][0]['url']}"
+         th:alt="${#authentication.principal.attributes['display_name']}"
+         class="rounded-circle"
+         width="40" height="40">
+    <span th:text="${#authentication.principal.attributes['display_name']}"></span>
+</div>
+</body>
+</html>
