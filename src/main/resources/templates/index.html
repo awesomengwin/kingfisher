@@ -1,43 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width; initial-scale=1">
-    <title>kingfisher</title>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}">
-    <script th:src="@{/webjars/bootstrap/5.3.8/js/bootstrap.bundle.min.js}"></script>
-    <script th:src="@{/webjars/htmx.org/2.0.10/dist/htmx.min.js}"></script>
+    <title>kingfisher home</title>
 </head>
-<body hx-boost="true">
-<div>
-    <img th:if="${not currentUser.images.isEmpty()}"
-         th:src="${currentUser.images.first.url()}"
-         th:alt="${currentUser.displayName}"
-         class="rounded-circle"
-         width="40" height="40">
-    <span th:text="${currentUser.displayName}"></span>
-</div>
+<body>
+<div layout:fragment="content">
+    <div>
+        <img th:if="${not currentUser.images.isEmpty()}"
+             th:src="${currentUser.images.first.url()}"
+             th:alt="${currentUser.displayName}"
+             class="rounded-circle"
+             width="40" height="40">
+        <span th:text="${currentUser.displayName}"></span>
+    </div>
 
-<!--User saved tracks table-->
-<table class="table">
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">Title</th>
-        <th scope="col">Album</th>
-        <th scope="col">Date added</th>
-        <th scope="col">Duration</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="track,iterateState : ${userSavedTracks.items()}">
-        <th scope="row" th:text="${iterateState.index + 1}">1</th>
-        <td th:text="${track.track().name()}">Since I've been loving you</td>
-        <td th:text="${track.track().album().name()}">Led Zeppelin II</td>
-        <td th:text="${track.addedAt()}">1 second ago</td>
-        <td th:text="${track.track().getDurationFormatted()}"></td>
-    </tr>
-    </tbody>
-</table>
+    <!--User saved tracks table-->
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Album</th>
+            <th scope="col">Date added</th>
+            <th scope="col">Duration</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="track,iterateState : ${userSavedTracks.items()}">
+            <th scope="row" th:text="${iterateState.index + 1}">1</th>
+            <td th:text="${track.track().name()}">Since I've been loving you</td>
+            <td th:text="${track.track().album().name()}">Led Zeppelin II</td>
+            <td th:text="${track.addedAt()}">1 second ago</td>
+            <td th:text="${track.track().getDurationFormatted()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
