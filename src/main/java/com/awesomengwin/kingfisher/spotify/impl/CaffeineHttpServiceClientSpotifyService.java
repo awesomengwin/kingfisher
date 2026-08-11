@@ -1,5 +1,7 @@
-package com.awesomengwin.kingfisher.spotify;
+package com.awesomengwin.kingfisher.spotify.impl;
 
+import com.awesomengwin.kingfisher.spotify.SpotifyApi;
+import com.awesomengwin.kingfisher.spotify.SpotifyService;
 import com.awesomengwin.kingfisher.spotify.dto.Page;
 import com.awesomengwin.kingfisher.spotify.dto.response.SavedTrack;
 import com.github.benmanes.caffeine.cache.Caffeine;
