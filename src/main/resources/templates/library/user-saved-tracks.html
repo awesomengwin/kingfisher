@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>user saved tracks</title>
+</head>
+<body>
+<main>
+    <div id="user-saved-tracks" class="list-group">
+        <button th:each="track: ${userSavedTracks.items()}"
+                class="list-group-item list-group-item-action"
+                hx-put="/spotify/player/play" hx-trigger="dblclick"
+                th:hx-vals='|{"uri": "${track.track().uri()}"}|'
+                hx-swap="none" th:text="${track.track().name()}">
+        </button>
+    </div>
+</main>
+</body>
+</html>

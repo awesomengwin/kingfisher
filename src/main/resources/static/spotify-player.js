@@ -21,9 +21,26 @@ window.onSpotifyWebPlaybackSDKReady = () => {
   player.connect();
 }
 
+document.body.addEventListener('htmx:configRequest', (evt) => {
+  if (evt.detail.verb !== 'GET') {
+    const csrfToken = getCsrfToken();
+    const csrfHeader = getCsrfHeader();
+
+    evt.detail.headers[csrfHeader] = csrfToken;
+  }
+
+  if (evt.detail.elt.matches('#user-saved-tracks .list-group-item')) {
+    if (!deviceId) {
+      console.error('Spotify Player Device ID is missing');
+    }
+
+    evt.detail.parameters.deviceId = deviceId;
+  }
+});
+
 const post = async (url, headers, body) => {
-  const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
-  const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+  const csrfToken = getCsrfToken();
+  const csrfHeader = getCsrfHeader();
 
   const options = {
     method: 'POST',
@@ -39,4 +56,12 @@ const post = async (url, headers, body) => {
   }
 
   return fetch(url, options);
+}
+
+const getCsrfToken = () => {
+  return document.querySelector('meta[name="_csrf"]')?.content;
+}
+
+const getCsrfHeader = () => {
+  return document.querySelector('meta[name="_csrf_header"]')?.content;
 }
