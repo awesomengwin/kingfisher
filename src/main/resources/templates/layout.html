@@ -4,6 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width; initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title th:replace="${title}"></title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}">
     <script th:src="@{/webjars/bootstrap/5.3.8/js/bootstrap.bundle.min.js}"></script>
@@ -11,5 +13,8 @@
 </head>
 <body hx-boost="true">
 <th:block th:replace="${content}"/>
+
+<script th:src="@{/spotify-player.js}"></script>
+<script src="https://sdk.scdn.co/spotify-player.js"></script>
 </body>
 </html>

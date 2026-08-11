@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.spotify.valueobject;
+package com.awesomengwin.kingfisher.spotify.dto;
 
 public record Image(
         String url,
