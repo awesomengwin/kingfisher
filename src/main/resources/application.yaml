@@ -28,6 +28,8 @@ spring:
               - user-read-private
               - user-read-email
               - user-library-read
+              - user-modify-playback-state
+              - streaming
           spotify-service:
             provider: spotify
             client-id: ${SPOTIFY_CLIENT_ID:your_spotify_client_id}
