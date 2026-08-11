@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
 <head>
     <title>kingfisher home</title>
 </head>
 <body>
-<div layout:fragment="content">
+<main>
     <div>
         <img th:if="${not currentUser.images.isEmpty()}"
              th:src="${currentUser.images.first.url()}"
@@ -37,6 +36,6 @@
         </tr>
         </tbody>
     </table>
-</div>
+</main>
 </body>
 </html>
