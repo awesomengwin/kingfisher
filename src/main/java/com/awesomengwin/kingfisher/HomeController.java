@@ -2,8 +2,8 @@ package com.awesomengwin.kingfisher;
 
 import com.awesomengwin.kingfisher.spotify.SpotifyService;
 import com.awesomengwin.kingfisher.spotify.SpotifyUser;
-import com.awesomengwin.kingfisher.spotify.valueobject.Page;
-import com.awesomengwin.kingfisher.spotify.valueobject.SavedTrack;
+import com.awesomengwin.kingfisher.spotify.dto.Page;
+import com.awesomengwin.kingfisher.spotify.dto.response.SavedTrack;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;

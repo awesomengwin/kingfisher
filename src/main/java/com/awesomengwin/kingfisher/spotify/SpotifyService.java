@@ -1,7 +1,7 @@
 package com.awesomengwin.kingfisher.spotify;
 
-import com.awesomengwin.kingfisher.spotify.valueobject.Page;
-import com.awesomengwin.kingfisher.spotify.valueobject.SavedTrack;
+import com.awesomengwin.kingfisher.spotify.dto.Page;
+import com.awesomengwin.kingfisher.spotify.dto.response.SavedTrack;
 
 public interface SpotifyService {
 

@@ -1,4 +1,6 @@
-package com.awesomengwin.kingfisher.spotify.valueobject;
+package com.awesomengwin.kingfisher.spotify.dto.response;
+
+import com.awesomengwin.kingfisher.spotify.dto.Image;
 
 import java.util.List;
 

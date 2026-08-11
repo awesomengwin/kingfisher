@@ -1,7 +1,7 @@
 package com.awesomengwin.kingfisher.spotify;
 
-import com.awesomengwin.kingfisher.spotify.valueobject.Page;
-import com.awesomengwin.kingfisher.spotify.valueobject.SavedTrack;
+import com.awesomengwin.kingfisher.spotify.dto.Page;
+import com.awesomengwin.kingfisher.spotify.dto.response.SavedTrack;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.springframework.stereotype.Service;

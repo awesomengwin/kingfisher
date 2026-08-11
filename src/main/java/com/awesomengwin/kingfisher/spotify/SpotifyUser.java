@@ -1,6 +1,6 @@
 package com.awesomengwin.kingfisher.spotify;
 
-import com.awesomengwin.kingfisher.spotify.valueobject.Image;
+import com.awesomengwin.kingfisher.spotify.dto.Image;
 import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
