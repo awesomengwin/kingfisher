@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+      th:replace="~{layout :: layout(~{::title}, ~{::#content})}">
 <head>
     <title>user saved tracks</title>
 </head>
 <body>
-<main>
+<div id="content">
     <div id="user-saved-tracks" class="list-group">
         <button th:each="track: ${userSavedTracks.items()}"
                 class="list-group-item list-group-item-action"
@@ -14,6 +14,6 @@
                 data-hx-swap="none" th:text="${track.track().name()}">
         </button>
     </div>
-</main>
+</div>
 </body>
 </html>
