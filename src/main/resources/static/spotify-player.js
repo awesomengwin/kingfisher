@@ -1,8 +1,11 @@
 let deviceId;
+let player;
 
 window.onSpotifyWebPlaybackSDKReady = () => {
+  if (player) return;
+
   // noinspection JSUnresolvedVariable, JSUnusedGlobalSymbols
-  const player = new Spotify.Player({
+  player = new Spotify.Player({
     name: 'kingfisher',
     getOAuthToken: async (cb) => {
       const resp = await post('/spotify/token');
