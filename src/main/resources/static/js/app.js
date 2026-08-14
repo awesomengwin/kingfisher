@@ -5,3 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSpotifyPlayer();
   initUserSavedTracks();
 });
+
+document.addEventListener('htmx:afterSwap', () => {
+  initUserSavedTracks();
+});

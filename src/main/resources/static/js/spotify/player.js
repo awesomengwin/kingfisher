@@ -49,7 +49,7 @@ const setupSpotifyDeviceIdHtmxConfigRequest = () => {
       evt.detail.headers[csrfHeader] = csrfToken;
     }
 
-    if (evt.detail.elt.matches('#user-saved-tracks .list-group-item')) {
+    if (evt.detail.elt.matches('[data-user-saved-tracks] .list-group-item')) {
       if (!deviceId) {
         console.error('Spotify Player Device ID is missing');
       }
