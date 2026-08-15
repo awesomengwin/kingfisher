@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::#content})}">
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
 <head>
     <title>user saved tracks</title>
 </head>
 <body>
-<div id="content">
-    <div data-user-saved-tracks>
-        <div class="list-group">
+<th:block th:fragment="content">
+    <aside class="left-sidebar d-flex flex-column" data-user-saved-tracks>
+        <div class="flex-grow-1 list-group overflow-auto">
             <button th:each="track: ${userSavedTracks.items()}"
                     class="list-group-item list-group-item-action"
                     data-hx-put="/spotify/player/play" data-hx-trigger="dblclick"
@@ -20,7 +20,10 @@
                 th:data-current-page="${userSavedTracks.currentPage()}"
                 th:data-total-pages="${userSavedTracks.totalPages()}"></ul>
         </nav>
-    </div>
-</div>
+    </aside>
+    <section class="flex-grow-1">
+        blank
+    </section>
+</th:block>
 </body>
 </html>
