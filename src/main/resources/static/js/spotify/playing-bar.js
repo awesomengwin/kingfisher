@@ -30,7 +30,7 @@ export const handlePlayerStateChange = (state) => {
   durationMs = state.duration;
   lastUpdateTimestamp = performance.now();
 
-  const { trackAlbumCover, trackName, trackArtists, playerToggle, duration, progress } = elements;
+  const { trackAlbumCover, trackName, trackArtists, duration, progress, playIcon, pauseIcon } = elements;
 
   if (trackAlbumCover) {
     trackAlbumCover.src = currentTrack.album?.images?.[0]?.url;
@@ -45,8 +45,9 @@ export const handlePlayerStateChange = (state) => {
     trackArtists.textContent = currentTrack.artists.map((artist) => artist.name).join(', ');
   }
 
-  if (playerToggle) {
-    playerToggle.textContent = state.paused ? 'Play' : 'Pause';
+  if (playIcon && pauseIcon) {
+    playIcon.classList.toggle('d-none', !state.paused);
+    pauseIcon.classList.toggle('d-none', state.paused);
   }
 
   if (duration) {
@@ -72,7 +73,9 @@ const cacheElements = (bar) => {
     playerToggle: bar.querySelector('[data-player-toggle]'),
     position: bar.querySelector('[data-position]'),
     duration: bar.querySelector('[data-duration]'),
-    progress: bar.querySelector('[data-progress]')
+    progress: bar.querySelector('[data-progress]'),
+    playIcon: bar.querySelector('[data-play-icon]'),
+    pauseIcon: bar.querySelector('[data-pause-icon]')
   };
 }
 
