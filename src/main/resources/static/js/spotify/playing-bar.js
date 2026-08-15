@@ -119,6 +119,8 @@ const onSeekCommit = async (e) => {
 }
 
 const startProgressLoop = () => {
+  stopProgressLoop();
+
   const tick = () => {
     if (!isDragging && !isPaused && durationMs > 0) {
       const elapsed = performance.now() - lastUpdateTimestamp;
@@ -131,7 +133,6 @@ const startProgressLoop = () => {
   rafId = requestAnimationFrame(tick);
 }
 
-// noinspection JSUnusedGlobalSymbols
 export const stopProgressLoop = () => {
   if (rafId) {
     cancelAnimationFrame(rafId);
