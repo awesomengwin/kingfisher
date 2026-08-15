@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::#content})}">
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
 <head>
     <title>user saved tracks</title>
 </head>
 <body>
-<div id="content">
-    <div data-user-saved-tracks>
-        <div class="list-group">
+<th:block th:fragment="content">
+    <aside class="left-sidebar d-flex flex-column" data-user-saved-tracks>
+        <div class="flex-grow-1 list-group overflow-auto">
             <button th:each="track: ${userSavedTracks.items()}"
                     class="list-group-item list-group-item-action"
                     data-hx-put="/spotify/player/play" data-hx-trigger="dblclick"
@@ -15,12 +15,15 @@
                     data-hx-swap="none" th:text="${track.track().name()}">
             </button>
         </div>
-        <nav th:if="${userSavedTracks.totalPages() > 1}" aria-label="User saved tracks page">
+        <nav class="mt-2" th:if="${userSavedTracks.totalPages() > 1}" aria-label="User saved tracks page">
             <ul data-pagination class="pagination"
                 th:data-current-page="${userSavedTracks.currentPage()}"
                 th:data-total-pages="${userSavedTracks.totalPages()}"></ul>
         </nav>
-    </div>
-</div>
+    </aside>
+    <section class="flex-grow-1 overflow-auto">
+        blank
+    </section>
+</th:block>
 </body>
 </html>

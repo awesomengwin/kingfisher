@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::#content})}">
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
 <head>
     <title>kingfisher home</title>
 </head>
 <body>
-<div id="content">
+<th:block th:fragment="content">
     <h1>Still working on it!</h1>
-</div>
+</th:block>
 </body>
 </html>

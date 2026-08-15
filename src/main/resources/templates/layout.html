@@ -9,12 +9,13 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title th:replace="${title}"></title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
     <script th:src="@{/webjars/bootstrap/5.3.8/js/bootstrap.bundle.min.js}"></script>
     <script th:src="@{/webjars/htmx.org/2.0.10/dist/htmx.min.js}"></script>
     <script type="module" th:src="@{/js/app.js}"></script>
 </head>
-<body data-hx-boost="true">
-<header class="mb-3 bg-body-tertiary">
+<body class="d-flex flex-column vh-100" data-hx-boost="true">
+<header class="flex-shrink-0 mb-3 bg-body-tertiary">
     <div class="container">
         <nav class="navbar navbar-expand-lg">
             <a th:href="@{/}" class="navbar-brand">kingfisher</a>
@@ -34,8 +35,34 @@
         </nav>
     </div>
 </header>
-<main class="container">
+<main class="container d-flex flex-grow-1 gap-3">
     <th:block th:replace="${content}"/>
 </main>
+<div class="container d-flex flex-shrink-0">
+    <div class="d-flex align-items-center gap-2 flex-shrink-0 w-25">
+        <img class="rounded flex-shrink-0" src="https://i.scdn.co/image/ab67616d0000b2738d0212a10cc2d93289d29b32" alt="Track cover art" width="48" height="48">
+        <div class="d-flex flex-column justify-content-center flex-grow-1" style="min-width: 0">
+            <div class="text-truncate fw-medium">
+                Since I've Been Loving You
+            </div>
+            <div class="text-truncate text-body-secondary small">
+                Led Zeppelin
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-column align-items-center flex-grow-1">
+        <div>
+            <button class="btn btn-sm btn-primary">Play</button>
+        </div>
+        <div class="d-flex align-items-center gap-2 w-100">
+            <small class="flex-shrink-0">1:32</small>
+            <div class="progress flex-grow-1" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar w-75"></div>
+            </div>
+            <small class="flex-shrink-0">1:32</small>
+        </div>
+    </div>
+    <div class="flex-shrink-0 w-25"></div>
+</div>
 </body>
 </html>
