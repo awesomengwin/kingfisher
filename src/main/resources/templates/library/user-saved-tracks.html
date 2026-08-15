@@ -15,13 +15,13 @@
                     data-hx-swap="none" th:text="${track.track().name()}">
             </button>
         </div>
-        <nav th:if="${userSavedTracks.totalPages() > 1}" aria-label="User saved tracks page">
+        <nav class="mt-2" th:if="${userSavedTracks.totalPages() > 1}" aria-label="User saved tracks page">
             <ul data-pagination class="pagination"
                 th:data-current-page="${userSavedTracks.currentPage()}"
                 th:data-total-pages="${userSavedTracks.totalPages()}"></ul>
         </nav>
     </aside>
-    <section class="flex-grow-1">
+    <section class="flex-grow-1 overflow-auto">
         blank
     </section>
 </th:block>
