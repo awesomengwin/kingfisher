@@ -4,12 +4,12 @@ import { getCsrfHeader, getCsrfToken } from "../utils/csrf.js";
 let deviceId;
 let player;
 
-export const initSpotifyPlayer = () => {
-  setupSpotifyWebPlaybackSDK();
+export const initSpotifyPlayer = (onPlayerStateChanged, initPlayingBar) => {
+  setupSpotifyWebPlaybackSDK(onPlayerStateChanged, initPlayingBar);
   setupSpotifyDeviceIdHtmxConfigRequest();
 }
 
-const setupSpotifyWebPlaybackSDK = () => {
+const setupSpotifyWebPlaybackSDK = (onPlayerStateChanged, initPlayingBar) => {
   window.onSpotifyWebPlaybackSDKReady = () => {
     if (player) return;
 
@@ -30,7 +30,13 @@ const setupSpotifyWebPlaybackSDK = () => {
       deviceId = device_id;
     });
 
-    player.connect();
+    // noinspection JSDeprecatedSymbols, JSCheckFunctionSignatures
+    player.addListener('player_state_changed', (state) => {
+      if (!state) return;
+      onPlayerStateChanged(state);
+    });
+
+    player.connect().then(() => initPlayingBar(player));
   }
 
   const script = document.createElement('script');
