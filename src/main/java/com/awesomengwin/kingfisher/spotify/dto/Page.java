@@ -10,4 +10,11 @@ public record Page<T>(
         String previous,
         List<T> items
 ) {
+    public int currentPage() {
+        return offset / limit + 1;
+    }
+
+    public int totalPages() {
+        return (total + limit - 1) / limit;
+    }
 }

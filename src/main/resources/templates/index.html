@@ -1,41 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+      th:replace="~{layout :: layout(~{::title}, ~{::#content})}">
 <head>
     <title>kingfisher home</title>
 </head>
 <body>
-<main>
-    <div>
-        <img th:if="${not currentUser.images.isEmpty()}"
-             th:src="${currentUser.images.first.url()}"
-             th:alt="${currentUser.displayName}"
-             class="rounded-circle"
-             width="40" height="40">
-        <span th:text="${currentUser.displayName}"></span>
-    </div>
-
-    <!--User saved tracks table-->
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Title</th>
-            <th scope="col">Album</th>
-            <th scope="col">Date added</th>
-            <th scope="col">Duration</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="track,iterateState : ${userSavedTracks.items()}">
-            <th scope="row" th:text="${iterateState.index + 1}">1</th>
-            <td th:text="${track.track().name()}">Since I've been loving you</td>
-            <td th:text="${track.track().album().name()}">Led Zeppelin II</td>
-            <td th:text="${track.addedAt()}">1 second ago</td>
-            <td th:text="${track.track().getDurationFormatted()}"></td>
-        </tr>
-        </tbody>
-    </table>
-</main>
+<div id="content">
+    <h1>Still working on it!</h1>
+</div>
 </body>
 </html>

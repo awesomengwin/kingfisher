@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::#content})}">
+<head>
+    <title>user saved tracks</title>
+</head>
+<body>
+<div id="content">
+    <div data-user-saved-tracks>
+        <div class="list-group">
+            <button th:each="track: ${userSavedTracks.items()}"
+                    class="list-group-item list-group-item-action"
+                    data-hx-put="/spotify/player/play" data-hx-trigger="dblclick"
+                    th:hx-vals='|{"uri": "${track.track().uri()}"}|'
+                    data-hx-swap="none" th:text="${track.track().name()}">
+            </button>
+        </div>
+        <nav th:if="${userSavedTracks.totalPages() > 1}" aria-label="User saved tracks page">
+            <ul data-pagination class="pagination"
+                th:data-current-page="${userSavedTracks.currentPage()}"
+                th:data-total-pages="${userSavedTracks.totalPages()}"></ul>
+        </nav>
+    </div>
+</div>
+</body>
+</html>
