@@ -1,8 +1,8 @@
-package com.awesomengwin.kingfisher.spotify.dto;
+package com.awesomengwin.kingfisher.spotify.client;
 
 import java.util.List;
 
-public record Page<T>(
+public record SpotifyPage<T>(
         int limit,
         int offset,
         int total,

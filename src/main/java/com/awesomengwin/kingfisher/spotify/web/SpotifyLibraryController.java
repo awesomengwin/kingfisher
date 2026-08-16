@@ -1,9 +1,8 @@
 package com.awesomengwin.kingfisher.spotify.web;
 
 import com.awesomengwin.kingfisher.spotify.SpotifyService;
-import com.awesomengwin.kingfisher.spotify.dto.Page;
-import com.awesomengwin.kingfisher.spotify.dto.request.PaginationRequest;
-import com.awesomengwin.kingfisher.spotify.dto.response.SavedTrack;
+import com.awesomengwin.kingfisher.spotify.client.SpotifyPage;
+import com.awesomengwin.kingfisher.spotify.client.SavedTrackResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -26,7 +25,7 @@ public class SpotifyLibraryController {
     public String userSavedTracks(@AuthenticationPrincipal OAuth2User currentUser,
                                   @ModelAttribute PaginationRequest p,
                                   Model model) {
-        Page<SavedTrack> userSavedTracks =
+        SpotifyPage<SavedTrackResponse> userSavedTracks =
                 spotifyService.getUserSavedTracks(currentUser.getName(), p.limit(), p.offset());
         model.addAttribute("userSavedTracks", userSavedTracks);
 

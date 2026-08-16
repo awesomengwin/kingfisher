@@ -1,8 +1,5 @@
-package com.awesomengwin.kingfisher.spotify;
+package com.awesomengwin.kingfisher.spotify.client;
 
-import com.awesomengwin.kingfisher.spotify.dto.Page;
-import com.awesomengwin.kingfisher.spotify.dto.request.StartPlaybackRequest;
-import com.awesomengwin.kingfisher.spotify.dto.response.SavedTrack;
 import org.springframework.security.oauth2.client.annotation.ClientRegistrationId;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,11 +8,11 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PutExchange;
 
 @HttpExchange
-public interface SpotifyApi {
+public interface SpotifyClient {
 
     @GetExchange("/me/tracks")
     @ClientRegistrationId("spotify-login")
-    Page<SavedTrack> getUserSavedTracks(@RequestParam int limit, @RequestParam int offset);
+    SpotifyPage<SavedTrackResponse> getUserSavedTracks(@RequestParam int limit, @RequestParam int offset);
 
     @PutExchange("/me/player/play")
     @ClientRegistrationId("spotify-login")

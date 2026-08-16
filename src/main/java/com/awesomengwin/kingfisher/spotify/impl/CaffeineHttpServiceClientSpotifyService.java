@@ -1,12 +1,11 @@
 package com.awesomengwin.kingfisher.spotify.impl;
 
-import com.awesomengwin.kingfisher.spotify.SpotifyApi;
-import com.awesomengwin.kingfisher.spotify.SpotifyCacheKey;
+import com.awesomengwin.kingfisher.spotify.client.SpotifyClient;
 import com.awesomengwin.kingfisher.spotify.SpotifyPlayerService;
 import com.awesomengwin.kingfisher.spotify.SpotifyService;
-import com.awesomengwin.kingfisher.spotify.dto.Page;
-import com.awesomengwin.kingfisher.spotify.dto.request.StartPlaybackRequest;
-import com.awesomengwin.kingfisher.spotify.dto.response.SavedTrack;
+import com.awesomengwin.kingfisher.spotify.client.SpotifyPage;
+import com.awesomengwin.kingfisher.spotify.client.StartPlaybackRequest;
+import com.awesomengwin.kingfisher.spotify.client.SavedTrackResponse;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
@@ -17,27 +16,27 @@ import java.time.Duration;
 @Service
 public class CaffeineHttpServiceClientSpotifyService implements SpotifyService, SpotifyPlayerService {
 
-    private final SpotifyApi spotifyApi;
-    private final LoadingCache<SpotifyCacheKey, Page<SavedTrack>> userSavedTracksLoadingCache;
+    private final SpotifyClient spotifyClient;
+    private final LoadingCache<SpotifyCacheKey, SpotifyPage<SavedTrackResponse>> userSavedTracksLoadingCache;
 
-    public CaffeineHttpServiceClientSpotifyService(SpotifyApi spotifyApi) {
-        this.spotifyApi = spotifyApi;
+    public CaffeineHttpServiceClientSpotifyService(SpotifyClient spotifyClient) {
+        this.spotifyClient = spotifyClient;
         this.userSavedTracksLoadingCache = createCommonCaffeineLoadingCache(this::loadUserSavedTracks);
     }
 
     @Override
-    public Page<SavedTrack> getUserSavedTracks(String userId, int limit, int offset) {
+    public SpotifyPage<SavedTrackResponse> getUserSavedTracks(String userId, int limit, int offset) {
         return userSavedTracksLoadingCache.get(
                 new SpotifyCacheKey(userId, "user-saved-tracks", limit, offset));
     }
 
     @Override
     public void startPlayback(String deviceId, String uri) {
-        spotifyApi.startPlayback(deviceId, new StartPlaybackRequest(uri));
+        spotifyClient.startPlayback(deviceId, new StartPlaybackRequest(uri));
     }
 
-    private Page<SavedTrack> loadUserSavedTracks(SpotifyCacheKey key) {
-        return spotifyApi.getUserSavedTracks(key.limit(), key.offset());
+    private SpotifyPage<SavedTrackResponse> loadUserSavedTracks(SpotifyCacheKey key) {
+        return spotifyClient.getUserSavedTracks(key.limit(), key.offset());
     }
 
     private <K, V> LoadingCache<K, V> createCommonCaffeineLoadingCache(CacheLoader<K, V> loader) {
