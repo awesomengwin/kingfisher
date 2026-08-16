@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.spotify;
+package com.awesomengwin.kingfisher.spotify.client;
 
 import com.awesomengwin.kingfisher.spotify.dto.Page;
 import com.awesomengwin.kingfisher.spotify.dto.request.StartPlaybackRequest;
@@ -11,7 +11,7 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PutExchange;
 
 @HttpExchange
-public interface SpotifyApi {
+public interface SpotifyClient {
 
     @GetExchange("/me/tracks")
     @ClientRegistrationId("spotify-login")
