@@ -1,9 +1,9 @@
 package com.awesomengwin.kingfisher.spotify;
 
-import com.awesomengwin.kingfisher.spotify.dto.Page;
-import com.awesomengwin.kingfisher.spotify.dto.response.SavedTrack;
+import com.awesomengwin.kingfisher.spotify.client.SpotifyPage;
+import com.awesomengwin.kingfisher.spotify.client.SavedTrackResponse;
 
 public interface SpotifyService {
 
-    Page<SavedTrack> getUserSavedTracks(String userId, int limit, int offset);
+    SpotifyPage<SavedTrackResponse> getUserSavedTracks(String userId, int limit, int offset);
 }
