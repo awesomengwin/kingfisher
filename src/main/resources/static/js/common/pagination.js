@@ -12,6 +12,8 @@ export const initPagination = (container, current, total) => {
   }
 
   container.appendChild(createNextPageItem(current, total));
+
+  htmx.process(container);
 }
 
 const createPageItem = (page, current) => {
