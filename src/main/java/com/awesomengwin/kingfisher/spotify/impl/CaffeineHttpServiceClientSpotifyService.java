@@ -4,7 +4,7 @@ import com.awesomengwin.kingfisher.spotify.client.SpotifyClient;
 import com.awesomengwin.kingfisher.spotify.SpotifyPlayerService;
 import com.awesomengwin.kingfisher.spotify.SpotifyService;
 import com.awesomengwin.kingfisher.spotify.dto.Page;
-import com.awesomengwin.kingfisher.spotify.dto.request.StartPlaybackRequest;
+import com.awesomengwin.kingfisher.spotify.client.StartPlaybackRequest;
 import com.awesomengwin.kingfisher.spotify.dto.response.SavedTrack;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;

@@ -1,7 +1,6 @@
 package com.awesomengwin.kingfisher.spotify.client;
 
 import com.awesomengwin.kingfisher.spotify.dto.Page;
-import com.awesomengwin.kingfisher.spotify.dto.request.StartPlaybackRequest;
 import com.awesomengwin.kingfisher.spotify.dto.response.SavedTrack;
 import org.springframework.security.oauth2.client.annotation.ClientRegistrationId;
 import org.springframework.web.bind.annotation.RequestBody;
