@@ -1,7 +1,6 @@
 package com.awesomengwin.kingfisher.spotify.impl;
 
 import com.awesomengwin.kingfisher.spotify.SpotifyApi;
-import com.awesomengwin.kingfisher.spotify.SpotifyCacheKey;
 import com.awesomengwin.kingfisher.spotify.SpotifyPlayerService;
 import com.awesomengwin.kingfisher.spotify.SpotifyService;
 import com.awesomengwin.kingfisher.spotify.dto.Page;
