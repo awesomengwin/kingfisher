@@ -8,7 +8,8 @@
 <th:block th:fragment="content">
     <aside class="left-sidebar d-flex flex-column" data-user-saved-tracks>
         <div class="flex-grow-1 list-group overflow-auto">
-            <button th:each="track: ${userSavedTracks.items()}"
+            <button data-track-item th:data-spotify-uri="${track.track().uri()}"
+                    th:each="track: ${userSavedTracks.items()}"
                     class="list-group-item list-group-item-action"
                     data-hx-put="/spotify/player/play" data-hx-trigger="dblclick"
                     th:hx-vals='|{"uri": "${track.track().uri()}"}|'
@@ -22,7 +23,7 @@
         </nav>
     </aside>
     <section class="flex-grow-1 overflow-auto">
-        blank
+        <button id="lyrics-toggle">Lyrics toggle</button>
     </section>
 </th:block>
 </body>
