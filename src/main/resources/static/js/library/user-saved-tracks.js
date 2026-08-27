@@ -5,6 +5,10 @@ export const initUserSavedTracks = () => {
 
   if (!root) return;
 
+  setupPagination(root);
+}
+
+const setupPagination = (root) => {
   const pagination = root.querySelector('[data-pagination]');
 
   if (!pagination) return;
