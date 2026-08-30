@@ -1,29 +1,29 @@
-export const initPagination = (container, current, total) => {
+export const initPagination = (container, current, total, size) => {
   container.innerHTML = '';
 
-  container.appendChild(createPreviousPageItem(current));
+  container.appendChild(createPreviousPageItem(current, size));
 
   for (const p of buildPageList(current, total)) {
     if (p === '...') {
       container.appendChild(createEllipsisPageItem());
     } else {
-      container.appendChild(createPageItem(p, current));
+      container.appendChild(createPageItem(p, current, size));
     }
   }
 
-  container.appendChild(createNextPageItem(current, total));
+  container.appendChild(createNextPageItem(current, total, size));
 
   htmx.process(container);
 }
 
-const createPageItem = (page, current) => {
+const createPageItem = (page, current, size) => {
   const li = document.createElement('li');
   li.classList.add('page-item');
 
   const link = document.createElement('a');
   link.classList.add('page-link');
 
-  link.href = `?page=${page}`;
+  link.href = `?page=${page}&size=${size}`;
   link.textContent = page;
 
   if (page === current) {
@@ -48,14 +48,14 @@ const createEllipsisPageItem = () => {
   return li;
 }
 
-const createNextPageItem = (current, total) => {
+const createNextPageItem = (current, total, size) => {
   const li = document.createElement('li');
   li.classList.add('page-item');
 
   const link = document.createElement('a');
   link.classList.add('page-link');
 
-  link.href = `?page=${current + 1}`;
+  link.href = `?page=${current + 1}&size=${size}`;
   link.textContent = 'Next';
 
   if (current === total) {
@@ -67,14 +67,14 @@ const createNextPageItem = (current, total) => {
   return li;
 }
 
-const createPreviousPageItem = (current) => {
+const createPreviousPageItem = (current, size) => {
   const li = document.createElement('li');
   li.classList.add('page-item');
 
   const link = document.createElement('a');
   link.classList.add('page-link');
 
-  link.href = `?page=${current - 1}`;
+  link.href = `?page=${current - 1}&size=${size}`;
   link.textContent = 'Previous';
 
   if (current === 1) {
