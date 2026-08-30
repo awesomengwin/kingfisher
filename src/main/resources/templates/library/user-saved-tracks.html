@@ -15,11 +15,22 @@
                     data-hx-swap="none" th:text="${track.track().name()}">
             </button>
         </div>
-        <nav class="mt-2" th:if="${userSavedTracks.totalPages() > 1}" aria-label="User saved tracks page">
-            <ul data-pagination class="pagination"
-                th:data-current-page="${userSavedTracks.currentPage()}"
-                th:data-total-pages="${userSavedTracks.totalPages()}"></ul>
-        </nav>
+        <div class="mt-2 d-flex justify-content-between">
+            <nav th:if="${userSavedTracks.totalPages() > 1}" aria-label="User saved tracks page">
+                <ul data-pagination class="pagination pagination-sm mb-0"
+                    th:data-current-page="${userSavedTracks.currentPage()}"
+                    th:data-total-pages="${userSavedTracks.totalPages()}"
+                    th:data-page-size="${userSavedTracks.limit()}"></ul>
+            </nav>
+            <div class="btn-group btn-group-sm" role="group" aria-label="User saved tracks page size">
+                <a href="?size=20" class="btn btn-outline-primary"
+                   th:classappend="${userSavedTracks.limit() eq 20 ? 'active' : ''}">20</a>
+                <a href="?size=30" class="btn btn-outline-primary"
+                   th:classappend="${userSavedTracks.limit() eq 30 ? 'active' : ''}">30</a>
+                <a href="?size=50" class="btn btn-outline-primary"
+                   th:classappend="${userSavedTracks.limit() eq 50 ? 'active' : ''}">50</a>
+            </div>
+        </div>
     </aside>
     <section class="flex-grow-1 overflow-auto">
         blank
