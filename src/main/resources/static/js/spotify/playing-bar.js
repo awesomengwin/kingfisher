@@ -1,3 +1,5 @@
+import { SpotifyPlayerEvent } from "./player.js";
+
 let player;
 let elements = {};
 let rafId;
@@ -17,10 +19,12 @@ export const initPlayingBar = (spotifyPlayer) => {
   cacheElements(bar);
   bindEvents();
   startProgressLoop();
+
+  document.addEventListener(SpotifyPlayerEvent.STATE_CHANGED, handlePlayerStateChange);
 }
 
-export const handlePlayerStateChange = (state) => {
-  if (!state) return;
+const handlePlayerStateChange = (e) => {
+  const state = e.detail;
 
   const currentTrack = state.track_window?.current_track;
   if (!currentTrack) return;
@@ -136,7 +140,7 @@ const startProgressLoop = () => {
   rafId = requestAnimationFrame(tick);
 }
 
-export const stopProgressLoop = () => {
+const stopProgressLoop = () => {
   if (rafId) {
     cancelAnimationFrame(rafId);
     rafId = null;
