@@ -38,23 +38,21 @@
 <main class="container d-flex flex-grow-1 gap-3">
     <th:block th:replace="${content}"/>
 </main>
-<div data-playing-bar class="container d-flex flex-shrink-0" data-hx-disinherit="hx-target hx-select">
-    <div class="d-flex align-items-center gap-2 flex-shrink-0 w-25">
-        <img data-track-album-cover class="flex-shrink-0"
-             src="https://i.scdn.co/image/ab67616d0000b27390a50cfe99a4c19ff3cbfbdb"
-             alt="Track cover art" width="48" height="48">
-        <div class="d-flex flex-column justify-content-center flex-grow-1" style="min-width: 0">
-            <div data-track-name class="text-truncate fw-medium">
-                Since I've Been Loving You
+<div data-playing-bar class="container d-flex align-items-center gap-3 flex-shrink-0" data-hx-disinherit="hx-target hx-select">
+    <img data-track-album-cover class="flex-shrink-0"
+         src="https://i.scdn.co/image/ab67616d0000b27390a50cfe99a4c19ff3cbfbdb"
+         alt="Track cover art" width="64" height="64">
+    <div class="d-flex flex-column flex-grow-1" style="min-width: 0">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex flex-column" style="min-width: 0">
+                <div data-track-name class="text-truncate lead">
+                    Since I've Been Loving You
+                </div>
+                <div data-track-artists class="text-truncate text-body-secondary small">
+                    Led Zeppelin
+                </div>
             </div>
-            <div data-track-artists class="text-truncate text-body-secondary small">
-                Led Zeppelin
-            </div>
-        </div>
-    </div>
-    <div class="d-flex flex-column align-items-center flex-grow-1">
-        <div>
-            <button data-player-toggle class="btn btn-link">
+            <button data-player-toggle class="btn btn-link p-0">
                 <svg data-play-icon xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-play-circle-fill" viewBox="0 0 16 16">
                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"/>
                 </svg>
@@ -70,7 +68,6 @@
             <small data-duration class="flex-shrink-0">1:32</small>
         </div>
     </div>
-    <div class="flex-shrink-0 w-25"></div>
 </div>
 </body>
 </html>
