@@ -1,0 +1,21 @@
+<!--/*@thymesVar id="currentPage" type="java.lang.String"*/-->
+<header th:fragment="header" class="flex-shrink-0 mb-3 bg-body-tertiary">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <a th:href="@{/}" class="navbar-brand">kingfisher</a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggle"
+                    aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggle">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a th:href="@{/library/tracks}" class="nav-link"
+                           th:classappend="${currentPage eq '/library/tracks' ? 'active' : ''}"
+                           th:attr="aria-current=${currentPage eq '/library/tracks' ? 'page' : ''}">Liked tracks</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header>
