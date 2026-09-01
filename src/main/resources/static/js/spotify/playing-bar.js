@@ -1,6 +1,5 @@
-import { SpotifyPlayerEvent } from "./player.js";
+import { SpotifyPlayerEvent, togglePlay, seek } from "./player.js";
 
-let player;
 let elements = {};
 let rafId;
 
@@ -10,9 +9,7 @@ let positionMs = 0;
 let durationMs = 0;
 let lastUpdateTimestamp = 0;
 
-export const initPlayingBar = (spotifyPlayer) => {
-  player = spotifyPlayer;
-
+export const initPlayingBar = () => {
   const bar = document.querySelector('[data-playing-bar]');
   if (!bar) return;
 
@@ -87,10 +84,7 @@ const bindEvents = () => {
   const { playerToggle, progress } = elements;
 
   if (playerToggle) {
-    playerToggle.addEventListener('click', () => {
-      player?.togglePlay().catch((err) =>
-        console.error('Spotify SDK toggle play failed', err));
-    });
+    playerToggle.addEventListener('click', togglePlay);
   }
 
   if (progress) {
@@ -115,7 +109,7 @@ const onSeekCommit = async (e) => {
   const seekMs = Number(e.target.value);
 
   try {
-    await player?.seek(seekMs);
+    seek(seekMs);
     positionMs = seekMs;
     lastUpdateTimestamp = performance.now();
   } catch (err) {

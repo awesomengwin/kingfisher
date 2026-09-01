@@ -3,9 +3,9 @@ import { initUserSavedTracks } from "./library/user-saved-tracks.js";
 import { initPlayingBar } from "./spotify/playing-bar.js";
 import { getCsrfHeader, getCsrfToken } from "./utils/csrf.js";
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const player = await initSpotifyPlayer();
-  initPlayingBar(player);
+document.addEventListener('DOMContentLoaded', () => {
+  initSpotifyPlayer();
+  initPlayingBar();
   initUserSavedTracks();
 });
 
