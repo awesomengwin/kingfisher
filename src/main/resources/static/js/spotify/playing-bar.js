@@ -1,8 +1,19 @@
 import { SpotifyPlayerEvent, togglePlay, seek } from "./player.js";
 
-let elements = {};
-let rafId;
+const playingBar = document.querySelector('[data-playing-bar]');
+const ui = {
+  trackAlbumCover: playingBar.querySelector('[data-track-album-cover]'),
+  trackName: playingBar.querySelector('[data-track-name]'),
+  trackArtists: playingBar.querySelector('[data-track-artists]'),
+  playerToggle: playingBar.querySelector('[data-player-toggle]'),
+  position: playingBar.querySelector('[data-position]'),
+  duration: playingBar.querySelector('[data-duration]'),
+  progress: playingBar.querySelector('[data-progress]'),
+  playIcon: playingBar.querySelector('[data-play-icon]'),
+  pauseIcon: playingBar.querySelector('[data-pause-icon]'),
+}
 
+let rafId;
 let isDragging = false;
 let isPaused = true;
 let positionMs = 0;
@@ -10,14 +21,31 @@ let durationMs = 0;
 let lastUpdateTimestamp = 0;
 
 export const initPlayingBar = () => {
-  const bar = document.querySelector('[data-playing-bar]');
-  if (!bar) return;
-
-  cacheElements(bar);
-  bindEvents();
-  startProgressLoop();
-
   document.addEventListener(SpotifyPlayerEvent.STATE_CHANGED, handlePlayerStateChange);
+
+  // Toggle Play
+  ui.playerToggle.addEventListener('click', togglePlay);
+
+  // Seek
+  ui.progress.addEventListener('pointerdown', () => {
+    isDragging = true;
+  });
+  ui.progress.addEventListener('input', (e) => {
+    const value = Number(e.target.value);
+    ui.position.textContent = getTimeFormatted(value);
+  });
+  ui.progress.addEventListener('change', (e) => {
+    const seekMs = Number(e.target.value);
+
+    seek(seekMs);
+    positionMs = seekMs;
+    lastUpdateTimestamp = performance.now();
+
+    isDragging = false;
+  });
+
+  // Loop
+  startProgressLoop();
 }
 
 const handlePlayerStateChange = (e) => {
@@ -31,91 +59,20 @@ const handlePlayerStateChange = (e) => {
   durationMs = state.duration;
   lastUpdateTimestamp = performance.now();
 
-  const { trackAlbumCover, trackName, trackArtists, duration, progress, playIcon, pauseIcon } = elements;
+  ui.trackAlbumCover.src = currentTrack.album?.images?.[0]?.url;
+  ui.trackAlbumCover.alt = `Album cover for ${currentTrack.album?.name}`;
+  ui.trackName.textContent = currentTrack.name;
+  ui.trackArtists.textContent = currentTrack.artists.map((artist) => artist.name).join(', ');
 
-  if (trackAlbumCover) {
-    trackAlbumCover.src = currentTrack.album?.images?.[0]?.url;
-    trackAlbumCover.alt = `Album cover for ${currentTrack.album?.name}`;
-  }
+  ui.playIcon.classList.toggle('d-none', !state.paused);
+  ui.pauseIcon.classList.toggle('d-none', state.paused);
 
-  if (trackName) {
-    trackName.textContent = currentTrack.name;
-  }
-
-  if (trackArtists) {
-    trackArtists.textContent = currentTrack.artists.map((artist) => artist.name).join(', ');
-  }
-
-  if (playIcon && pauseIcon) {
-    playIcon.classList.toggle('d-none', !state.paused);
-    pauseIcon.classList.toggle('d-none', state.paused);
-  }
-
-  if (duration) {
-    duration.textContent = getTimeFormatted(durationMs);
-  }
-
-  if (progress) {
-    progress.max = durationMs;
-    progress.setAttribute('aria-label', `${currentTrack.name} progress bar`);
-  }
+  ui.duration.textContent = getTimeFormatted(durationMs);
+  ui.progress.max = durationMs;
+  ui.progress.setAttribute('aria-label', `${currentTrack.name} progress bar`);
 
   if (!isDragging) {
     updateProgressDisplay(positionMs);
-  }
-}
-
-const cacheElements = (bar) => {
-  elements = {
-    bar,
-    trackAlbumCover: bar.querySelector('[data-track-album-cover]'),
-    trackName: bar.querySelector('[data-track-name]'),
-    trackArtists: bar.querySelector('[data-track-artists]'),
-    playerToggle: bar.querySelector('[data-player-toggle]'),
-    position: bar.querySelector('[data-position]'),
-    duration: bar.querySelector('[data-duration]'),
-    progress: bar.querySelector('[data-progress]'),
-    playIcon: bar.querySelector('[data-play-icon]'),
-    pauseIcon: bar.querySelector('[data-pause-icon]')
-  };
-}
-
-const bindEvents = () => {
-  const { playerToggle, progress } = elements;
-
-  if (playerToggle) {
-    playerToggle.addEventListener('click', togglePlay);
-  }
-
-  if (progress) {
-    progress.addEventListener('pointerdown', onSeekStart);
-    progress.addEventListener('input', onSeekInput);
-    progress.addEventListener('change', onSeekCommit);
-  }
-}
-
-const onSeekStart = () => {
-  isDragging = true;
-}
-
-const onSeekInput = (e) => {
-  const value = Number(e.target.value);
-  if (elements.position) {
-    elements.position.textContent = getTimeFormatted(value);
-  }
-}
-
-const onSeekCommit = async (e) => {
-  const seekMs = Number(e.target.value);
-
-  try {
-    seek(seekMs);
-    positionMs = seekMs;
-    lastUpdateTimestamp = performance.now();
-  } catch (err) {
-    console.error('Failed to seek track', err);
-  } finally {
-    isDragging = false;
   }
 }
 
@@ -142,15 +99,8 @@ const stopProgressLoop = () => {
 }
 
 const updateProgressDisplay = (ms) => {
-  const { position, progress } = elements;
-
-  if (progress) {
-    progress.value = ms;
-  }
-
-  if (position) {
-    position.textContent = getTimeFormatted(ms);
-  }
+  ui.progress.value = ms;
+  ui.position.textContent = getTimeFormatted(ms);
 }
 
 const getTimeFormatted = (ms) => {
