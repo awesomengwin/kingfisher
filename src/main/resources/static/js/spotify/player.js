@@ -46,17 +46,9 @@ export const initSpotifyPlayer = () => {
 }
 
 export const togglePlay = () => {
-  getPlayer().togglePlay().error(err => console.error('Failed to execute Spotify toggle play', err));
+  player.togglePlay();
 }
 
 export const seek = (seekMs) => {
-  getPlayer().seek(seekMs).error(err => console.error('Failed to execute Spotify toggle play', err));
-}
-
-const getPlayer = () => {
-  if (!player) {
-    throw new Error('Spotify player has not been initialized');
-  }
-
-  return player;
+  player.seek(seekMs);
 }
