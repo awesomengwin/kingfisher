@@ -1,6 +1,7 @@
 // noinspection JSUnresolvedReference
 
 import { post } from "../utils/http.js";
+import { setError, setSuccess } from "../common/popup.js";
 
 let player;
 
@@ -25,8 +26,17 @@ export const initSpotifyPlayer = () => {
 
     // noinspection JSDeprecatedSymbols, JSCheckFunctionSignatures
     player.addListener('ready', ({ device_id }) => {
-      console.log('Ready with Device ID', device_id);
+      console.log('Connected with Device ID', device_id);
       document.body.dataset.deviceId = device_id;
+
+      setSuccess('Spotify Player is ready and connected.', 5000);
+    });
+
+    // noinspection JSDeprecatedSymbols, JSCheckFunctionSignatures
+    player.addListener('not_ready', ({ device_id }) => {
+      console.error('Device ID is not ready for playback', device_id);
+
+      setError('Spotify Player is not ready. Please try again.');
     });
 
     // noinspection JSDeprecatedSymbols, JSCheckFunctionSignatures
@@ -46,9 +56,9 @@ export const initSpotifyPlayer = () => {
 }
 
 export const togglePlay = () => {
-  player.togglePlay();
+  return player.togglePlay();
 }
 
 export const seek = (seekMs) => {
-  player.seek(seekMs);
+  return player.seek(seekMs);
 }

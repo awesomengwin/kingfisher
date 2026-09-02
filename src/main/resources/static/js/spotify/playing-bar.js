@@ -1,4 +1,5 @@
 import { SpotifyPlayerEvent, togglePlay, seek } from "./player.js";
+import { setError } from "../common/popup.js";
 
 const playingBar = document.querySelector('[data-playing-bar]');
 const ui = {
@@ -24,7 +25,13 @@ export const initPlayingBar = () => {
   document.addEventListener(SpotifyPlayerEvent.STATE_CHANGED, handlePlayerStateChange);
 
   // Toggle Play
-  ui.playerToggle.addEventListener('click', togglePlay);
+  ui.playerToggle.addEventListener('click', async () => {
+    try {
+      await togglePlay();
+    } catch (err) {
+      setError(err);
+    }
+  });
 
   // Seek
   ui.progress.addEventListener('pointerdown', () => {
@@ -34,10 +41,14 @@ export const initPlayingBar = () => {
     const value = Number(e.target.value);
     ui.position.textContent = getTimeFormatted(value);
   });
-  ui.progress.addEventListener('change', (e) => {
+  ui.progress.addEventListener('change', async (e) => {
     const seekMs = Number(e.target.value);
 
-    seek(seekMs);
+    try {
+      await seek(seekMs);
+    } catch (err) {
+      setError(err);
+    }
     positionMs = seekMs;
     lastUpdateTimestamp = performance.now();
 
