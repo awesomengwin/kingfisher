@@ -10,8 +10,6 @@ const ui = {
   position: playingBar.querySelector('[data-position]'),
   duration: playingBar.querySelector('[data-duration]'),
   progress: playingBar.querySelector('[data-progress]'),
-  playIcon: playingBar.querySelector('[data-play-icon]'),
-  pauseIcon: playingBar.querySelector('[data-pause-icon]'),
 }
 
 let rafId;
@@ -75,8 +73,7 @@ const handlePlayerStateChange = (e) => {
   ui.trackName.textContent = currentTrack.name;
   ui.trackArtists.textContent = currentTrack.artists.map((artist) => artist.name).join(', ');
 
-  ui.playIcon.classList.toggle('d-none', !state.paused);
-  ui.pauseIcon.classList.toggle('d-none', state.paused);
+  ui.playerToggle.textContent = state.paused ? 'Play' : 'Pause';
 
   ui.duration.textContent = getTimeFormatted(durationMs);
   ui.progress.max = durationMs;
