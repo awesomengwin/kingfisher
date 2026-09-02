@@ -9,12 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initUserSavedTracks();
 });
 
-document.addEventListener('htmx:afterSwap', (evt) => {
-  const elt = evt.detail.requestConfig.elt;
-  if (elt.matches('[data-user-saved-tracks] .list-group-item')) return;
-
-  initUserSavedTracks();
-});
+document.addEventListener('user-saved-tracks:page-changed', initUserSavedTracks);
 
 document.body.addEventListener('htmx:configRequest', (evt) => {
   if (evt.detail.verb !== 'GET') {

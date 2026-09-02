@@ -3,6 +3,7 @@ package com.awesomengwin.kingfisher.spotify.web;
 import com.awesomengwin.kingfisher.spotify.SpotifyService;
 import com.awesomengwin.kingfisher.spotify.client.SpotifyPage;
 import com.awesomengwin.kingfisher.spotify.client.SavedTrackResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -24,10 +25,12 @@ public class SpotifyLibraryController {
     @GetMapping("/tracks")
     public String userSavedTracks(@AuthenticationPrincipal OAuth2User currentUser,
                                   @ModelAttribute PaginationRequest p,
-                                  Model model) {
+                                  Model model, HttpServletResponse response) {
         SpotifyPage<SavedTrackResponse> userSavedTracks =
                 spotifyService.getUserSavedTracks(currentUser.getName(), p.limit(), p.offset());
         model.addAttribute("userSavedTracks", userSavedTracks);
+
+        response.addHeader("HX-Trigger-After-Swap", "user-saved-tracks:page-changed");
 
         return "library/user-saved-tracks";
     }
