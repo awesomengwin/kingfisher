@@ -57,9 +57,7 @@ export const initPlayingBar = () => {
   startProgressLoop();
 }
 
-const handlePlayerStateChange = (e) => {
-  const state = e.detail;
-
+const handlePlayerStateChange = ({ detail: state }) => {
   const currentTrack = state.track_window?.current_track;
   if (!currentTrack) return;
 
