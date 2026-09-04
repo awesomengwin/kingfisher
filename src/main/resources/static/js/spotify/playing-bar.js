@@ -80,7 +80,7 @@ export const initPlayingBar = () => {
 }
 
 const handlePlayerStateChange = ({ detail: state }) => {
-  const currentTrack = state.track_window?.current_track;
+  const currentTrack = state?.track_window?.current_track;
   if (!currentTrack) return;
 
   isPaused = state.paused;
