@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('user-saved-tracks:page-changed', initUserSavedTracks);
 
-document.body.addEventListener('htmx:configRequest', (evt) => {
+htmx.on('htmx:configRequest', (evt) => {
   if (evt.detail.verb !== 'GET') {
     const csrfToken = getCsrfToken();
     const csrfHeader = getCsrfHeader();
