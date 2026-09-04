@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initUserSavedTracks();
 });
 
-document.addEventListener('user-saved-tracks:page-changed', initUserSavedTracks);
+document.addEventListener('user-saved-tracks:init', initUserSavedTracks);
 
 htmx.on('htmx:configRequest', (evt) => {
   if (evt.detail.verb !== 'GET') {

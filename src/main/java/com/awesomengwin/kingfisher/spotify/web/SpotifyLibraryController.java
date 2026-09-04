@@ -30,7 +30,7 @@ public class SpotifyLibraryController {
                 spotifyService.getUserSavedTracks(currentUser.getName(), p.limit(), p.offset());
         model.addAttribute("userSavedTracks", userSavedTracks);
 
-        response.addHeader("HX-Trigger-After-Swap", "user-saved-tracks:page-changed");
+        response.addHeader("HX-Trigger-After-Swap", "user-saved-tracks:init");
 
         return "library/user-saved-tracks";
     }
