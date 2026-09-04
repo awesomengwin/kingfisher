@@ -15,7 +15,8 @@
                     data-hx-swap="none" th:text="${track.track().name()}">
             </button>
         </div>
-        <div class="mt-2 d-flex justify-content-between">
+        <div data-hx-target-inherited="main" data-hx-swap-inherited="outerHTML" data-hx-select-inherited="main"
+             class="mt-2 d-flex justify-content-between">
             <nav th:if="${userSavedTracks.totalPages() > 1}" aria-label="User saved tracks page">
                 <ul data-pagination class="pagination pagination-sm mb-0"
                     th:data-current-page="${userSavedTracks.currentPage()}"

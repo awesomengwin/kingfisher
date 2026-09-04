@@ -11,11 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('user-saved-tracks:init', initUserSavedTracks);
 
-htmx.on('htmx:configRequest', (evt) => {
-  if (evt.detail.verb !== 'GET') {
+document.addEventListener('htmx-config-request', ({ detail: { ctx } }) => {
+  if (ctx.request.method !== 'GET') {
     const csrfToken = getCsrfToken();
     const csrfHeader = getCsrfHeader();
 
-    evt.detail.headers[csrfHeader] = csrfToken;
+    ctx.request.headers[csrfHeader] = csrfToken;
   }
 });
