@@ -1,4 +1,4 @@
-import { SpotifyPlayerEvent, togglePlay, seek } from "./player.js";
+import { SpotifyPlayerEvent, togglePlay, seek, getCurrentState } from "./player.js";
 import { setError } from "../common/popup.js";
 
 const playingBar = document.querySelector('[data-playing-bar]');
@@ -52,6 +52,27 @@ export const initPlayingBar = () => {
     lastUpdateTimestamp = performance.now();
 
     isDragging = false;
+  });
+
+  // Toggle lyrics
+  ui.lyricsToggle.addEventListener('click', async () => {
+    try {
+      const state = await getCurrentState();
+
+      const trackId = state?.track_window?.current_track?.id;
+      if (!trackId) {
+        setError('Failed to obtain current track id');
+        return;
+      }
+
+      await htmx.ajax('get', `/lyrics?trackId=${trackId}`, {
+        target: 'main',
+        select: 'main',
+        swap: 'outerHTML'
+      });
+    } catch (err) {
+      setError(err);
+    }
   });
 
   // Loop
