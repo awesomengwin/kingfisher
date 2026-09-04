@@ -1,5 +1,6 @@
 package com.awesomengwin.kingfisher.spotify.web;
 
+import com.awesomengwin.kingfisher.HtmxConstants;
 import com.awesomengwin.kingfisher.spotify.SpotifyService;
 import com.awesomengwin.kingfisher.spotify.client.SpotifyPage;
 import com.awesomengwin.kingfisher.spotify.client.SavedTrackResponse;
@@ -30,7 +31,7 @@ public class SpotifyLibraryController {
                 spotifyService.getUserSavedTracks(currentUser.getName(), p.limit(), p.offset());
         model.addAttribute("userSavedTracks", userSavedTracks);
 
-        response.addHeader("HX-Trigger-After-Swap", "user-saved-tracks:init");
+        response.addHeader(HtmxConstants.HX_TRIGGER_AFTER_SWAP, "user-saved-tracks:init");
 
         return "library/user-saved-tracks";
     }
