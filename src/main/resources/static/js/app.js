@@ -9,18 +9,18 @@ document.addEventListener('DOMContentLoaded', () => {
   initUserSavedTracks();
 });
 
-document.addEventListener('htmx:afterSwap', (evt) => {
-  const elt = evt.detail.requestConfig.elt;
+document.addEventListener('htmx:after:swap', ({ detail: { ctx } }) => {
+  const elt = ctx.sourceElement;
   if (elt.matches('[data-user-saved-tracks] .list-group-item')) return;
 
   initUserSavedTracks();
 });
 
-document.body.addEventListener('htmx:configRequest', (evt) => {
-  if (evt.detail.verb !== 'GET') {
+document.body.addEventListener('htmx:config:request', ({ detail: { ctx } }) => {
+  if (ctx.request.method !== 'GET') {
     const csrfToken = getCsrfToken();
     const csrfHeader = getCsrfHeader();
 
-    evt.detail.headers[csrfHeader] = csrfToken;
+    ctx.request.headers[csrfHeader] = csrfToken;
   }
 });
