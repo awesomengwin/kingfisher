@@ -1,4 +1,4 @@
-import { SpotifyPlayerEvent, togglePlay, seek } from "./player.js";
+import { SpotifyPlayerEvent, togglePlay, seek, getCurrentState } from "./player.js";
 import { setError } from "../common/popup.js";
 
 const playingBar = document.querySelector('[data-playing-bar]');
@@ -7,6 +7,7 @@ const ui = {
   trackName: playingBar.querySelector('[data-track-name]'),
   trackArtists: playingBar.querySelector('[data-track-artists]'),
   playerToggle: playingBar.querySelector('[data-player-toggle]'),
+  lyricsToggle: playingBar.querySelector('[data-lyrics-toggle]'),
   position: playingBar.querySelector('[data-position]'),
   duration: playingBar.querySelector('[data-duration]'),
   progress: playingBar.querySelector('[data-progress]'),
@@ -53,6 +54,27 @@ export const initPlayingBar = () => {
     isDragging = false;
   });
 
+  // Toggle lyrics
+  ui.lyricsToggle.addEventListener('click', async () => {
+    try {
+      const state = await getCurrentState();
+
+      const trackId = state?.track_window?.current_track?.id;
+      if (!trackId) {
+        setError('Failed to obtain current track id');
+        return;
+      }
+
+      await htmx.ajax('GET', `/lyrics?trackId=${trackId}`, {
+        target: 'main',
+        select: 'main',
+        swap: 'outerHTML'
+      });
+    } catch (err) {
+      setError(err);
+    }
+  });
+
   // Loop
   startProgressLoop();
 }
@@ -72,6 +94,7 @@ const handlePlayerStateChange = ({ detail: state }) => {
   ui.trackArtists.textContent = currentTrack.artists.map((artist) => artist.name).join(', ');
 
   ui.playerToggle.textContent = state.paused ? 'Play' : 'Pause';
+  ui.lyricsToggle.disabled = !currentTrack.id;
 
   ui.duration.textContent = getTimeFormatted(durationMs);
   ui.progress.max = durationMs;

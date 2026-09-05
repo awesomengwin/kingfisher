@@ -62,3 +62,7 @@ export const togglePlay = () => {
 export const seek = (seekMs) => {
   return player.seek(seekMs);
 }
+
+export const getCurrentState = () => {
+  return player.getCurrentState();
+}
