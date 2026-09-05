@@ -1,10 +1,12 @@
 package com.awesomengwin.kingfisher.lyrics.impl;
 
+import com.awesomengwin.kingfisher.common.ApiClientNotFoundException;
 import com.awesomengwin.kingfisher.lyrics.*;
 import com.awesomengwin.kingfisher.lyrics.client.LyricsApiResponse;
 import com.awesomengwin.kingfisher.lyrics.client.LyricsClient;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +25,12 @@ public class HttpClientThenDbLyricsService implements LyricsService {
     public LyricsDto getLyrics(String trackId) {
         Optional<Lyrics> lyricsOpt = lyricsRepository.findByTrackId(trackId);
 
-        if (lyricsOpt.isEmpty()) {
-            LyricsApiResponse lyricsApiResponse = lyricsClient.getLyrics(trackId);
+        if (lyricsOpt.isPresent()) {
+            return new LyricsDto(lyricsOpt.get().getTrackId(), lyricsOpt.get().getLines());
+        }
 
-            if (lyricsApiResponse.error()) {
-                throw new RuntimeException("Failed to fetch lyrics");
-            }
+        try {
+            LyricsApiResponse lyricsApiResponse = lyricsClient.getLyrics(trackId);
 
             List<LyricsLine> lyricsLines = lyricsApiResponse.lines().stream()
                     .map(line -> new LyricsLine(line.startTimeMs(), line.words(), line.endTimeMs()))
@@ -38,8 +40,8 @@ public class HttpClientThenDbLyricsService implements LyricsService {
             lyricsRepository.save(lyrics);
 
             return new LyricsDto(lyrics.getTrackId(), lyrics.getLines());
+        } catch (ApiClientNotFoundException e) {
+            return new LyricsDto(trackId, Collections.emptyList());
         }
-
-        return new LyricsDto(lyricsOpt.get().getTrackId(), lyricsOpt.get().getLines());
     }
 }
