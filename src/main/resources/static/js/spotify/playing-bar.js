@@ -20,6 +20,15 @@ let positionMs = 0;
 let durationMs = 0;
 let lastUpdateTimestamp = 0;
 
+export const getPositionMs = () => {
+  if (isPaused || durationMs === 0) {
+    return positionMs;
+  }
+
+  const elapsed = performance.now() - lastUpdateTimestamp;
+  return Math.min(positionMs + elapsed, durationMs);
+};
+
 export const initPlayingBar = () => {
   document.addEventListener(SpotifyPlayerEvent.STATE_CHANGED, handlePlayerStateChange);
 
@@ -110,9 +119,8 @@ const startProgressLoop = () => {
 
   const tick = () => {
     if (!isDragging && !isPaused && durationMs > 0) {
-      const elapsed = performance.now() - lastUpdateTimestamp;
-      const interpolated = Math.min(positionMs + elapsed, durationMs);
-      updateProgressDisplay(interpolated);
+      const positionMs = getPositionMs();
+      updateProgressDisplay(positionMs);
     }
     rafId = requestAnimationFrame(tick);
   }

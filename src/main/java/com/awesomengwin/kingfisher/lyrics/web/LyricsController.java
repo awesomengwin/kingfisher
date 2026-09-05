@@ -2,6 +2,7 @@ package com.awesomengwin.kingfisher.lyrics.web;
 
 import com.awesomengwin.kingfisher.lyrics.LyricsDto;
 import com.awesomengwin.kingfisher.lyrics.LyricsService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +20,11 @@ public class LyricsController {
     }
 
     @GetMapping
-    public String getLyrics(@RequestParam String trackId, Model model) {
+    public String getLyrics(@RequestParam String trackId, Model model, HttpServletResponse response) {
         LyricsDto lyrics = lyricsService.getLyrics(trackId);
         model.addAttribute("lyrics", lyrics);
+
+        response.addHeader("HX-Trigger", "lyrics:init");
 
         return "lyrics/lyrics";
     }
