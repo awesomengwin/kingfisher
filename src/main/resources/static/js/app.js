@@ -2,6 +2,7 @@ import { initSpotifyPlayer } from "./spotify/player.js";
 import { initUserSavedTracks } from "./library/user-saved-tracks.js";
 import { initPlayingBar } from "./spotify/playing-bar.js";
 import { getCsrfHeader, getCsrfToken } from "./utils/csrf.js";
+import { initLyrics } from "./lyrics/lyrics.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   initSpotifyPlayer();
@@ -9,12 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
   initUserSavedTracks();
 });
 
-document.addEventListener('htmx:after:swap', ({ detail: { ctx } }) => {
-  const elt = ctx.sourceElement;
-  if (elt.matches('[data-user-saved-tracks] .list-group-item')) return;
+document.addEventListener('user-saved-tracks:init', initUserSavedTracks);
 
-  initUserSavedTracks();
+let cleanupLyricsFn;
+document.addEventListener('lyrics:init', () => {
+  cleanupLyricsFn = initLyrics();
 });
+
+document.addEventListener('htmx:before:swap', () => {
+  cleanupLyricsFn?.();
+  cleanupLyricsFn = null;
+})
 
 document.body.addEventListener('htmx:config:request', ({ detail: { ctx } }) => {
   if (ctx.request.method !== 'GET') {

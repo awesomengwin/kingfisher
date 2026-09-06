@@ -2,6 +2,12 @@ main {
     min-height: 0;
 }
 
+/*user-saved-tracks*/
 .left-sidebar {
     width: 420px;
+}
+
+/*lyrics*/
+[data-lyrics] [data-lyrics-line] {
+    transition: opacity 0.2s;
 }

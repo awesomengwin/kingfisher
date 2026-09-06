@@ -10,9 +10,9 @@
         <div class="flex-grow-1 list-group overflow-auto">
             <button th:each="track: ${userSavedTracks.items()}"
                     class="list-group-item list-group-item-action"
-                    data-hx-put="/spotify/player/play" data-hx-trigger="dblclick"
+                    hx-put="/spotify/player/play" hx-trigger="dblclick"
                     th:hx-vals='|js:{uri: "${track.track().uri()}", deviceId: document.body.dataset.deviceId}|'
-                    data-hx-swap="none" th:text="${track.track().name()}">
+                    hx-swap="none" th:text="${track.track().name()}">
             </button>
         </div>
         <div hx-target:inherited="main" hx-select:inherited="main" hx-swap:inherited="outerHTML"

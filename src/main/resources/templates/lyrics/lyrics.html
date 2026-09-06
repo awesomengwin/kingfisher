@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>lyrics</title>
+</head>
+<body>
+<th:block th:fragment="content">
+    <div class="w-100 d-flex flex-column gap-3">
+        <h2>song name</h2>
+        <div class="flex-grow-1 overflow-y-auto" data-lyrics>
+            <th:block th:if="${#lists.isEmpty(lyrics.lines())}">
+                <p class="fs-2">No lyrics available.</p>
+            </th:block>
+            <th:block th:unless="${#lists.isEmpty(lyrics.lines())}">
+                <div th:each="line : ${lyrics.lines()}" class="opacity-25 fs-1 fw-bold mb-4" data-lyrics-line
+                     th:data-start-time-ms="${line.startTimeMs}">
+                    <p class="text-break m-0" th:text="${line.words}"></p>
+                </div>
+            </th:block>
+        </div>
+    </div>
+</th:block>
+</body>
