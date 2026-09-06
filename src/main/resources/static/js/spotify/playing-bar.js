@@ -19,6 +19,7 @@ let isPaused = true;
 let positionMs = 0;
 let durationMs = 0;
 let lastUpdateTimestamp = 0;
+let currentTrackId;
 
 export const getPositionMs = () => {
   if (isPaused || durationMs === 0) {
@@ -65,23 +66,15 @@ export const initPlayingBar = () => {
 
   // Toggle lyrics
   ui.lyricsToggle.addEventListener('click', async () => {
-    try {
-      const state = await getCurrentState();
+    const state = await getCurrentState();
 
-      const trackId = state?.track_window?.current_track?.id;
-      if (!trackId) {
-        setError('Failed to obtain current track id');
-        return;
-      }
-
-      await htmx.ajax('GET', `/lyrics?trackId=${trackId}`, {
-        target: 'main',
-        select: 'main',
-        swap: 'outerHTML'
-      });
-    } catch (err) {
-      setError(err);
+    const trackId = state?.track_window?.current_track?.id;
+    if (!trackId) {
+      setError('Failed to obtain current track id');
+      return;
     }
+
+    loadLyricsPage(trackId);
   });
 
   // Loop
@@ -96,6 +89,16 @@ const handlePlayerStateChange = ({ detail: state }) => {
   positionMs = state.position;
   durationMs = state.duration;
   lastUpdateTimestamp = performance.now();
+
+  const newTrackId = currentTrack.id;
+  if (currentTrackId && currentTrackId !== newTrackId) {
+    const isLyricsPageActive = document.querySelector('[data-lyrics]');
+
+    if (isLyricsPageActive) {
+      loadLyricsPage(newTrackId);
+    }
+  }
+  currentTrackId = newTrackId;
 
   ui.trackAlbumCover.src = currentTrack.album?.images?.[0]?.url;
   ui.trackAlbumCover.alt = `Album cover for ${currentTrack.album?.name}`;
@@ -112,6 +115,14 @@ const handlePlayerStateChange = ({ detail: state }) => {
   if (!isDragging) {
     updateProgressDisplay(positionMs);
   }
+}
+
+const loadLyricsPage = (trackId) => {
+  htmx.ajax('GET', `/lyrics?trackId=${trackId}`, {
+    target: 'main',
+    select: 'main',
+    swap: 'outerHTML'
+  }).catch(err => setError(err));
 }
 
 const startProgressLoop = () => {
