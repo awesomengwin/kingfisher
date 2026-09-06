@@ -11,7 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('user-saved-tracks:init', initUserSavedTracks);
-document.addEventListener('lyrics:init', initLyrics);
+
+let cleanupLyricsFn;
+document.addEventListener('lyrics:init', () => {
+  cleanupLyricsFn = initLyrics();
+});
+
+document.addEventListener('htmx:before:swap', () => {
+  cleanupLyricsFn?.();
+  cleanupLyricsFn = null;
+})
 
 document.body.addEventListener('htmx:config:request', ({ detail: { ctx } }) => {
   if (ctx.request.method !== 'GET') {

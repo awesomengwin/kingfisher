@@ -9,14 +9,19 @@ const ui = {
 
 export const initLyrics = () => {
   const root = document.querySelector('[data-lyrics]');
+
   if (!root) return;
 
   ui.lines = root.querySelectorAll('[data-lyrics-line]');
 
   if (ui.lines.length === 0) return;
 
+  currentActiveIdx = -1;
+
   // Loop
   startSyncLoop();
+
+  return () => stopSyncLoop();
 }
 
 const startSyncLoop = () => {
