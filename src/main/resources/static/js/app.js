@@ -30,3 +30,9 @@ document.body.addEventListener('htmx:config:request', ({ detail: { ctx } }) => {
     ctx.request.headers[csrfHeader] = csrfToken;
   }
 });
+
+htmx.onLoad(elt => {
+  if (elt.matches('.toast')) {
+    new bootstrap.Toast(elt).show();
+  }
+});
