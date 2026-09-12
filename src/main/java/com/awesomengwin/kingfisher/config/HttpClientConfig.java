@@ -42,7 +42,7 @@ public class HttpClientConfig {
                 String message = getErrorMessage(groupName, response, jsonMapper);
 
                 if (statusCode == HttpStatus.NOT_FOUND) {
-                    throw new ApiClientNotFoundException(groupName, message);
+                    throw new ApiClientNotFoundException(groupName, response.getStatusText(), message);
                 }
                 throw new ApiClientException(groupName, statusCode, response.getStatusText(), message);
             });

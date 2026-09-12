@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class ApiClientNotFoundException extends ApiClientException {
 
-    public ApiClientNotFoundException(String group, String message) {
-        super(group, HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase(), message);
+    public ApiClientNotFoundException(String group, String statusText, String message) {
+        super(group, HttpStatus.NOT_FOUND, statusText, message);
     }
 }
