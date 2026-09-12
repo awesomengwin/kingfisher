@@ -7,9 +7,10 @@ public record PlaylistResponse(
         String description,
         String href,
         String name,
+        String id,
         String uri,
         List<Image> images,
-        List<PlaylistItemRef> items
+        PlaylistItemRef items
 ) {
     public record PlaylistItemRef(
             String href,
