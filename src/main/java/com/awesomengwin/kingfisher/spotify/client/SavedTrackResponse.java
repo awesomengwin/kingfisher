@@ -32,12 +32,6 @@ public record SavedTrackResponse(
                 String uri,
                 List<Image> images
         ) {
-            public record Image(
-                    String url,
-                    int height,
-                    int width
-            ) {
-            }
         }
     }
 }
