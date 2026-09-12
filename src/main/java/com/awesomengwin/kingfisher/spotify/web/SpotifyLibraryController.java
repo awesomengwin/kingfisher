@@ -1,6 +1,7 @@
 package com.awesomengwin.kingfisher.spotify.web;
 
 import com.awesomengwin.kingfisher.spotify.SpotifyService;
+import com.awesomengwin.kingfisher.spotify.client.PlaylistResponse;
 import com.awesomengwin.kingfisher.spotify.client.SpotifyPage;
 import com.awesomengwin.kingfisher.spotify.client.SavedTrackResponse;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,5 +34,18 @@ public class SpotifyLibraryController {
         response.addHeader("HX-Trigger", "user-saved-tracks:init");
 
         return "library/user-saved-tracks";
+    }
+
+    @GetMapping("/playlists")
+    public String userPlaylists(@AuthenticationPrincipal OAuth2User currentUser,
+                                @ModelAttribute PaginationRequest p,
+                                Model model, HttpServletResponse response) {
+        SpotifyPage<PlaylistResponse> userPlaylists =
+                spotifyService.getUserPlaylists(currentUser.getName(), p.limit(), p.offset());
+        model.addAttribute("userPlaylists", userPlaylists);
+
+        response.addHeader("HX-Trigger", "user-playlists:init");
+
+        return "library/user-playlists";
     }
 }

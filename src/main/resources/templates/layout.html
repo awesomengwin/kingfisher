@@ -33,6 +33,11 @@
                            th:classappend="${currentPage eq '/library/tracks' ? 'active' : ''}"
                            th:attr="aria-current=${currentPage eq '/library/tracks' ? 'page' : ''}">Liked tracks</a>
                     </li>
+                    <li class="nav-item">
+                        <a th:href="@{/library/playlists}" class="nav-link"
+                           th:classappend="${currentPage eq '/library/playlists' ? 'active' : ''}"
+                           th:attr="aria-current=${currentPage eq '/library/playlists' ? 'page' : ''}">Playlists</a>
+                    </li>
                 </ul>
             </div>
         </nav>

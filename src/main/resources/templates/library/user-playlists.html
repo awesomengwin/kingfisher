@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>user playlists</title>
+</head>
+<body>
+<th:block th:fragment="content">
+    <aside hx-target:inherited="main" hx-select:inherited="main" hx-swap:inherited="outerHTML"
+           class="left-sidebar d-flex flex-column" data-user-playlists>
+        <div class="flex-grow-1 list-group overflow-auto">
+            <a th:each="playlist: ${userPlaylists.items()}"
+               class="list-group-item list-group-item-action"
+               th:href="@{/library/playlists/{playlistId}/tracks(playlistId=${playlist.id()})}"
+               th:text="${playlist.name()}"></a>
+        </div>
+        <div class="mt-2 d-flex justify-content-between">
+            <nav th:if="${userPlaylists.totalPages() > 1}" aria-label="User playlists page">
+                <ul data-pagination class="pagination pagination-sm mb-0"
+                    th:data-current-page="${userPlaylists.currentPage()}"
+                    th:data-total-pages="${userPlaylists.totalPages()}"
+                    th:data-page-size="${userPlaylists.limit()}"></ul>
+            </nav>
+            <div class="btn-group btn-group-sm" role="group" aria-label="User playlists page size">
+                <a href="?size=20" class="btn btn-outline-primary"
+                   th:classappend="${userPlaylists.limit() eq 20 ? 'active' : ''}">20</a>
+                <a href="?size=30" class="btn btn-outline-primary"
+                   th:classappend="${userPlaylists.limit() eq 30 ? 'active' : ''}">30</a>
+                <a href="?size=50" class="btn btn-outline-primary"
+                   th:classappend="${userPlaylists.limit() eq 50 ? 'active' : ''}">50</a>
+            </div>
+        </div>
+    </aside>
+    <section class="flex-grow-1 overflow-auto">
+        blank
+    </section>
+</th:block>
+</body>
+</html>

@@ -3,14 +3,17 @@ import { initUserSavedTracks } from "./library/user-saved-tracks.js";
 import { initPlayingBar } from "./spotify/playing-bar.js";
 import { getCsrfHeader, getCsrfToken } from "./utils/csrf.js";
 import { initLyrics } from "./lyrics/lyrics.js";
+import { initUserPlaylists } from "./library/user-playlists.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   initSpotifyPlayer();
   initPlayingBar();
   initUserSavedTracks();
+  initUserPlaylists();
 });
 
 htmx.on('user-saved-tracks:init', initUserSavedTracks);
+htmx.on('user-playlists:init', initUserPlaylists);
 
 let cleanupLyricsFn;
 htmx.on('lyrics:init', () => {

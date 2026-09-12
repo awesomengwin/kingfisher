@@ -14,6 +14,10 @@ public interface SpotifyClient {
     @ClientRegistrationId("spotify-login")
     SpotifyPage<SavedTrackResponse> getUserSavedTracks(@RequestParam int limit, @RequestParam int offset);
 
+    @GetExchange("/me/playlists")
+    @ClientRegistrationId("spotify-login")
+    SpotifyPage<PlaylistResponse> getUserPlaylists(@RequestParam int limit, @RequestParam int offset);
+
     @PutExchange("/me/player/play")
     @ClientRegistrationId("spotify-login")
     void startPlayback(@RequestParam("device_id") String deviceId, @RequestBody StartPlaybackRequest request);
