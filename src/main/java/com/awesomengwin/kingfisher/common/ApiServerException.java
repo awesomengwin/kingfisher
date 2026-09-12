@@ -5,11 +5,13 @@ import org.springframework.http.HttpStatusCode;
 public class ApiServerException extends RuntimeException {
     private final String group;
     private final HttpStatusCode statusCode;
+    private final String statusText;
 
-    public ApiServerException(String group, HttpStatusCode statusCode, String message) {
+    public ApiServerException(String group, HttpStatusCode statusCode, String statusText, String message) {
         super(message);
         this.group = group;
         this.statusCode = statusCode;
+        this.statusText = statusText;
     }
 
     public String getGroup() {
@@ -18,5 +20,9 @@ public class ApiServerException extends RuntimeException {
 
     public HttpStatusCode getStatusCode() {
         return statusCode;
+    }
+
+    public String getStatusText() {
+        return statusText;
     }
 }

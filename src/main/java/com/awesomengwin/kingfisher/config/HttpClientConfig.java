@@ -44,14 +44,14 @@ public class HttpClientConfig {
                 if (statusCode == HttpStatus.NOT_FOUND) {
                     throw new ApiClientNotFoundException(groupName, message);
                 }
-                throw new ApiClientException(groupName, statusCode, message);
+                throw new ApiClientException(groupName, statusCode, response.getStatusText(), message);
             });
 
             clientBuilder.defaultStatusHandler(HttpStatusCode::is5xxServerError, (request, response) -> {
                 HttpStatusCode statusCode = response.getStatusCode();
                 String message = getErrorMessage(groupName, response, jsonMapper);
 
-                throw new ApiServerException(groupName, statusCode, message);
+                throw new ApiServerException(groupName, statusCode, response.getStatusText(), message);
             });
         });
     }
