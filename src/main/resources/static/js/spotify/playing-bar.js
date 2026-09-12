@@ -21,6 +21,8 @@ let durationMs = 0;
 let lastUpdateTimestamp = 0;
 let currentTrackId;
 
+let isOnLyricsPage;
+
 export const getPositionMs = () => {
   if (isPaused || durationMs === 0) {
     return positionMs;
@@ -66,6 +68,11 @@ export const initPlayingBar = () => {
 
   // Toggle lyrics
   ui.lyricsToggle.addEventListener('click', async () => {
+    if (isOnLyricsPage) {
+      history.back();
+      return;
+    }
+
     const state = await getCurrentState();
 
     const trackId = state?.track_window?.current_track?.id;
@@ -79,6 +86,8 @@ export const initPlayingBar = () => {
 
   // Loop
   startProgressLoop();
+
+  htmx.on('htmx:after:swap', syncLyricsState);
 }
 
 const handlePlayerStateChange = ({ detail: state }) => {
@@ -118,11 +127,21 @@ const handlePlayerStateChange = ({ detail: state }) => {
 }
 
 const loadLyricsPage = (trackId) => {
-  htmx.ajax('GET', `/lyrics?trackId=${trackId}`, {
+  const url = `/lyrics?trackId=${trackId}`;
+
+  htmx.ajax('GET', url, {
     target: 'main',
     select: 'main',
-    swap: 'outerHTML'
+    swap: 'outerHTML',
+    push: url,
   }).catch(err => setError(err));
+}
+
+const syncLyricsState = () => {
+  isOnLyricsPage = !!document.querySelector('[data-lyrics]');
+
+  ui.lyricsToggle.classList.toggle('active', isOnLyricsPage);
+  ui.lyricsToggle.setAttribute('aria-pressed', String(isOnLyricsPage));
 }
 
 const startProgressLoop = () => {
