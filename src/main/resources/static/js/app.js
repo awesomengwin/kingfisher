@@ -10,19 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
   initUserSavedTracks();
 });
 
-document.addEventListener('user-saved-tracks:init', initUserSavedTracks);
+htmx.on('user-saved-tracks:init', initUserSavedTracks);
 
 let cleanupLyricsFn;
-document.addEventListener('lyrics:init', () => {
+htmx.on('lyrics:init', () => {
   cleanupLyricsFn = initLyrics();
 });
 
-document.addEventListener('htmx:before:swap', () => {
+htmx.on('htmx:before:swap', () => {
   cleanupLyricsFn?.();
   cleanupLyricsFn = null;
-})
+});
 
-document.body.addEventListener('htmx:config:request', ({ detail: { ctx } }) => {
+htmx.on('htmx:config:request', ({ detail: { ctx } }) => {
   if (ctx.request.method !== 'GET') {
     const csrfToken = getCsrfToken();
     const csrfHeader = getCsrfHeader();
