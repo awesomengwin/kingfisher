@@ -14,14 +14,14 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public OAuth2AuthorizedClientService jdbcOAuth2AuthorizedClientService(
+    OAuth2AuthorizedClientService jdbcOAuth2AuthorizedClientService(
             JdbcOperations jdbcOperations,
             ClientRegistrationRepository clientRegistrationRepository) {
         return new JdbcOAuth2AuthorizedClientService(jdbcOperations, clientRegistrationRepository);
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/actuator/health").permitAll()

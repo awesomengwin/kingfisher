@@ -27,13 +27,13 @@ import java.io.InputStream;
 public class HttpClientConfig {
 
     @Bean
-    public OAuth2RestClientHttpServiceGroupConfigurer oauth2RestClientConfigurer(
+    OAuth2RestClientHttpServiceGroupConfigurer oauth2RestClientConfigurer(
             OAuth2AuthorizedClientManager manager) {
         return OAuth2RestClientHttpServiceGroupConfigurer.from(manager);
     }
 
     @Bean
-    public RestClientHttpServiceGroupConfigurer apiClientErrorHandling(JsonMapper jsonMapper) {
+    RestClientHttpServiceGroupConfigurer apiClientErrorHandling(JsonMapper jsonMapper) {
         return groups -> groups.forEachClient((group, clientBuilder) -> {
             String groupName = group.name();
 
