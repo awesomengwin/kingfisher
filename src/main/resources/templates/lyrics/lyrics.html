@@ -7,7 +7,6 @@
 <body>
 <th:block th:fragment="content">
     <div class="w-100 d-flex flex-column gap-3">
-        <h2>song name</h2>
         <div class="flex-grow-1 overflow-y-auto" data-lyrics>
             <th:block th:if="${#lists.isEmpty(lyrics.lines())}">
                 <p class="fs-2">No lyrics available.</p>
