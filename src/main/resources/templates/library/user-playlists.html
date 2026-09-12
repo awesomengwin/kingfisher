@@ -15,7 +15,7 @@
                th:text="${playlist.name()}"></a>
         </div>
         <div class="mt-2 d-flex justify-content-between">
-            <nav th:if="${userPlaylists.totalPages() > 1}" aria-label="User playlists page">
+            <nav aria-label="User playlists page">
                 <ul data-pagination class="pagination pagination-sm mb-0"
                     th:data-current-page="${userPlaylists.currentPage()}"
                     th:data-total-pages="${userPlaylists.totalPages()}"
