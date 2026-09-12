@@ -1,14 +1,10 @@
 package com.awesomengwin.kingfisher.common;
 
-public class ApiClientNotFoundException extends RuntimeException {
-    private final String group;
+import org.springframework.http.HttpStatus;
 
-    public ApiClientNotFoundException(String group, String message) {
-        super(message);
-        this.group = group;
-    }
+public class ApiClientNotFoundException extends ApiClientException {
 
-    public String getGroup() {
-        return group;
+    public ApiClientNotFoundException(String group, String statusText, String message) {
+        super(group, HttpStatus.NOT_FOUND, statusText, message);
     }
 }
