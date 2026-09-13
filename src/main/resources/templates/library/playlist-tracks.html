@@ -15,23 +15,11 @@
                     hx-swap="none" th:text="${track.item().name()}">
             </button>
         </div>
-        <div hx-target:inherited="main" hx-select:inherited="main" hx-swap:inherited="outerHTML"
-             class="mt-2 d-flex justify-content-between">
-            <nav aria-label="Playlist tracks page">
-                <ul data-pagination class="pagination pagination-sm mb-0"
-                    th:data-current-page="${playlistTracks.currentPage()}"
-                    th:data-total-pages="${playlistTracks.totalPages()}"
-                    th:data-page-size="${playlistTracks.limit()}"></ul>
-            </nav>
-            <div class="btn-group btn-group-sm" role="group" aria-label="Playlist tracks page size">
-                <a href="?size=20" class="btn btn-outline-primary"
-                   th:classappend="${playlistTracks.limit() eq 20 ? 'active' : ''}">20</a>
-                <a href="?size=30" class="btn btn-outline-primary"
-                   th:classappend="${playlistTracks.limit() eq 30 ? 'active' : ''}">30</a>
-                <a href="?size=50" class="btn btn-outline-primary"
-                   th:classappend="${playlistTracks.limit() eq 50 ? 'active' : ''}">50</a>
-            </div>
-        </div>
+        <th:block th:replace="~{fragments/pagination :: pagination(
+            name='Playlist tracks',
+            currentPage=${playlistTracks.currentPage()},
+            totalPages=${playlistTracks.totalPages()},
+            limit=${playlistTracks.limit()})}"/>
     </aside>
     <section class="flex-grow-1 overflow-auto">
         blank

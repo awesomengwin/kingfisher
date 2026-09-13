@@ -1,0 +1,18 @@
+<div th:fragment="pagination(name, currentPage, totalPages, limit)"
+     hx-target:inherited="main" hx-select:inherited="main" hx-swap:inherited="outerHTML"
+     class="mt-2 d-flex justify-content-between">
+    <nav th:aria-label="${name + ' page'}">
+        <ul data-pagination class="pagination pagination-sm mb-0"
+            th:data-current-page="${currentPage}"
+            th:data-total-pages="${totalPages}"
+            th:data-page-size="${limit}"></ul>
+    </nav>
+    <div class="btn-group btn-group-sm" role="group" th:aria-label="${name + ' page size'}">
+        <a href="?size=20" class="btn btn-outline-primary"
+           th:classappend="${limit eq 20 ? 'active' : ''}">20</a>
+        <a href="?size=30" class="btn btn-outline-primary"
+           th:classappend="${limit eq 30 ? 'active' : ''}">30</a>
+        <a href="?size=50" class="btn btn-outline-primary"
+           th:classappend="${limit eq 50 ? 'active' : ''}">50</a>
+    </div>
+</div>
