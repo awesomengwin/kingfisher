@@ -11,7 +11,7 @@
         <div class="flex-grow-1 list-group overflow-auto">
             <a th:each="playlist: ${userPlaylists.items()}"
                class="list-group-item list-group-item-action"
-               th:href="@{/library/playlists/{playlistId}/tracks(playlistId=${playlist.id()}, playlistUri=${playlist.uri()})}"
+               th:href="@{/library/playlists/{playlistId}/tracks(playlistId=${playlist.id()})}"
                th:text="${playlist.name()}"></a>
         </div>
         <th:block th:replace="~{fragments/pagination :: pagination(
