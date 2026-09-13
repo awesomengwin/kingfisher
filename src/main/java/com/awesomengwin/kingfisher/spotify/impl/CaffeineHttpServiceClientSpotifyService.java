@@ -7,6 +7,7 @@ import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.Duration;
 
@@ -46,6 +47,16 @@ public class CaffeineHttpServiceClientSpotifyService implements SpotifyService, 
     @Override
     public void startPlayback(String deviceId, String uri) {
         spotifyClient.startPlayback(deviceId, new StartPlaybackRequest(uri));
+    }
+
+    @Override
+    public void startPlayback(String userId, String deviceId, String contextUri, String uri) {
+        if (StringUtils.hasText(contextUri)) {
+            spotifyClient.startPlayback(deviceId, new StartPlaybackRequest(contextUri, uri));
+            return;
+        }
+        spotifyClient.startPlayback(deviceId,
+                new StartPlaybackRequest("spotify:user:%s:collection".formatted(userId), uri));
     }
 
     @Override
