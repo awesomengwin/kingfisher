@@ -52,12 +52,12 @@ public class SpotifyLibraryController {
     }
 
     @GetMapping("/playlists/{playlistId}/tracks")
-    public String playlistTracks(@PathVariable String playlistId,
-                                 @AuthenticationPrincipal OAuth2User currentUser,
+    public String playlistTracks(@AuthenticationPrincipal OAuth2User currentUser,
+                                 @PathVariable String playlistId,
                                  @ModelAttribute PaginationRequest p,
                                  Model model, HttpServletResponse response) {
         SpotifyPage<PlaylistTrackResponse> playlistTracks =
-                spotifyService.getPlaylistTracks(playlistId, currentUser.getName(), p.limit(), p.offset());
+                spotifyService.getPlaylistTracks(currentUser.getName(), playlistId, p.limit(), p.offset());
         model.addAttribute("playlistTracks", playlistTracks);
 
         response.addHeader("HX-Trigger", "playlist-tracks:init");

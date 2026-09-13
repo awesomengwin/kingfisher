@@ -38,7 +38,7 @@ public class CaffeineHttpServiceClientSpotifyService implements SpotifyService, 
     }
 
     @Override
-    public SpotifyPage<PlaylistTrackResponse> getPlaylistTracks(String playlistId, String userId, int limit, int offset) {
+    public SpotifyPage<PlaylistTrackResponse> getPlaylistTracks(String userId, String playlistId, int limit, int offset) {
         return playlistTracksLoadingCache.get(
                 new SpotifyCacheKey(userId, "playlists:%s".formatted(playlistId), playlistId, limit, offset));
     }

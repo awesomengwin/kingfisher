@@ -11,5 +11,5 @@ public interface SpotifyService {
 
     SpotifyPage<PlaylistResponse> getUserPlaylists(String userId, int limit, int offset);
 
-    SpotifyPage<PlaylistTrackResponse> getPlaylistTracks(String playlistId, String userId, int limit, int offset);
+    SpotifyPage<PlaylistTrackResponse> getPlaylistTracks(String userId, String playlistId, int limit, int offset);
 }
