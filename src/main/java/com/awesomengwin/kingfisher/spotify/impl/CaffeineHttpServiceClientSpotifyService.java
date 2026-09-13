@@ -45,11 +45,6 @@ public class CaffeineHttpServiceClientSpotifyService implements SpotifyService, 
     }
 
     @Override
-    public void startPlayback(String deviceId, String uri) {
-        spotifyClient.startPlayback(deviceId, new StartPlaybackRequest(uri));
-    }
-
-    @Override
     public void startPlayback(String userId, String deviceId, String contextUri, String uri) {
         if (StringUtils.hasText(contextUri)) {
             spotifyClient.startPlayback(deviceId, new StartPlaybackRequest(contextUri, uri));
