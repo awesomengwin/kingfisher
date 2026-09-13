@@ -11,7 +11,7 @@
             <button th:each="track: ${playlistTracks.items()}"
                     class="list-group-item list-group-item-action"
                     hx-put="/spotify/player/play" hx-trigger="dblclick"
-                    th:hx-vals='|js:{uri: "${track.item().uri()}", deviceId: document.body.dataset.deviceId}|'
+                    th:hx-vals='|js:{uri: "${track.item().uri()}", deviceId: document.body.dataset.deviceId, contextUri: "${playlistUri}"}|'
                     hx-swap="none" th:text="${track.item().name()}">
             </button>
         </div>

@@ -10,10 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/library")
@@ -54,11 +51,13 @@ public class SpotifyLibraryController {
     @GetMapping("/playlists/{playlistId}/tracks")
     public String playlistTracks(@AuthenticationPrincipal OAuth2User currentUser,
                                  @PathVariable String playlistId,
+                                 @RequestParam String playlistUri,
                                  @ModelAttribute PaginationRequest p,
                                  Model model, HttpServletResponse response) {
         SpotifyPage<PlaylistTrackResponse> playlistTracks =
                 spotifyService.getPlaylistTracks(currentUser.getName(), playlistId, p.limit(), p.offset());
         model.addAttribute("playlistTracks", playlistTracks);
+        model.addAttribute("playlistUri", playlistUri);
 
         response.addHeader("HX-Trigger", "playlist-tracks:init");
 
