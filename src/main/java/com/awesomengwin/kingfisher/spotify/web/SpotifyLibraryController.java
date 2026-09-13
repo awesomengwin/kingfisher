@@ -2,6 +2,7 @@ package com.awesomengwin.kingfisher.spotify.web;
 
 import com.awesomengwin.kingfisher.spotify.SpotifyService;
 import com.awesomengwin.kingfisher.spotify.client.PlaylistResponse;
+import com.awesomengwin.kingfisher.spotify.client.PlaylistTrackResponse;
 import com.awesomengwin.kingfisher.spotify.client.SpotifyPage;
 import com.awesomengwin.kingfisher.spotify.client.SavedTrackResponse;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -47,5 +49,19 @@ public class SpotifyLibraryController {
         response.addHeader("HX-Trigger", "user-playlists:init");
 
         return "library/user-playlists";
+    }
+
+    @GetMapping("/playlists/{playlistId}/tracks")
+    public String playlistTracks(@PathVariable String playlistId,
+                                 @AuthenticationPrincipal OAuth2User currentUser,
+                                 @ModelAttribute PaginationRequest p,
+                                 Model model, HttpServletResponse response) {
+        SpotifyPage<PlaylistTrackResponse> playlistTracks =
+                spotifyService.getPlaylistTracks(playlistId, currentUser.getName(), p.limit(), p.offset());
+        model.addAttribute("playlistTracks", playlistTracks);
+
+        response.addHeader("HX-Trigger", "playlist-tracks:init");
+
+        return "library/playlist-tracks";
     }
 }

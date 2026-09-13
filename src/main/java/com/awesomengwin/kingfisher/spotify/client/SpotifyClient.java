@@ -1,6 +1,7 @@
 package com.awesomengwin.kingfisher.spotify.client;
 
 import org.springframework.security.oauth2.client.annotation.ClientRegistrationId;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
@@ -17,6 +18,11 @@ public interface SpotifyClient {
     @GetExchange("/me/playlists")
     @ClientRegistrationId("spotify-login")
     SpotifyPage<PlaylistResponse> getUserPlaylists(@RequestParam int limit, @RequestParam int offset);
+
+    @GetExchange("/playlists/{playlistId}/items")
+    @ClientRegistrationId("spotify-login")
+    SpotifyPage<PlaylistTrackResponse> getPlaylistTracks(@PathVariable String playlistId,
+                                                         @RequestParam int limit, @RequestParam int offset);
 
     @PutExchange("/me/player/play")
     @ClientRegistrationId("spotify-login")

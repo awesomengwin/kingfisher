@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>playlist tracks</title>
+</head>
+<body>
+<th:block th:fragment="content">
+    <aside class="left-sidebar d-flex flex-column" data-playlist-tracks>
+        <div class="flex-grow-1 list-group overflow-auto">
+            <button th:each="track: ${playlistTracks.items()}"
+                    class="list-group-item list-group-item-action"
+                    hx-put="/spotify/player/play" hx-trigger="dblclick"
+                    th:hx-vals='|js:{uri: "${track.item().uri()}", deviceId: document.body.dataset.deviceId}|'
+                    hx-swap="none" th:text="${track.item().name()}">
+            </button>
+        </div>
+        <div hx-target:inherited="main" hx-select:inherited="main" hx-swap:inherited="outerHTML"
+             class="mt-2 d-flex justify-content-between">
+            <nav aria-label="Playlist tracks page">
+                <ul data-pagination class="pagination pagination-sm mb-0"
+                    th:data-current-page="${playlistTracks.currentPage()}"
+                    th:data-total-pages="${playlistTracks.totalPages()}"
+                    th:data-page-size="${playlistTracks.limit()}"></ul>
+            </nav>
+            <div class="btn-group btn-group-sm" role="group" aria-label="Playlist tracks page size">
+                <a href="?size=20" class="btn btn-outline-primary"
+                   th:classappend="${playlistTracks.limit() eq 20 ? 'active' : ''}">20</a>
+                <a href="?size=30" class="btn btn-outline-primary"
+                   th:classappend="${playlistTracks.limit() eq 30 ? 'active' : ''}">30</a>
+                <a href="?size=50" class="btn btn-outline-primary"
+                   th:classappend="${playlistTracks.limit() eq 50 ? 'active' : ''}">50</a>
+            </div>
+        </div>
+    </aside>
+    <section class="flex-grow-1 overflow-auto">
+        blank
+    </section>
+</th:block>
+</body>
+</html>
