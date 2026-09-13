@@ -10,7 +10,7 @@ import { setError } from "../common/popup.js";
 
 const playingBar = document.querySelector('[data-playing-bar]');
 const ui = {
-  trackAlbumCover: playingBar.querySelector('[data-track-album-cover]'),
+  trackAlbumCover: playingBar.querySelectorAll('[data-track-album-cover]'),
   trackName: playingBar.querySelector('[data-track-name]'),
   trackArtists: playingBar.querySelector('[data-track-artists]'),
   playerToggle: playingBar.querySelector('[data-player-toggle]'),
@@ -178,8 +178,10 @@ const handlePlayerStateChange = ({ detail: state }) => {
   ui.playerRepeat.classList.toggle('active', !!repeatMode);
   ui.playerRepeat.setAttribute('aria-pressed', String(!!repeatMode));
 
-  ui.trackAlbumCover.src = currentTrack.album?.images?.[0]?.url;
-  ui.trackAlbumCover.alt = `Album cover for ${currentTrack.album?.name}`;
+  ui.trackAlbumCover.forEach(img => {
+    img.src = currentTrack.album?.images?.[0]?.url;
+    img.alt = `Album cover for ${currentTrack.album?.name}`;
+  });
   ui.trackName.textContent = currentTrack.name;
   ui.trackArtists.textContent = currentTrack.artists.map((artist) => artist.name).join(', ');
 

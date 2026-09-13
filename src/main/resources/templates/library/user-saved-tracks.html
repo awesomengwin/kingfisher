@@ -6,7 +6,7 @@
 </head>
 <body>
 <th:block th:fragment="content">
-    <aside class="left-sidebar d-flex flex-column" data-user-saved-tracks>
+    <aside class="left-sidebar d-flex flex-grow-1 flex-lg-grow-0 flex-column" data-user-saved-tracks>
         <div class="flex-grow-1 list-group overflow-auto">
             <button th:each="track: ${userSavedTracks.items()}"
                     class="list-group-item list-group-item-action"
@@ -24,7 +24,7 @@
             totalPages=${userSavedTracks.totalPages()},
             limit=${userSavedTracks.limit()})}"/>
     </aside>
-    <section class="flex-grow-1 overflow-auto">
+    <section class="d-none d-lg-block flex-grow-1 overflow-auto">
         blank
     </section>
 </th:block>

@@ -58,12 +58,15 @@
 </main>
 <!--Playing Bar-->
 <div data-playing-bar class="container d-flex align-items-center gap-3 flex-shrink-0">
-    <img data-track-album-cover class="flex-shrink-0"
+    <img data-track-album-cover class="flex-shrink-0 d-none d-lg-block"
          src="https://i.scdn.co/image/ab67616d0000b27390a50cfe99a4c19ff3cbfbdb"
          alt="Track cover art" width="64" height="64">
+    <img data-track-album-cover class="flex-shrink-0 d-block d-lg-none"
+         src="https://i.scdn.co/image/ab67616d0000b27390a50cfe99a4c19ff3cbfbdb"
+         alt="Track cover art" width="100" height="100">
     <div class="d-flex flex-column flex-grow-1" style="min-width: 0">
-        <div class="d-flex align-items-center justify-content-between">
-            <div class="d-flex flex-column" style="min-width: 0">
+        <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-center justify-content-lg-between">
+            <div class="d-flex flex-column align-self-stretch align-self-lg-auto" style="min-width: 0">
                 <div data-track-name class="text-truncate lead">
                     Since I've Been Loving You
                 </div>
