@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.awesomengwin</groupId>
     <artifactId>kingfisher</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>kingfisher</name>
     <description>kingfisher</description>
     <url/>
