@@ -1,6 +1,6 @@
 // noinspection JSUnresolvedReference
 
-import { post } from "../utils/http.js";
+import { post, put } from "../utils/http.js";
 import { setError, setSuccess } from "../common/popup.js";
 
 let player;
@@ -65,4 +65,30 @@ export const seek = (seekMs) => {
 
 export const getCurrentState = () => {
   return player.getCurrentState();
+}
+
+export const togglePlaybackShuffle = (state) => {
+  const params = new URLSearchParams({
+    deviceId: document.body.dataset.deviceId,
+    state,
+  });
+
+  return put(`/spotify/player/shuffle?${params}`);
+}
+
+export const setRepeatMode = (state) => {
+  const params = new URLSearchParams({
+    deviceId: document.body.dataset.deviceId,
+    state,
+  });
+
+  return put(`/spotify/player/repeat?${params}`);
+}
+
+export const nextTrack = () => {
+  return player.nextTrack();
+}
+
+export const previousTrack = () => {
+  return player.previousTrack();
 }

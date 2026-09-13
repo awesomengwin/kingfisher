@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>user playlists</title>
+</head>
+<body>
+<th:block th:fragment="content">
+    <aside hx-target:inherited="main" hx-select:inherited="main" hx-swap:inherited="outerHTML"
+           class="left-sidebar d-flex flex-column" data-user-playlists>
+        <div class="flex-grow-1 list-group overflow-auto">
+            <a th:each="playlist: ${userPlaylists.items()}"
+               class="list-group-item list-group-item-action"
+               th:href="@{/library/playlists/{playlistId}/tracks(playlistId=${playlist.id()})}"
+               th:text="${playlist.name()}"></a>
+        </div>
+        <th:block th:replace="~{fragments/pagination :: pagination(
+            name='User playlists',
+            currentPage=${userPlaylists.currentPage()},
+            totalPages=${userPlaylists.totalPages()},
+            limit=${userPlaylists.limit()})}"/>
+    </aside>
+    <section class="flex-grow-1 overflow-auto">
+        blank
+    </section>
+</th:block>
+</body>
+</html>

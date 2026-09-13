@@ -2,27 +2,28 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout(~{::title}, ~{::content})}">
 <head>
-    <title>user saved tracks</title>
+    <title>playlist tracks</title>
 </head>
 <body>
 <th:block th:fragment="content">
-    <aside class="left-sidebar d-flex flex-column" data-user-saved-tracks>
+    <aside class="left-sidebar d-flex flex-column" data-playlist-tracks>
         <div class="flex-grow-1 list-group overflow-auto">
-            <button th:each="track: ${userSavedTracks.items()}"
+            <button th:each="track: ${playlistTracks.items()}"
                     class="list-group-item list-group-item-action"
                     hx-put="/spotify/player/play" hx-trigger="dblclick"
                     th:hx-vals='|js:{
                         deviceId: document.body.dataset.deviceId,
-                        uri: "${track.track().uri()}"
+                        contextUri: "${playlistUri}",
+                        uri: "${track.item().uri()}"
                     }|'
-                    hx-swap="none" th:text="${track.track().name()}">
+                    hx-swap="none" th:text="${track.item().name()}">
             </button>
         </div>
         <th:block th:replace="~{fragments/pagination :: pagination(
-            name='User saved tracks',
-            currentPage=${userSavedTracks.currentPage()},
-            totalPages=${userSavedTracks.totalPages()},
-            limit=${userSavedTracks.limit()})}"/>
+            name='Playlist tracks',
+            currentPage=${playlistTracks.currentPage()},
+            totalPages=${playlistTracks.totalPages()},
+            limit=${playlistTracks.limit()})}"/>
     </aside>
     <section class="flex-grow-1 overflow-auto">
         blank
