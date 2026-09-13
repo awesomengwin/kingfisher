@@ -1,4 +1,11 @@
-import { SpotifyPlayerEvent, togglePlay, seek, getCurrentState } from "./player.js";
+import {
+  SpotifyPlayerEvent,
+  togglePlay,
+  seek,
+  getCurrentState,
+  togglePlaybackShuffle,
+  setRepeatMode, previousTrack, nextTrack
+} from "./player.js";
 import { setError } from "../common/popup.js";
 
 const playingBar = document.querySelector('[data-playing-bar]');
@@ -11,6 +18,10 @@ const ui = {
   position: playingBar.querySelector('[data-position]'),
   duration: playingBar.querySelector('[data-duration]'),
   progress: playingBar.querySelector('[data-progress]'),
+  playerShuffle: playingBar.querySelector('[data-player-shuffle]'),
+  playerRepeat: playingBar.querySelector('[data-player-repeat]'),
+  playerPrev: playingBar.querySelector('[data-player-prev]'),
+  playerNext: playingBar.querySelector('[data-player-next]'),
 }
 
 let rafId;
@@ -20,6 +31,9 @@ let positionMs = 0;
 let durationMs = 0;
 let lastUpdateTimestamp = 0;
 let currentTrackId;
+
+let shuffle;
+let repeatMode;
 
 let isOnLyricsPage;
 
@@ -39,6 +53,45 @@ export const initPlayingBar = () => {
   ui.playerToggle.addEventListener('click', async () => {
     try {
       await togglePlay();
+    } catch (err) {
+      setError(err);
+    }
+  });
+
+  // Previous track
+  ui.playerPrev.addEventListener('click', async () => {
+    try {
+      await previousTrack();
+    } catch (err) {
+      setError(err);
+    }
+  });
+
+  // Next track
+  ui.playerNext.addEventListener('click', async () => {
+    try {
+      await nextTrack();
+    } catch (err) {
+      setError(err);
+    }
+  });
+
+  // Toggle shuffle
+  ui.playerShuffle.addEventListener('click', async () => {
+    try {
+      await togglePlaybackShuffle(!shuffle);
+    } catch (err) {
+      setError(err);
+    }
+  });
+
+  // Change repeat mode
+  ui.playerRepeat.addEventListener('click', async () => {
+    try {
+      const next = (repeatMode + 1) % 3;
+      const repeatMap = [ "off", "context", "track" ];
+
+      await setRepeatMode(repeatMap[next]);
     } catch (err) {
       setError(err);
     }
@@ -108,6 +161,18 @@ const handlePlayerStateChange = ({ detail: state }) => {
     }
   }
   currentTrackId = newTrackId;
+
+  // Player controls
+  shuffle = state.shuffle;
+  repeatMode = state.repeat_mode;
+
+  ui.playerShuffle.classList.toggle('active', shuffle);
+  ui.playerShuffle.setAttribute('aria-pressed', String(shuffle));
+
+  const repeatLabelMap = [ "Repeat off", "Repeat on context", "Repeat on track" ];
+  ui.playerRepeat.textContent = repeatLabelMap[repeatMode];
+  ui.playerRepeat.classList.toggle('active', !!repeatMode);
+  ui.playerRepeat.setAttribute('aria-pressed', String(!!repeatMode));
 
   ui.trackAlbumCover.src = currentTrack.album?.images?.[0]?.url;
   ui.trackAlbumCover.alt = `Album cover for ${currentTrack.album?.name}`;
