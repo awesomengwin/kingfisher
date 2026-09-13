@@ -27,4 +27,12 @@ public interface SpotifyClient {
     @PutExchange("/me/player/play")
     @ClientRegistrationId("spotify-login")
     void startPlayback(@RequestParam("device_id") String deviceId, @RequestBody StartPlaybackRequest request);
+
+    @PutExchange("/me/player/shuffle")
+    @ClientRegistrationId("spotify-login")
+    void togglePlaybackShuffle(@RequestParam("device_id") String deviceId, @RequestParam boolean state);
+
+    @PutExchange("/me/player/repeat")
+    @ClientRegistrationId("spotify-login")
+    void setRepeatMode(@RequestParam("device_id") String deviceId, @RequestParam String state);
 }

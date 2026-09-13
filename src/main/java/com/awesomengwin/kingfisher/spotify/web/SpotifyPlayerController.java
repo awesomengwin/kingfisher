@@ -24,4 +24,14 @@ public class SpotifyPlayerController {
     public void startPlayback(@RequestParam String deviceId, @RequestParam String uri) {
         spotifyPlayerService.startPlayback(deviceId, uri);
     }
+
+    @PutMapping("/player/shuffle")
+    public void togglePlaybackShuffle(@RequestParam String deviceId, @RequestParam boolean state) {
+        spotifyPlayerService.togglePlaybackShuffle(deviceId, state);
+    }
+
+    @PutMapping("/player/repeat")
+    public void setRepeatMode(@RequestParam String deviceId, @RequestParam String state) {
+        spotifyPlayerService.setRepeatMode(deviceId, state);
+    }
 }

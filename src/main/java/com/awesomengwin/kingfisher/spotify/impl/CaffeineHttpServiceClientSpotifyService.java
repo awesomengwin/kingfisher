@@ -48,6 +48,16 @@ public class CaffeineHttpServiceClientSpotifyService implements SpotifyService, 
         spotifyClient.startPlayback(deviceId, new StartPlaybackRequest(uri));
     }
 
+    @Override
+    public void togglePlaybackShuffle(String deviceId, boolean state) {
+        spotifyClient.togglePlaybackShuffle(deviceId, state);
+    }
+
+    @Override
+    public void setRepeatMode(String deviceId, String state) {
+        spotifyClient.setRepeatMode(deviceId, state);
+    }
+
     private SpotifyPage<SavedTrackResponse> loadUserSavedTracks(SpotifyCacheKey key) {
         return spotifyClient.getUserSavedTracks(key.limit(), key.offset());
     }
