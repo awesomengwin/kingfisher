@@ -7,7 +7,7 @@
 <body>
 <th:block th:fragment="content">
     <aside hx-target:inherited="main" hx-select:inherited="main" hx-swap:inherited="outerHTML"
-           class="left-sidebar d-flex flex-column" data-user-playlists>
+           class="left-sidebar d-flex flex-grow-1 flex-lg-grow-0 flex-column" data-user-playlists>
         <div class="flex-grow-1 list-group overflow-auto">
             <a th:each="playlist: ${userPlaylists.items()}"
                class="list-group-item list-group-item-action"
@@ -20,7 +20,7 @@
             totalPages=${userPlaylists.totalPages()},
             limit=${userPlaylists.limit()})}"/>
     </aside>
-    <section class="flex-grow-1 overflow-auto">
+    <section class="d-none d-lg-block flex-grow-1 overflow-auto">
         blank
     </section>
 </th:block>
