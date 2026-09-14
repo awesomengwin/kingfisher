@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width; initial-scale=1">
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
-    <title th:replace="${title}"></title>
+    <title><th:block th:insert="${title}"/> - Kingfisher</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/app.css}">
     <script th:src="@{/webjars/bootstrap/5.3.8/js/bootstrap.bundle.min.js}"></script>
