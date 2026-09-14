@@ -21,6 +21,11 @@
         <ul hx-target:inherited="main" hx-select:inherited="main" hx-swap:inherited="outerHTML"
             class="nav nav-underline">
             <li class="nav-item">
+                <a th:href="@{/}" class="nav-link"
+                   th:classappend="${currentPage eq '/' ? 'active' : ''}"
+                   th:attr="aria-current=${currentPage eq '/' ? 'page' : ''}">Home</a>
+            </li>
+            <li class="nav-item">
                 <a th:href="@{/library/tracks}" class="nav-link"
                    th:classappend="${currentPage eq '/library/tracks' ? 'active' : ''}"
                    th:attr="aria-current=${currentPage eq '/library/tracks' ? 'page' : ''}">Liked tracks</a>
