@@ -20,12 +20,16 @@ public class Lyrics {
     @JdbcTypeCode(SqlTypes.JSON)
     private List<LyricsLine> lines = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private TranslateStatus translateStatus;
+
     public Lyrics() {
     }
 
     public Lyrics(String trackId, List<LyricsLine> lines) {
         this.trackId = trackId;
         this.lines = lines;
+        this.translateStatus = TranslateStatus.NONE;
     }
 
     public Long getId() {
@@ -38,5 +42,9 @@ public class Lyrics {
 
     public List<LyricsLine> getLines() {
         return lines;
+    }
+
+    public TranslateStatus getTranslateStatus() {
+        return translateStatus;
     }
 }

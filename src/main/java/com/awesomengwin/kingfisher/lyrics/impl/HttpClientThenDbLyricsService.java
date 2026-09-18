@@ -26,7 +26,7 @@ public class HttpClientThenDbLyricsService implements LyricsService {
         Optional<Lyrics> lyricsOpt = lyricsRepository.findByTrackId(trackId);
 
         if (lyricsOpt.isPresent()) {
-            return new LyricsDto(lyricsOpt.get().getTrackId(), lyricsOpt.get().getLines());
+            return new LyricsDto(lyricsOpt.get().getTrackId(), lyricsOpt.get().getLines(), lyricsOpt.get().getTranslateStatus());
         }
 
         try {
@@ -39,9 +39,9 @@ public class HttpClientThenDbLyricsService implements LyricsService {
             Lyrics lyrics = new Lyrics(trackId, lyricsLines);
             lyricsRepository.save(lyrics);
 
-            return new LyricsDto(lyrics.getTrackId(), lyrics.getLines());
+            return new LyricsDto(lyrics.getTrackId(), lyrics.getLines(), lyrics.getTranslateStatus());
         } catch (ApiClientNotFoundException e) {
-            return new LyricsDto(trackId, Collections.emptyList());
+            return new LyricsDto(trackId, Collections.emptyList(), null);
         }
     }
 }

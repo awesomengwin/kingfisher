@@ -58,5 +58,7 @@ class LyricsRepositoryTests {
         assertThat(savedLyrics.getLines())
                 .extracting(LyricsLine::endTimeMs)
                 .containsExactly(2000L, 3000L, 4000L);
+
+        assertEquals(TranslateStatus.NONE, savedLyrics.getTranslateStatus());
     }
 }
