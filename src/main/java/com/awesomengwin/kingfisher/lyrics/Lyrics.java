@@ -3,6 +3,7 @@ package com.awesomengwin.kingfisher.lyrics;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,20 @@ public class Lyrics {
     public Lyrics(String trackId, List<LyricsLine> lines) {
         this.trackId = trackId;
         this.lines = lines;
-        this.translateStatus = TranslateStatus.NONE;
+
+        boolean isPartialTranslated = lines.stream().anyMatch(line -> StringUtils.hasText(line.translatedWords()));
+
+        if (isPartialTranslated) {
+            this.translateStatus = TranslateStatus.PARTIAL;
+
+            boolean isCompletedTranslated = lines.stream().allMatch(line -> StringUtils.hasText(line.translatedWords()));
+
+            if (isCompletedTranslated) {
+                this.translateStatus = TranslateStatus.COMPLETED;
+            }
+        } else {
+            this.translateStatus = TranslateStatus.NONE;
+        }
     }
 
     public Long getId() {
