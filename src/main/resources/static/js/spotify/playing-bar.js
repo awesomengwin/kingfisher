@@ -14,6 +14,7 @@ const ui = {
   trackName: playingBar.querySelector('[data-track-name]'),
   trackArtists: playingBar.querySelector('[data-track-artists]'),
   playerToggle: playingBar.querySelector('[data-player-toggle]'),
+  translateLyrics: playingBar.querySelector('[data-translate-lyrics]'),
   lyricsToggle: playingBar.querySelector('[data-lyrics-toggle]'),
   position: playingBar.querySelector('[data-position]'),
   duration: playingBar.querySelector('[data-duration]'),
@@ -124,6 +125,23 @@ export const initPlayingBar = () => {
     isDragging = false;
   });
 
+  // Translate lyrics
+  ui.translateLyrics.addEventListener('click', async () => {
+    const state = await getCurrentState();
+
+    const trackId = state?.track_window?.current_track?.id;
+    if (!trackId) {
+      setError('Failed to obtain current track id');
+      return;
+    }
+
+    htmx.ajax('PUT', `/lyrics/translate?trackId=${trackId}`, {
+      target: 'main',
+      select: 'main',
+      swap: 'outerHTML'
+    }).catch(err => setError(err));
+  });
+
   // Toggle lyrics
   ui.lyricsToggle.addEventListener('click', async () => {
     if (isOnLyricsPage) {
@@ -211,10 +229,18 @@ const loadLyricsPage = (trackId) => {
 }
 
 const syncLyricsState = () => {
-  isOnLyricsPage = !!document.querySelector('[data-lyrics]');
+  const lyricsRoot = document.querySelector('[data-lyrics]');
+
+  isOnLyricsPage = !!lyricsRoot;
 
   ui.lyricsToggle.classList.toggle('active', isOnLyricsPage);
   ui.lyricsToggle.setAttribute('aria-pressed', String(isOnLyricsPage));
+
+  if (lyricsRoot) {
+    const translateStatus = lyricsRoot.dataset.translateStatus;
+
+    ui.translateLyrics.disabled = !translateStatus;
+  }
 }
 
 const startProgressLoop = () => {
