@@ -53,3 +53,6 @@ spring:
 logging:
   level:
     org.springframework.ai.chat.client.advisor: debug
+
+kingfisher:
+  secret-key: ${KINGFISHER_SECRET_KEY}
