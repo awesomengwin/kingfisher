@@ -15,6 +15,10 @@ public interface SpotifyClient {
     @ClientRegistrationId("spotify-login")
     SpotifyPage<SavedTrackResponse> getUserSavedTracks(@RequestParam int limit, @RequestParam int offset);
 
+    @GetExchange("/tracks/{trackId}")
+    @ClientRegistrationId("spotify-service")
+    Track getTrack(@PathVariable String trackId);
+
     @GetExchange("/me/playlists")
     @ClientRegistrationId("spotify-login")
     SpotifyPage<PlaylistResponse> getUserPlaylists(@RequestParam int limit, @RequestParam int offset);
