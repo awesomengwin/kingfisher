@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -22,6 +23,16 @@ public class LyricsController {
     @GetMapping
     public String getLyrics(@RequestParam String trackId, Model model, HttpServletResponse response) {
         LyricsDto lyrics = lyricsService.getLyrics(trackId);
+        model.addAttribute("lyrics", lyrics);
+
+        response.addHeader("HX-Trigger", "lyrics:init");
+
+        return "lyrics/lyrics";
+    }
+
+    @PutMapping("/translate")
+    public String translateLyrics(@RequestParam String trackId, Model model, HttpServletResponse response) {
+        LyricsDto lyrics = lyricsService.translate(trackId);
         model.addAttribute("lyrics", lyrics);
 
         response.addHeader("HX-Trigger", "lyrics:init");
