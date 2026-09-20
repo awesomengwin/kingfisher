@@ -4,5 +4,5 @@ public interface LyricsService {
 
     LyricsDto getLyrics(String trackId);
 
-    LyricsDto translate(String trackId);
+    LyricsDto translate(String trackId, String userId);
 }

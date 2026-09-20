@@ -3,6 +3,8 @@ package com.awesomengwin.kingfisher.lyrics.web;
 import com.awesomengwin.kingfisher.lyrics.LyricsDto;
 import com.awesomengwin.kingfisher.lyrics.LyricsService;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +33,9 @@ public class LyricsController {
     }
 
     @PutMapping("/translate")
-    public String translateLyrics(@RequestParam String trackId, Model model, HttpServletResponse response) {
-        LyricsDto lyrics = lyricsService.translate(trackId);
+    public String translateLyrics(@AuthenticationPrincipal OAuth2User currentUser,
+                                  @RequestParam String trackId, Model model, HttpServletResponse response) {
+        LyricsDto lyrics = lyricsService.translate(trackId, currentUser.getName());
         model.addAttribute("lyrics", lyrics);
 
         response.addHeader("HX-Trigger", "lyrics:init");
