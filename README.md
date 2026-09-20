@@ -21,6 +21,7 @@ Run app with Docker
 export SPOTIFY_CLIENT_ID=your_spotify_client_id
 export SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
 export LYRICS_API_URL=your_lyrics_api_url
+export KINGFISHER_SECRET_KEY="$(openssl rand -base64 32)"
 ```
 
 ```shell
@@ -28,6 +29,7 @@ docker run --rm \
 -e SPOTIFY_CLIENT_ID="$SPOTIFY_CLIENT_ID" \
 -e SPOTIFY_CLIENT_SECRET="$SPOTIFY_CLIENT_SECRET" \
 -e LYRICS_API_URL="$LYRICS_API_URL" \
+-e KINGFISHER_SECRET_KEY="$KINGFISHER_SECRET_KEY" \
 -e DB_URL=jdbc:postgresql://host.docker.internal:5432/kingfisher \
 -p 8080:8080 ghcr.io/awesomengwin/kingfisher:latest
 ```
