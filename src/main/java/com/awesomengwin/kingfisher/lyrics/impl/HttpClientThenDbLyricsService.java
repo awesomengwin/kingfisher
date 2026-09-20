@@ -59,7 +59,7 @@ public class HttpClientThenDbLyricsService implements LyricsService {
     }
 
     @Override
-    public LyricsDto translate(String trackId) {
+    public LyricsDto translate(String trackId, String userId) {
         Lyrics lyrics = lyricsRepository.findByTrackId(trackId)
                 .orElseThrow(() -> new RuntimeException("Lyrics of track %s could not be found".formatted(trackId)));
 
@@ -77,7 +77,7 @@ public class HttpClientThenDbLyricsService implements LyricsService {
                         .toList());
 
         LyricsTranslatorResponse translated = lyricsTranslator
-                .translate(new LyricsTranslatorRequest(lines, trackMetadata));
+                .translate(new LyricsTranslatorRequest(lines, trackMetadata, userId));
 
         List<LyricsLine> mergedLyricsLine = getMergedLyricsLine(lyrics.getLines(), translated.lines());
 

@@ -3,17 +3,33 @@ package com.awesomengwin.kingfisher.lyrics.translator.impl;
 import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslator;
 import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslatorRequest;
 import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslatorResponse;
+import com.awesomengwin.kingfisher.userpreferences.OpenAiApiKeyProvider;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChatClientLyricsTranslator implements LyricsTranslator {
 
-    public final ChatClient chatClient;
+    private final OpenAiApiKeyProvider openAiApiKeyProvider;
 
-    public ChatClientLyricsTranslator(ChatClient.Builder builder) {
-        this.chatClient = builder.defaultSystem("""
+    public ChatClientLyricsTranslator(OpenAiApiKeyProvider openAiApiKeyProvider) {
+        this.openAiApiKeyProvider = openAiApiKeyProvider;
+    }
+
+    @Override
+    public LyricsTranslatorResponse translate(LyricsTranslatorRequest request) {
+        String apiKey = openAiApiKeyProvider.getApiKey(request.userId());
+
+        OpenAiChatModel openAiChatModel = OpenAiChatModel.builder()
+                .options(OpenAiChatOptions.builder()
+                        .apiKey(apiKey)
+                        .build())
+                .build();
+
+        ChatClient chatClient = ChatClient.builder(openAiChatModel).defaultSystem("""
                 You are a professional literary translator specializing in translating English song lyrics \
                 into natural, idiomatic Vietnamese.
                 
@@ -24,10 +40,7 @@ public class ChatClientLyricsTranslator implements LyricsTranslator {
                 never merge, split, or omit lines.
                 - Ensure consistency in capitalization between the translation and the original.
                 """).build();
-    }
 
-    @Override
-    public LyricsTranslatorResponse translate(LyricsTranslatorRequest request) {
         return chatClient.prompt()
                 .advisors(new SimpleLoggerAdvisor())
                 .user(u -> u.text("""
