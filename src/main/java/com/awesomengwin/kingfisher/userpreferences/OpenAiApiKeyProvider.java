@@ -16,6 +16,10 @@ public class OpenAiApiKeyProvider {
                 .orElseThrow(() -> new IllegalStateException(
                         "User prefs with ID %s could not be found".formatted(userId)));
 
+        if (userPrefs.getOpenAiApiKey() == null) {
+            throw new IllegalStateException("User prefs OpenAI API Key is not set");
+        }
+
         return userPrefs.getOpenAiApiKey();
     }
 }
