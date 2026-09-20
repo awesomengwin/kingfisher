@@ -52,7 +52,7 @@ public class ChatClientLyricsTranslator implements LyricsTranslator {
                         .param("trackName", request.trackMetadata().trackName())
                         .param("artistNames", String.join(", ", request.trackMetadata().artistNames()))
                         .param("albumName", request.trackMetadata().albumName())
-                        .param("lines", request.getNumberedLines()))
+                        .param("lines", request.getLinesPromptFormatted()))
                 .call()
                 .entity(LyricsTranslatorResponse.class);
     }

@@ -2,7 +2,7 @@ package com.awesomengwin.kingfisher.lyrics;
 
 public interface LyricsService {
 
-    LyricsDto getLyrics(String trackId);
+    LyricsTranslationDto getLyrics(String trackId, String userId);
 
-    LyricsDto translate(String trackId, String userId);
+    LyricsTranslationDto translate(String trackId, String userId);
 }
