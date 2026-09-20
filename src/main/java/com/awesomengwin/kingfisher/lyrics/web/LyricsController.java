@@ -1,6 +1,6 @@
 package com.awesomengwin.kingfisher.lyrics.web;
 
-import com.awesomengwin.kingfisher.lyrics.LyricsDto;
+import com.awesomengwin.kingfisher.lyrics.LyricsTranslationDto;
 import com.awesomengwin.kingfisher.lyrics.LyricsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,8 +23,9 @@ public class LyricsController {
     }
 
     @GetMapping
-    public String getLyrics(@RequestParam String trackId, Model model, HttpServletResponse response) {
-        LyricsDto lyrics = lyricsService.getLyrics(trackId);
+    public String getLyrics(@AuthenticationPrincipal OAuth2User currentUser,
+                            @RequestParam String trackId, Model model, HttpServletResponse response) {
+        LyricsTranslationDto lyrics = lyricsService.getLyrics(trackId, currentUser.getName());
         model.addAttribute("lyrics", lyrics);
 
         response.addHeader("HX-Trigger", "lyrics:init");
@@ -35,7 +36,7 @@ public class LyricsController {
     @PutMapping("/translate")
     public String translateLyrics(@AuthenticationPrincipal OAuth2User currentUser,
                                   @RequestParam String trackId, Model model, HttpServletResponse response) {
-        LyricsDto lyrics = lyricsService.translate(trackId, currentUser.getName());
+        LyricsTranslationDto lyrics = lyricsService.translate(trackId, currentUser.getName());
         model.addAttribute("lyrics", lyrics);
 
         response.addHeader("HX-Trigger", "lyrics:init");

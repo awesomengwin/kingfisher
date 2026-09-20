@@ -2,7 +2,10 @@ package com.awesomengwin.kingfisher.lyrics.translator;
 
 import java.util.List;
 
-public record LyricsTranslatorRequest(List<String> lines, TrackMetadata trackMetadata, String userId) {
+public record LyricsTranslatorRequest(List<LyricsLine> lines, TrackMetadata trackMetadata, String userId) {
+    public record LyricsLine(Long startTimeMs, String words) {
+    }
+
     public record TrackMetadata(
             String trackName,
             String albumName,
@@ -10,17 +13,18 @@ public record LyricsTranslatorRequest(List<String> lines, TrackMetadata trackMet
     ) {
     }
 
-    public String getNumberedLines() {
+    public String getLinesPromptFormatted() {
         if (lines == null || lines.isEmpty()) {
             throw new IllegalArgumentException("lines must not be null or empty");
         }
 
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < lines.size(); i++) {
-            String words = lines.get(i);
+        for (LyricsLine line : lines) {
+            Long startTimeMs = line.startTimeMs();
+            String words = line.words();
 
-            sb.append(i).append(": ")
+            sb.append("[").append(startTimeMs).append("]")
                     .append(words == null || words.isBlank() ? "" : words)
                     .append("\n");
         }

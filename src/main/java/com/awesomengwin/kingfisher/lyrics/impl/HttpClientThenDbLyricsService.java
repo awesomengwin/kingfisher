@@ -7,7 +7,6 @@ import com.awesomengwin.kingfisher.lyrics.client.LyricsClient;
 import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslator;
 import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslatorRequest;
 import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslatorResponse;
-import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslatorResponse.TranslatedLyricsLine;
 import com.awesomengwin.kingfisher.spotify.SpotifyService;
 import com.awesomengwin.kingfisher.spotify.client.Track;
 import org.springframework.stereotype.Service;
@@ -15,9 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class HttpClientThenDbLyricsService implements LyricsService {
@@ -26,20 +23,30 @@ public class HttpClientThenDbLyricsService implements LyricsService {
     private final LyricsClient lyricsClient;
     private final SpotifyService spotifyService;
     private final LyricsTranslator lyricsTranslator;
+    private final TranslationRepository translationRepository;
 
-    public HttpClientThenDbLyricsService(LyricsRepository lyricsRepository, LyricsClient lyricsClient, SpotifyService spotifyService, LyricsTranslator lyricsTranslator) {
+    public HttpClientThenDbLyricsService(LyricsRepository lyricsRepository, LyricsClient lyricsClient, SpotifyService spotifyService, LyricsTranslator lyricsTranslator, TranslationRepository translationRepository) {
         this.lyricsRepository = lyricsRepository;
         this.lyricsClient = lyricsClient;
         this.spotifyService = spotifyService;
         this.lyricsTranslator = lyricsTranslator;
+        this.translationRepository = translationRepository;
     }
 
     @Override
-    public LyricsDto getLyrics(String trackId) {
-        Optional<Lyrics> lyricsOpt = lyricsRepository.findByTrackId(trackId);
+    public LyricsTranslationDto getLyrics(String trackId, String userId) {
+        Lyrics lyricsDb = lyricsRepository.findByTrackId(trackId)
+                .orElse(null);
 
-        if (lyricsOpt.isPresent()) {
-            return new LyricsDto(lyricsOpt.get().getTrackId(), lyricsOpt.get().getLines(), lyricsOpt.get().getTranslateStatus());
+        if (lyricsDb != null) {
+            Translation translation = translationRepository.findByTrackIdAndUserId(trackId, userId)
+                    .orElse(null);
+
+            if (translation != null) {
+                return mergeLyricsAndTranslation(lyricsDb, translation);
+            }
+
+            return toLyricsWithoutTranslation(lyricsDb);
         }
 
         try {
@@ -52,21 +59,21 @@ public class HttpClientThenDbLyricsService implements LyricsService {
             Lyrics lyrics = new Lyrics(trackId, lyricsLines);
             lyricsRepository.save(lyrics);
 
-            return new LyricsDto(lyrics.getTrackId(), lyrics.getLines(), lyrics.getTranslateStatus());
+            return toLyricsWithoutTranslation(lyrics);
         } catch (ApiClientNotFoundException e) {
-            return new LyricsDto(trackId, Collections.emptyList(), null);
+            return new LyricsTranslationDto(trackId, Collections.emptyList(), null);
         }
     }
 
     @Override
-    public LyricsDto translate(String trackId, String userId) {
+    public LyricsTranslationDto translate(String trackId, String userId) {
         Lyrics lyrics = lyricsRepository.findByTrackId(trackId)
                 .orElseThrow(() -> new RuntimeException("Lyrics of track %s could not be found".formatted(trackId)));
 
         Track track = spotifyService.getTrack(trackId);
 
-        List<String> lines = lyrics.getLines().stream()
-                .map(LyricsLine::words)
+        List<LyricsTranslatorRequest.LyricsLine> lines = lyrics.getLines().stream()
+                .map(line -> new LyricsTranslatorRequest.LyricsLine(line.startTimeMs(), line.words()))
                 .toList();
 
         var trackMetadata = new LyricsTranslatorRequest.TrackMetadata(
@@ -79,33 +86,57 @@ public class HttpClientThenDbLyricsService implements LyricsService {
         LyricsTranslatorResponse translated = lyricsTranslator
                 .translate(new LyricsTranslatorRequest(lines, trackMetadata, userId));
 
-        List<LyricsLine> mergedLyricsLine = getMergedLyricsLine(lyrics.getLines(), translated.lines());
-
-        lyrics.updateLines(mergedLyricsLine);
-
-        lyricsRepository.save(lyrics);
-
-        return new LyricsDto(lyrics.getTrackId(), lyrics.getLines(), lyrics.getTranslateStatus());
-    }
-
-    private List<LyricsLine> getMergedLyricsLine(List<LyricsLine> source,
-                                                 List<TranslatedLyricsLine> translated) {
-        Map<Integer, String> byIndex = translated.stream()
-                .collect(Collectors.toMap(TranslatedLyricsLine::index, TranslatedLyricsLine::translatedWords));
-
-        if (byIndex.size() != source.size()) {
+        if (lyrics.getLines().size() != translated.lines().size()) {
             throw new IllegalArgumentException("Expected %d translated lines, got %d"
-                    .formatted(source.size(), byIndex.size()));
+                    .formatted(lyrics.getLines().size(), translated.lines().size()));
         }
 
-        return IntStream.range(0, source.size())
-                .mapToObj(i -> {
-                    String translatedWords = byIndex.get(i);
-
-                    LyricsLine line = source.get(i);
-
-                    return new LyricsLine(line.startTimeMs(), line.words(), line.endTimeMs(), translatedWords);
-                })
+        List<TranslatedLine> translatedLines = translated.lines().stream()
+                .map(translatedLine -> new TranslatedLine(translatedLine.startTimeMs(), translatedLine.translatedWords()))
                 .toList();
+
+        Translation translation = translationRepository.findByTrackIdAndUserId(trackId, userId)
+                .orElseGet(() -> new Translation(trackId, userId, translatedLines));
+
+        translation.updateLines(translatedLines);
+
+        translationRepository.save(translation);
+
+        return mergeLyricsAndTranslation(lyrics, translation);
+    }
+
+    private LyricsTranslationDto mergeLyricsAndTranslation(Lyrics lyrics, Translation translation) {
+        Map<Long, String> byStartTimeMs = translation.getLines().stream()
+                .collect(Collectors.toMap(
+                        TranslatedLine::startTimeMs,
+                        TranslatedLine::translatedWords));
+
+        List<LyricsTranslationDto.LyricsTranslationLine> lyricsTranslationLines = lyrics.getLines().stream()
+                .map(line -> new LyricsTranslationDto.LyricsTranslationLine(
+                        line.startTimeMs(),
+                        line.words(),
+                        line.endTimeMs(),
+                        byStartTimeMs.get(line.startTimeMs())))
+                .toList();
+
+        return new LyricsTranslationDto(
+                lyrics.getTrackId(),
+                lyricsTranslationLines,
+                translation.getTranslateStatus());
+    }
+
+    private LyricsTranslationDto toLyricsWithoutTranslation(Lyrics lyrics) {
+        return new LyricsTranslationDto(
+                lyrics.getTrackId(),
+                lyrics.getLines().stream()
+                        .map(line -> new LyricsTranslationDto.LyricsTranslationLine(
+                                line.startTimeMs(),
+                                line.words(),
+                                line.endTimeMs(),
+                                null
+                        ))
+                        .toList(),
+                TranslateStatus.NONE
+        );
     }
 }
