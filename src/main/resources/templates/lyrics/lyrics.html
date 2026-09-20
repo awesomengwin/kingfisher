@@ -7,14 +7,16 @@
 <body>
 <th:block th:fragment="content">
     <div class="w-100 d-flex flex-column gap-3">
-        <div class="flex-grow-1 overflow-y-auto" data-lyrics>
+        <div class="flex-grow-1 overflow-y-auto" data-lyrics th:data-translate-status="${lyrics.translateStatus()}">
             <th:block th:if="${#lists.isEmpty(lyrics.lines())}">
                 <p class="fs-2">No lyrics available.</p>
             </th:block>
             <th:block th:unless="${#lists.isEmpty(lyrics.lines())}">
-                <div th:each="line : ${lyrics.lines()}" class="opacity-25 fs-1 fw-bold mb-4" data-lyrics-line
+                <div th:each="line : ${lyrics.lines()}" class="opacity-25 mb-4" data-lyrics-line
                      th:data-start-time-ms="${line.startTimeMs}">
-                    <p class="text-break m-0" th:text="${line.words}"></p>
+                    <p class="text-break fs-1 fw-bold m-0" th:text="${line.words}"></p>
+                    <p class="text-break fs-3 fw-normal m-0 opacity-75"
+                       th:if="${line.translatedWords()}" th:text="${line.translatedWords()}"></p>
                 </div>
             </th:block>
         </div>

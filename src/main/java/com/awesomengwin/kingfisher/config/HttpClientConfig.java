@@ -3,6 +3,7 @@ package com.awesomengwin.kingfisher.config;
 import com.awesomengwin.kingfisher.common.ApiClientException;
 import com.awesomengwin.kingfisher.common.ApiClientNotFoundException;
 import com.awesomengwin.kingfisher.common.ApiServerException;
+import com.awesomengwin.kingfisher.common.wikimedia.WiktionaryClient;
 import com.awesomengwin.kingfisher.lyrics.client.LyricsApiErrorResponse;
 import com.awesomengwin.kingfisher.lyrics.client.LyricsClient;
 import com.awesomengwin.kingfisher.spotify.client.SpotifyApiErrorResponse;
@@ -24,6 +25,7 @@ import java.io.InputStream;
 @Configuration
 @ImportHttpServices(group = "spotify", types = SpotifyClient.class)
 @ImportHttpServices(group = "lyrics", types = LyricsClient.class)
+@ImportHttpServices(group = "wiktionary", types = WiktionaryClient.class)
 public class HttpClientConfig {
 
     @Bean

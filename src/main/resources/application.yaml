@@ -45,3 +45,11 @@ spring:
         base-url: https://api.spotify.com/v1
       lyrics:
         base-url: ${LYRICS_API_URL:your_lyrics_api_url}
+      wiktionary:
+        base-url: https://en.wiktionary.org/api/rest_v1
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+
+kingfisher:
+  secret-key: ${KINGFISHER_SECRET_KEY}

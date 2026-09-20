@@ -18,18 +18,25 @@ public class CaffeineHttpServiceClientSpotifyService implements SpotifyService, 
     private final LoadingCache<SpotifyCacheKey, SpotifyPage<SavedTrackResponse>> userSavedTracksLoadingCache;
     private final LoadingCache<SpotifyCacheKey, SpotifyPage<PlaylistResponse>> userPlaylistsLoadingCache;
     private final LoadingCache<SpotifyCacheKey, SpotifyPage<PlaylistTrackResponse>> playlistTracksLoadingCache;
+    private final LoadingCache<SpotifyCacheKey, Track> trackLoadingCache;
 
     public CaffeineHttpServiceClientSpotifyService(SpotifyClient spotifyClient) {
         this.spotifyClient = spotifyClient;
         this.userSavedTracksLoadingCache = createCommonCaffeineLoadingCache(this::loadUserSavedTracks);
         this.userPlaylistsLoadingCache = createCommonCaffeineLoadingCache(this::loadUserPlaylists);
         this.playlistTracksLoadingCache = createCommonCaffeineLoadingCache(this::loadPlaylistTracks);
+        this.trackLoadingCache = createCommonCaffeineLoadingCache(this::loadTrack);
     }
 
     @Override
     public SpotifyPage<SavedTrackResponse> getUserSavedTracks(String userId, int limit, int offset) {
         return userSavedTracksLoadingCache.get(
                 new SpotifyCacheKey(userId, "user-saved-tracks", limit, offset));
+    }
+
+    @Override
+    public Track getTrack(String trackId) {
+        return trackLoadingCache.get(new SpotifyCacheKey("track", trackId));
     }
 
     @Override
@@ -74,6 +81,10 @@ public class CaffeineHttpServiceClientSpotifyService implements SpotifyService, 
 
     private SpotifyPage<PlaylistTrackResponse> loadPlaylistTracks(SpotifyCacheKey key) {
         return spotifyClient.getPlaylistTracks(key.resourceId(), key.limit(), key.offset());
+    }
+
+    private Track loadTrack(SpotifyCacheKey key) {
+        return spotifyClient.getTrack(key.resourceId());
     }
 
     private <K, V> LoadingCache<K, V> createCommonCaffeineLoadingCache(CacheLoader<K, V> loader) {

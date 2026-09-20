@@ -58,5 +58,63 @@ class LyricsRepositoryTests {
         assertThat(savedLyrics.getLines())
                 .extracting(LyricsLine::endTimeMs)
                 .containsExactly(2000L, 3000L, 4000L);
+
+        assertEquals(TranslateStatus.NONE, savedLyrics.getTranslateStatus());
+    }
+
+    @Test
+    void shouldOkWhenSaveWithPartialTranslatedLyrics() {
+        String trackId = "1T8usYsiGEMPMQOLFgJEbE";
+
+        List<LyricsLine> lines = new ArrayList<>();
+        lines.add(new LyricsLine(1000L, "Foo", 2000L, "Cat"));
+        lines.add(new LyricsLine(2000L, "Bar", 3000L, "Dog"));
+        lines.add(new LyricsLine(3000L, "Lady", 4000L));
+
+        Lyrics lyrics = new Lyrics(trackId, lines);
+
+        lyricsRepository.save(lyrics);
+
+        Lyrics savedLyrics = lyricsRepository.findByTrackId(trackId).orElseThrow();
+
+        assertNotNull(savedLyrics);
+
+        assertNotNull(savedLyrics.getId());
+
+        assertEquals(trackId, savedLyrics.getTrackId());
+
+        assertThat(savedLyrics.getLines())
+                .extracting(LyricsLine::translatedWords)
+                .containsExactly("Cat", "Dog", null);
+
+        assertEquals(TranslateStatus.PARTIAL, savedLyrics.getTranslateStatus());
+    }
+
+    @Test
+    void shouldOkWhenSaveWithCompletedTranslatedLyrics() {
+        String trackId = "2KzCDxKpgLqBffHu1IZ7Kn";
+
+        List<LyricsLine> lines = new ArrayList<>();
+        lines.add(new LyricsLine(1000L, "Foo", 2000L, "Cat"));
+        lines.add(new LyricsLine(2000L, "Bar", 3000L, "Dog"));
+        lines.add(new LyricsLine(3000L, "Lady", 4000L, "Bird"));
+
+        Lyrics lyrics = new Lyrics(trackId, lines);
+
+        lyricsRepository.save(lyrics);
+
+        Lyrics savedLyrics = lyricsRepository.findByTrackId(trackId).orElseThrow();
+
+        assertNotNull(savedLyrics);
+
+        assertNotNull(savedLyrics.getId());
+
+        assertEquals(trackId, savedLyrics.getTrackId());
+
+        assertThat(savedLyrics.getLines())
+                .extracting(LyricsLine::translatedWords)
+                .containsExactly("Cat", "Dog", "Bird");
+
+        assertEquals(TranslateStatus.COMPLETED, savedLyrics.getTranslateStatus());
     }
 }

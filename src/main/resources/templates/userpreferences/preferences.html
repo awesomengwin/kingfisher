@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title/text()}, ~{::content})}">
+<head>
+    <title>user preferences</title>
+</head>
+<body>
+<th:block th:fragment="content">
+    <div class="w-100" hx-target:inherited="main" hx-select:inherited="main" hx-swap:inherited="outerHTML">
+        <h1>User Preferences</h1>
+
+        <h2>OpenAI API Key</h2>
+        <form th:action="@{/me/preferences/openai}" method="POST">
+            <div class="mb-3">
+                <label for="openAiApiKey" class="form-label">Secret Key</label>
+                <input type="text" id="openAiApiKey" name="openAiApiKey" class="form-control"
+                       th:placeholder="${userPrefs != null ? userPrefs.maskedOpenAiApiKey() : ''}"
+                       autocomplete="off">
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" th:formaction="@{/me/preferences/openai/delete}"
+                        class="btn btn-danger"
+                        th:if="${userPrefs != null && userPrefs.maskedOpenAiApiKey() != null}">Delete
+                </button>
+            </div>
+        </form>
+    </div>
+</th:block>
+</body>
+</html>

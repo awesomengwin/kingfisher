@@ -3,4 +3,6 @@ package com.awesomengwin.kingfisher.lyrics;
 public interface LyricsService {
 
     LyricsDto getLyrics(String trackId);
+
+    LyricsDto translate(String trackId, String userId);
 }
