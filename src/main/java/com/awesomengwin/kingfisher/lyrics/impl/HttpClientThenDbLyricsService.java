@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class HttpClientThenDbLyricsService implements LyricsService {
@@ -90,22 +89,21 @@ public class HttpClientThenDbLyricsService implements LyricsService {
 
     private List<LyricsLine> getMergedLyricsLine(List<LyricsLine> source,
                                                  List<TranslatedLyricsLine> translated) {
-        Map<Integer, String> byIndex = translated.stream()
-                .collect(Collectors.toMap(TranslatedLyricsLine::index, TranslatedLyricsLine::translatedWords));
+        Map<Long, String> byStartTimeMs = translated.stream()
+                .collect(Collectors.toMap(TranslatedLyricsLine::startTimeMs, TranslatedLyricsLine::translatedWords));
 
-        if (byIndex.size() != source.size()) {
+        if (byStartTimeMs.size() != source.size()) {
             throw new IllegalArgumentException("Expected %d translated lines, got %d"
-                    .formatted(source.size(), byIndex.size()));
+                    .formatted(source.size(), byStartTimeMs.size()));
         }
 
-        return IntStream.range(0, source.size())
-                .mapToObj(i -> {
-                    String translatedWords = byIndex.get(i);
-
-                    LyricsLine line = source.get(i);
-
-                    return new LyricsLine(line.startTimeMs(), line.words(), line.endTimeMs(), translatedWords);
-                })
+        return source.stream()
+                .map(line -> new LyricsLine(
+                        line.startTimeMs(),
+                        line.words(),
+                        line.endTimeMs(),
+                        byStartTimeMs.get(line.startTimeMs())
+                ))
                 .toList();
     }
 }
