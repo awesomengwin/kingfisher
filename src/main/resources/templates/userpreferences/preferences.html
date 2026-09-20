@@ -10,12 +10,15 @@
         <h1>User Preferences</h1>
 
         <h2>OpenAI API Key</h2>
-        <form th:action="@{/me/preferences/openai}" method="POST">
+        <form th:action="@{/me/preferences/openai}" th:object="${openAiApiKeyForm}" method="POST">
             <div class="mb-3">
                 <label for="openAiApiKey" class="form-label">Secret Key</label>
-                <input type="text" id="openAiApiKey" name="openAiApiKey" class="form-control"
+                <input type="text" id="openAiApiKey" th:field="*{openAiApiKey}"
+                       th:classappend="${#fields.hasErrors('openAiApiKey') ? 'is-invalid' : ''}" class="form-control"
                        th:placeholder="${userPrefs != null ? userPrefs.maskedOpenAiApiKey() : ''}"
                        autocomplete="off">
+                <div th:if="${#fields.hasErrors('openAiApiKey')}" th:errors="*{openAiApiKey}"
+                     class="invalid-feedback"></div>
             </div>
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">Submit</button>

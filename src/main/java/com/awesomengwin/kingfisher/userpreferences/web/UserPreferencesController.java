@@ -1,10 +1,12 @@
 package com.awesomengwin.kingfisher.userpreferences.web;
 
 import com.awesomengwin.kingfisher.userpreferences.UserPreferencesService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -21,26 +23,28 @@ public class UserPreferencesController {
     public String preferences(@AuthenticationPrincipal OAuth2User currentUser, Model model) {
         model.addAttribute("userPrefs",
                 userPreferencesService.getUserPrefs(currentUser.getName()));
+        model.addAttribute("openAiApiKeyForm", new OpenAiApiKeyForm(null));
 
         return "userpreferences/preferences";
     }
 
     @PostMapping("/openai")
     public String updateOpenAiApiKey(@AuthenticationPrincipal OAuth2User currentUser,
-                                     @RequestParam String openAiApiKey, Model model) {
-        userPreferencesService.updateOpenAiApiKey(currentUser.getName(), openAiApiKey);
-        model.addAttribute("userPrefs",
-                userPreferencesService.getUserPrefs(currentUser.getName()));
+                                     @Valid @ModelAttribute("openAiApiKeyForm") OpenAiApiKeyForm form,
+                                     BindingResult result) {
+        if (result.hasErrors()) {
+            return "userpreferences/preferences";
+        }
 
-        return "userpreferences/preferences";
+        userPreferencesService.updateOpenAiApiKey(currentUser.getName(), form.openAiApiKey());
+
+        return "redirect:/me/preferences";
     }
 
     @PostMapping("/openai/delete")
-    public String deleteOpenAiApiKey(@AuthenticationPrincipal OAuth2User currentUser, Model model) {
+    public String deleteOpenAiApiKey(@AuthenticationPrincipal OAuth2User currentUser) {
         userPreferencesService.deleteOpenAiApiKey(currentUser.getName());
-        model.addAttribute("userPrefs",
-                userPreferencesService.getUserPrefs(currentUser.getName()));
 
-        return "userpreferences/preferences";
+        return "redirect:/me/preferences";
     }
 }
