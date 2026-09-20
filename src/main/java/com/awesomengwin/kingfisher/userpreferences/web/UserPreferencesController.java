@@ -26,9 +26,9 @@ public class UserPreferencesController {
     }
 
     @PostMapping("/openai")
-    public String updateOpenaiApiKey(@AuthenticationPrincipal OAuth2User currentUser,
-                                     @RequestParam String openaiApiKey, Model model) {
-        userPreferencesService.updateOpenaiApiKey(currentUser.getName(), openaiApiKey);
+    public String updateOpenAiApiKey(@AuthenticationPrincipal OAuth2User currentUser,
+                                     @RequestParam String openAiApiKey, Model model) {
+        userPreferencesService.updateOpenAiApiKey(currentUser.getName(), openAiApiKey);
         model.addAttribute("userPrefs",
                 userPreferencesService.getUserPrefs(currentUser.getName()));
 
@@ -36,8 +36,8 @@ public class UserPreferencesController {
     }
 
     @PostMapping("/openai/delete")
-    public String deleteOpenaiApiKey(@AuthenticationPrincipal OAuth2User currentUser, Model model) {
-        userPreferencesService.deleteOpenaiApiKey(currentUser.getName());
+    public String deleteOpenAiApiKey(@AuthenticationPrincipal OAuth2User currentUser, Model model) {
+        userPreferencesService.deleteOpenAiApiKey(currentUser.getName());
         model.addAttribute("userPrefs",
                 userPreferencesService.getUserPrefs(currentUser.getName()));
 

@@ -11,21 +11,21 @@ public class UserPreferencesService {
         this.userPreferencesRepository = userPreferencesRepository;
     }
 
-    public void updateOpenaiApiKey(String userId, String openaiApiKey) {
+    public void updateOpenAiApiKey(String userId, String openAiApiKey) {
         UserPreferences userPrefs = userPreferencesRepository.findById(userId)
                 .orElseGet(() -> new UserPreferences(userId));
 
-        userPrefs.setOpenaiApiKey(openaiApiKey);
+        userPrefs.setOpenAiApiKey(openAiApiKey);
 
         userPreferencesRepository.save(userPrefs);
     }
 
-    public void deleteOpenaiApiKey(String userId) {
+    public void deleteOpenAiApiKey(String userId) {
         UserPreferences userPrefs = userPreferencesRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "User Prefs with ID %s could not be found".formatted(userId)));
 
-        userPrefs.setOpenaiApiKey(null);
+        userPrefs.setOpenAiApiKey(null);
 
         userPreferencesRepository.save(userPrefs);
     }
@@ -33,7 +33,7 @@ public class UserPreferencesService {
     public UserPreferencesDto getUserPrefs(String userId) {
         UserPreferences userPrefs = userPreferencesRepository.findById(userId).orElse(null);
         return userPrefs == null ? null : new UserPreferencesDto(
-                userPrefs.getUserId(), mask(userPrefs.getOpenaiApiKey()));
+                userPrefs.getUserId(), mask(userPrefs.getOpenAiApiKey()));
     }
 
     private String mask(String key) {

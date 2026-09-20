@@ -11,7 +11,7 @@ public class UserPreferences {
 
     @Convert(converter = ApiKeyConverter.class)
     @Column(name = "openai_api_key")
-    private String openaiApiKey;
+    private String openAiApiKey;
 
     public UserPreferences() {
     }
@@ -24,11 +24,11 @@ public class UserPreferences {
         return userId;
     }
 
-    public String getOpenaiApiKey() {
-        return openaiApiKey;
+    public String getOpenAiApiKey() {
+        return openAiApiKey;
     }
 
-    public void setOpenaiApiKey(String openaiApiKey) {
-        this.openaiApiKey = openaiApiKey;
+    public void setOpenAiApiKey(String openAiApiKey) {
+        this.openAiApiKey = openAiApiKey;
     }
 }

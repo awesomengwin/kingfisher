@@ -12,16 +12,16 @@
         <h2>OpenAI API Key</h2>
         <form th:action="@{/me/preferences/openai}" method="POST">
             <div class="mb-3">
-                <label for="openaiApiKey" class="form-label">Secret Key</label>
-                <input type="text" id="openaiApiKey" name="openaiApiKey" class="form-control"
-                       th:placeholder="${userPrefs != null ? userPrefs.maskedOpenaiApiKey() : ''}"
+                <label for="openAiApiKey" class="form-label">Secret Key</label>
+                <input type="text" id="openAiApiKey" name="openAiApiKey" class="form-control"
+                       th:placeholder="${userPrefs != null ? userPrefs.maskedOpenAiApiKey() : ''}"
                        autocomplete="off">
             </div>
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="submit" th:formaction="@{/me/preferences/openai/delete}"
                         class="btn btn-danger"
-                        th:if="${userPrefs != null && userPrefs.maskedOpenaiApiKey() != null}">Delete
+                        th:if="${userPrefs != null && userPrefs.maskedOpenAiApiKey() != null}">Delete
                 </button>
             </div>
         </form>
