@@ -10,7 +10,7 @@ public interface LibraryService {
 
     Page<Track> getPlaylistTracks(String playlistId, String userId, Pageable p);
 
-    Page<Track> getAlbumTracks(String albumId, Pageable p);
+    Page<AlbumTrack> getAlbumTracks(String albumId, Pageable p);
 
     Track getTrack(String trackId);
 
