@@ -1,6 +1,6 @@
-package com.awesomengwin.kingfisher.spotify.web;
+package com.awesomengwin.kingfisher.spotifylegacy.web;
 
-import com.awesomengwin.kingfisher.spotify.SpotifyPlayerService;
+import com.awesomengwin.kingfisher.spotifylegacy.SpotifyPlayerService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;

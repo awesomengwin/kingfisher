@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.spotify.impl;
+package com.awesomengwin.kingfisher.spotifylegacy.impl;
 
 public record SpotifyCacheKey(
         String userId,

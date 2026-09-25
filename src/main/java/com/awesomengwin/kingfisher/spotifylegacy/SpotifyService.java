@@ -1,6 +1,6 @@
-package com.awesomengwin.kingfisher.spotify;
+package com.awesomengwin.kingfisher.spotifylegacy;
 
-import com.awesomengwin.kingfisher.spotify.client.*;
+import com.awesomengwin.kingfisher.spotifylegacy.client.*;
 
 public interface SpotifyService {
 

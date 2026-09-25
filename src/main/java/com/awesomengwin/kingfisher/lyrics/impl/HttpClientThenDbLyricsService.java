@@ -7,8 +7,8 @@ import com.awesomengwin.kingfisher.lyrics.client.LyricsClient;
 import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslator;
 import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslatorRequest;
 import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslatorResponse;
-import com.awesomengwin.kingfisher.spotify.SpotifyService;
-import com.awesomengwin.kingfisher.spotify.client.Track;
+import com.awesomengwin.kingfisher.spotifylegacy.SpotifyService;
+import com.awesomengwin.kingfisher.spotifylegacy.client.Track;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;

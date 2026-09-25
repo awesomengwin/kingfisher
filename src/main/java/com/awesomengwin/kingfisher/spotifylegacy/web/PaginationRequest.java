@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.spotify.web;
+package com.awesomengwin.kingfisher.spotifylegacy.web;
 
 public record PaginationRequest(
         Integer page,

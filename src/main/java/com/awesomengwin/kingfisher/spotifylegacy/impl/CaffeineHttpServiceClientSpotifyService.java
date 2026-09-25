@@ -1,8 +1,8 @@
-package com.awesomengwin.kingfisher.spotify.impl;
+package com.awesomengwin.kingfisher.spotifylegacy.impl;
 
-import com.awesomengwin.kingfisher.spotify.client.*;
-import com.awesomengwin.kingfisher.spotify.SpotifyPlayerService;
-import com.awesomengwin.kingfisher.spotify.SpotifyService;
+import com.awesomengwin.kingfisher.spotifylegacy.client.*;
+import com.awesomengwin.kingfisher.spotifylegacy.SpotifyPlayerService;
+import com.awesomengwin.kingfisher.spotifylegacy.SpotifyService;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;

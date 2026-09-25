@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.spotify.client;
+package com.awesomengwin.kingfisher.spotifylegacy.client;
 
 import org.springframework.security.oauth2.client.annotation.ClientRegistrationId;
 import org.springframework.web.bind.annotation.PathVariable;

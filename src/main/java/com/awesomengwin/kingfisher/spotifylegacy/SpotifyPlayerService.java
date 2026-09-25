@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.spotify;
+package com.awesomengwin.kingfisher.spotifylegacy;
 
 public interface SpotifyPlayerService {
 

@@ -1,10 +1,10 @@
-package com.awesomengwin.kingfisher.spotify.web;
+package com.awesomengwin.kingfisher.spotifylegacy.web;
 
-import com.awesomengwin.kingfisher.spotify.SpotifyService;
-import com.awesomengwin.kingfisher.spotify.client.PlaylistResponse;
-import com.awesomengwin.kingfisher.spotify.client.PlaylistTrackResponse;
-import com.awesomengwin.kingfisher.spotify.client.SpotifyPage;
-import com.awesomengwin.kingfisher.spotify.client.SavedTrackResponse;
+import com.awesomengwin.kingfisher.spotifylegacy.SpotifyService;
+import com.awesomengwin.kingfisher.spotifylegacy.client.PlaylistResponse;
+import com.awesomengwin.kingfisher.spotifylegacy.client.PlaylistTrackResponse;
+import com.awesomengwin.kingfisher.spotifylegacy.client.SpotifyPage;
+import com.awesomengwin.kingfisher.spotifylegacy.client.SavedTrackResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;

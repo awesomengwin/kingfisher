@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.spotify.client;
+package com.awesomengwin.kingfisher.spotifylegacy.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
