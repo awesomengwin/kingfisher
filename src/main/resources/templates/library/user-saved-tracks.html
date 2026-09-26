@@ -10,7 +10,7 @@
         <div class="flex-grow-1 list-group overflow-auto">
             <button th:each="track: ${userSavedTracks.items()}"
                     class="list-group-item list-group-item-action"
-                    hx-put="/spotify/player/play" hx-trigger="dblclick"
+                    hx-put="/player/play" hx-trigger="dblclick"
                     th:hx-vals='|js:{
                         deviceId: document.body.dataset.deviceId,
                         uri: "${track.track().uri()}"
@@ -20,9 +20,9 @@
         </div>
         <th:block th:replace="~{fragments/pagination :: pagination(
             name='User saved tracks',
-            currentPage=${userSavedTracks.currentPage()},
-            totalPages=${userSavedTracks.totalPages()},
-            limit=${userSavedTracks.limit()})}"/>
+            page=${userSavedTracks.page()},
+            size=${userSavedTracks.size()},
+            totalPages=${userSavedTracks.totalPages()})}"/>
     </aside>
     <section class="d-none d-lg-block flex-grow-1 overflow-auto">
         blank

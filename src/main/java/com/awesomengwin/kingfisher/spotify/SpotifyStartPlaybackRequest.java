@@ -1,18 +1,17 @@
-package com.awesomengwin.kingfisher.spotify.client;
+package com.awesomengwin.kingfisher.spotify;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record StartPlaybackRequest(
+public record SpotifyStartPlaybackRequest(
         @JsonProperty("context_uri")
         String contextUri,
         ContextOffset offset
 ) {
-    public StartPlaybackRequest(String contextUri, String uri) {
+
+    public SpotifyStartPlaybackRequest(String contextUri, String uri) {
         this(contextUri, new ContextOffset(uri));
     }
 
-    public record ContextOffset(
-            String uri
-    ) {
+    public record ContextOffset(String uri) {
     }
 }

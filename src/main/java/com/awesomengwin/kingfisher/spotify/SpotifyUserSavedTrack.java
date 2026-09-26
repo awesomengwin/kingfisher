@@ -1,12 +1,12 @@
-package com.awesomengwin.kingfisher.spotify.client;
+package com.awesomengwin.kingfisher.spotify;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Instant;
 
-public record SavedTrackResponse(
+public record SpotifyUserSavedTrack(
         @JsonProperty("added_at")
         Instant addedAt,
-        Track track
+        SpotifyTrack track
 ) {
 }

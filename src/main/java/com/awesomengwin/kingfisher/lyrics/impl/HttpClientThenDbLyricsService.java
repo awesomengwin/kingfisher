@@ -7,8 +7,9 @@ import com.awesomengwin.kingfisher.lyrics.client.LyricsClient;
 import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslator;
 import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslatorRequest;
 import com.awesomengwin.kingfisher.lyrics.translator.LyricsTranslatorResponse;
-import com.awesomengwin.kingfisher.spotify.SpotifyService;
-import com.awesomengwin.kingfisher.spotify.client.Track;
+import com.awesomengwin.kingfisher.library.LibraryService;
+import com.awesomengwin.kingfisher.library.Track;
+import com.awesomengwin.kingfisher.library.Artist;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -21,14 +22,14 @@ public class HttpClientThenDbLyricsService implements LyricsService {
 
     private final LyricsRepository lyricsRepository;
     private final LyricsClient lyricsClient;
-    private final SpotifyService spotifyService;
+    private final LibraryService libraryService;
     private final LyricsTranslator lyricsTranslator;
     private final TranslationRepository translationRepository;
 
-    public HttpClientThenDbLyricsService(LyricsRepository lyricsRepository, LyricsClient lyricsClient, SpotifyService spotifyService, LyricsTranslator lyricsTranslator, TranslationRepository translationRepository) {
+    public HttpClientThenDbLyricsService(LyricsRepository lyricsRepository, LyricsClient lyricsClient, LibraryService libraryService, LyricsTranslator lyricsTranslator, TranslationRepository translationRepository) {
         this.lyricsRepository = lyricsRepository;
         this.lyricsClient = lyricsClient;
-        this.spotifyService = spotifyService;
+        this.libraryService = libraryService;
         this.lyricsTranslator = lyricsTranslator;
         this.translationRepository = translationRepository;
     }
@@ -70,7 +71,7 @@ public class HttpClientThenDbLyricsService implements LyricsService {
         Lyrics lyrics = lyricsRepository.findByTrackId(trackId)
                 .orElseThrow(() -> new RuntimeException("Lyrics of track %s could not be found".formatted(trackId)));
 
-        Track track = spotifyService.getTrack(trackId);
+        Track track = libraryService.getTrack(trackId);
 
         List<LyricsTranslatorRequest.LyricsLine> lines = lyrics.getLines().stream()
                 .map(line -> new LyricsTranslatorRequest.LyricsLine(line.startTimeMs(), line.words()))
@@ -80,7 +81,7 @@ public class HttpClientThenDbLyricsService implements LyricsService {
                 track.name(),
                 track.album().name(),
                 track.artists().stream()
-                        .map(Track.Artist::name)
+                        .map(Artist::name)
                         .toList());
 
         LyricsTranslatorResponse translated = lyricsTranslator

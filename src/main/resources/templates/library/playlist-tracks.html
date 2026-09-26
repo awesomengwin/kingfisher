@@ -10,20 +10,20 @@
         <div class="flex-grow-1 list-group overflow-auto">
             <button th:each="track: ${playlistTracks.items()}"
                     class="list-group-item list-group-item-action"
-                    hx-put="/spotify/player/play" hx-trigger="dblclick"
+                    hx-put="/player/play" hx-trigger="dblclick"
                     th:hx-vals='|js:{
                         deviceId: document.body.dataset.deviceId,
                         contextUri: "${playlistUri}",
-                        uri: "${track.item().uri()}"
+                        uri: "${track.uri()}"
                     }|'
-                    hx-swap="none" th:text="${track.item().name()}">
+                    hx-swap="none" th:text="${track.name()}">
             </button>
         </div>
         <th:block th:replace="~{fragments/pagination :: pagination(
             name='Playlist tracks',
-            currentPage=${playlistTracks.currentPage()},
-            totalPages=${playlistTracks.totalPages()},
-            limit=${playlistTracks.limit()})}"/>
+            page=${playlistTracks.page()},
+            size=${playlistTracks.size()},
+            totalPages=${playlistTracks.totalPages()})}"/>
     </aside>
     <section class="d-none d-lg-block flex-grow-1 overflow-auto">
         blank
