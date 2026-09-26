@@ -6,8 +6,8 @@ import com.awesomengwin.kingfisher.common.ApiServerException;
 import com.awesomengwin.kingfisher.common.wikimedia.WiktionaryClient;
 import com.awesomengwin.kingfisher.lyrics.client.LyricsApiErrorResponse;
 import com.awesomengwin.kingfisher.lyrics.client.LyricsClient;
-import com.awesomengwin.kingfisher.spotifylegacy.client.SpotifyApiErrorResponse;
-import com.awesomengwin.kingfisher.spotifylegacy.client.SpotifyClient;
+import com.awesomengwin.kingfisher.spotify.SpotifyApiError;
+import com.awesomengwin.kingfisher.spotify.SpotifyClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -60,7 +60,7 @@ public class HttpClientConfig {
 
     private static String getErrorMessage(String groupName, ClientHttpResponse response, JsonMapper jsonMapper) {
         if ("spotify".equals(groupName)) {
-            return getResponseBodyAs(SpotifyApiErrorResponse.class, response, jsonMapper).error().message();
+            return getResponseBodyAs(SpotifyApiError.class, response, jsonMapper).error().message();
         } else if ("lyrics".equals(groupName)) {
             return getResponseBodyAs(LyricsApiErrorResponse.class, response, jsonMapper).message();
         } else throw new RuntimeException("Unknown group name");
