@@ -1,9 +1,11 @@
 package com.awesomengwin.kingfisher.spotify;
 
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.service.annotation.PutExchange;
 
 @HttpExchange
 public interface SpotifyClient {
@@ -26,4 +28,12 @@ public interface SpotifyClient {
     @GetExchange("/tracks/{trackId}")
     SpotifyTrack getTrack(@PathVariable String trackId);
 
+    @PutExchange("/me/player/play")
+    void startPlayback(@RequestParam("device_id") String deviceId, @RequestBody SpotifyStartPlaybackRequest request);
+
+    @PutExchange("/me/player/shuffle")
+    void togglePlaybackShuffle(@RequestParam("device_id") String deviceId, @RequestParam boolean state);
+
+    @PutExchange("/me/player/repeat")
+    void setRepeatMode(@RequestParam("device_id") String deviceId, @RequestParam String state);
 }

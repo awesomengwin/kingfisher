@@ -25,7 +25,7 @@ public class PlayerController {
     @PutMapping("/play")
     public void play(@AuthenticationPrincipal OAuth2User currentUser,
                      @RequestParam String deviceId,
-                     @RequestParam String contextUri, @RequestParam String uri) {
+                     @RequestParam(required = false) String contextUri, @RequestParam String uri) {
         playerService.play(currentUser.getName(), deviceId, contextUri, uri);
     }
 
