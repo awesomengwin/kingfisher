@@ -67,22 +67,22 @@ export const getCurrentState = () => {
   return player.getCurrentState();
 }
 
-export const togglePlaybackShuffle = (state) => {
+export const togglePlaybackShuffle = (enabled) => {
   const params = new URLSearchParams({
     deviceId: document.body.dataset.deviceId,
-    state,
+    enabled,
   });
 
-  return put(`/spotify/player/shuffle?${params}`);
+  return put(`/player/shuffle?${params}`);
 }
 
-export const setRepeatMode = (state) => {
+export const setRepeatMode = (mode) => {
   const params = new URLSearchParams({
     deviceId: document.body.dataset.deviceId,
-    state,
+    mode,
   });
 
-  return put(`/spotify/player/repeat?${params}`);
+  return put(`/player/repeat?${params}`);
 }
 
 export const nextTrack = () => {
