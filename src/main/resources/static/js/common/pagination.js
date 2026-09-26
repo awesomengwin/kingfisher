@@ -24,7 +24,7 @@ const createPageItem = (page, current, size) => {
   link.classList.add('page-link');
 
   link.href = `?page=${page}&size=${size}`;
-  link.textContent = page;
+  link.textContent = page + 1;
 
   if (page === current) {
     li.classList.add('active');
