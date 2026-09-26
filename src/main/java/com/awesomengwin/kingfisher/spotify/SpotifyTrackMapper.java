@@ -7,4 +7,8 @@ import org.mapstruct.Mapper;
 public interface SpotifyTrackMapper {
 
     Track map(SpotifyTrack source);
+
+    default Track map(SpotifyPlaylistTrack source) {
+        return source == null ? null : map(source.item());
+    }
 }
