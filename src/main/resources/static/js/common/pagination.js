@@ -58,7 +58,7 @@ const createNextPageItem = (current, total, size) => {
   link.href = `?page=${current + 1}&size=${size}`;
   link.textContent = 'Next';
 
-  if (current === total) {
+  if (current === total - 1) {
     li.classList.add('disabled');
   }
 
@@ -77,7 +77,7 @@ const createPreviousPageItem = (current, size) => {
   link.href = `?page=${current - 1}&size=${size}`;
   link.textContent = 'Previous';
 
-  if (current === 1) {
+  if (current === 0) {
     li.classList.add('disabled');
   }
 
@@ -97,8 +97,8 @@ const buildPageList = (c, m) => {
   let rangeWithDots = [];
   let l;
 
-  for (let i = 1; i <= last; i++) {
-    if (i === 1 || i === last || i >= left && i < right) {
+  for (let i = 0; i < last; i++) {
+    if (i === 0 || i === last - 1 || i >= left && i < right) {
       range.push(i);
     }
   }
