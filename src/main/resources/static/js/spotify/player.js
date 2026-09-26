@@ -17,7 +17,7 @@ export const initSpotifyPlayer = () => {
     player = new Spotify.Player({
       name: 'kingfisher',
       getOAuthToken: async (cb) => {
-        const resp = await post('/spotify/token');
+        const resp = await post('/token');
         const token = await resp.text();
         cb(token);
       },
