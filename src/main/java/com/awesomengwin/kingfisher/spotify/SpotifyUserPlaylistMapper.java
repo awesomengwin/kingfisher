@@ -4,7 +4,7 @@ import com.awesomengwin.kingfisher.library.UserPlaylist;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface SpotifyUserPlaylistMapper
         extends SpotifyPageMapper<SpotifyUserPlaylist, UserPlaylist> {
 

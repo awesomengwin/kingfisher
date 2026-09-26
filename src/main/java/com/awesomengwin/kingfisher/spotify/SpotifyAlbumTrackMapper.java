@@ -3,7 +3,7 @@ package com.awesomengwin.kingfisher.spotify;
 import com.awesomengwin.kingfisher.library.AlbumTrack;
 import org.mapstruct.Mapper;
 
-@Mapper(uses = SpotifyArtistMapper.class)
+@Mapper(componentModel = "spring", uses = SpotifyArtistMapper.class)
 public interface SpotifyAlbumTrackMapper
         extends SpotifyPageMapper<SpotifyAlbumTrack, AlbumTrack> {
 
