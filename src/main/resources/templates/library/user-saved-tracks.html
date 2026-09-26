@@ -20,9 +20,9 @@
         </div>
         <th:block th:replace="~{fragments/pagination :: pagination(
             name='User saved tracks',
-            currentPage=${userSavedTracks.currentPage()},
-            totalPages=${userSavedTracks.totalPages()},
-            limit=${userSavedTracks.limit()})}"/>
+            page=${userSavedTracks.page()},
+            size=${userSavedTracks.size()},
+            totalPages=${userSavedTracks.totalPages()})}"/>
     </aside>
     <section class="d-none d-lg-block flex-grow-1 overflow-auto">
         blank

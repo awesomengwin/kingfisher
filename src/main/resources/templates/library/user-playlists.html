@@ -16,9 +16,9 @@
         </div>
         <th:block th:replace="~{fragments/pagination :: pagination(
             name='User playlists',
-            currentPage=${userPlaylists.currentPage()},
-            totalPages=${userPlaylists.totalPages()},
-            limit=${userPlaylists.limit()})}"/>
+            page=${userPlaylists.page()},
+            size=${userPlaylists.size()},
+            totalPages=${userPlaylists.totalPages()})}"/>
     </aside>
     <section class="d-none d-lg-block flex-grow-1 overflow-auto">
         blank
