@@ -1,0 +1,10 @@
+package com.awesomengwin.kingfisher.spotify;
+
+import com.awesomengwin.kingfisher.library.Track;
+import org.mapstruct.Mapper;
+
+@Mapper(uses = {SpotifyAlbumMapper.class, SpotifyArtistMapper.class})
+public interface SpotifyTrackMapper {
+
+    Track map(SpotifyTrack source);
+}
