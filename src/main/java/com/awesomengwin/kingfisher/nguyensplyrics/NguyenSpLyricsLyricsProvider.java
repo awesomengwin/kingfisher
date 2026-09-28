@@ -1,7 +1,7 @@
 package com.awesomengwin.kingfisher.nguyensplyrics;
 
-import com.awesomengwin.kingfisher.lyricsv2.Lyrics;
-import com.awesomengwin.kingfisher.lyricsv2.LyricsProvider;
+import com.awesomengwin.kingfisher.lyrics.Lyrics;
+import com.awesomengwin.kingfisher.lyrics.LyricsProvider;
 import org.springframework.stereotype.Service;
 
 @Service

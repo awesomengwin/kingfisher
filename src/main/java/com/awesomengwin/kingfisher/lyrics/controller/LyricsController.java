@@ -1,8 +1,8 @@
-package com.awesomengwin.kingfisher.lyricsv2.controller;
+package com.awesomengwin.kingfisher.lyrics.controller;
 
-import com.awesomengwin.kingfisher.lyricsv2.Lyrics;
-import com.awesomengwin.kingfisher.lyricsv2.LyricsService;
-import com.awesomengwin.kingfisher.lyricsv2.TranslationLyrics;
+import com.awesomengwin.kingfisher.lyrics.Lyrics;
+import com.awesomengwin.kingfisher.lyrics.LyricsService;
+import com.awesomengwin.kingfisher.lyrics.TranslationLyrics;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;

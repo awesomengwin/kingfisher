@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.lyricsv2;
+package com.awesomengwin.kingfisher.lyrics;
 
 public class LyricsNotFoundException extends RuntimeException {
     public LyricsNotFoundException(String trackId) {

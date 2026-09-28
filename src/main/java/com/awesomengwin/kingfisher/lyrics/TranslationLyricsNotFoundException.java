@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.lyricsv2;
+package com.awesomengwin.kingfisher.lyrics;
 
 public class TranslationLyricsNotFoundException extends RuntimeException {
     public TranslationLyricsNotFoundException(String trackId, String userId) {

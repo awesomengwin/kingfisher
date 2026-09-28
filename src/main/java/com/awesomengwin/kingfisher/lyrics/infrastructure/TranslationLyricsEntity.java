@@ -1,6 +1,6 @@
-package com.awesomengwin.kingfisher.lyricsv2.infrastructure;
+package com.awesomengwin.kingfisher.lyrics.infrastructure;
 
-import com.awesomengwin.kingfisher.lyricsv2.TranslationLyricsStatus;
+import com.awesomengwin.kingfisher.lyrics.TranslationLyricsStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;

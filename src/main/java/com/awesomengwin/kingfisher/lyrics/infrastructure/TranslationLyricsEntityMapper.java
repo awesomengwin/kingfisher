@@ -1,6 +1,6 @@
-package com.awesomengwin.kingfisher.lyricsv2.infrastructure;
+package com.awesomengwin.kingfisher.lyrics.infrastructure;
 
-import com.awesomengwin.kingfisher.lyricsv2.TranslationLyrics;
+import com.awesomengwin.kingfisher.lyrics.TranslationLyrics;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring", uses = TranslationLyricsLineValueObjectMapper.class)

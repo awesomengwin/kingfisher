@@ -1,7 +1,7 @@
-package com.awesomengwin.kingfisher.lyricsv2.infrastructure;
+package com.awesomengwin.kingfisher.lyrics.infrastructure;
 
-import com.awesomengwin.kingfisher.lyricsv2.Lyrics;
-import com.awesomengwin.kingfisher.lyricsv2.LyricsRepository;
+import com.awesomengwin.kingfisher.lyrics.Lyrics;
+import com.awesomengwin.kingfisher.lyrics.LyricsRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

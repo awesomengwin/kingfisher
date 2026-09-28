@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.lyricsv2.infrastructure;
+package com.awesomengwin.kingfisher.lyrics.infrastructure;
 
 public record TranslationLyricsLineValueObject(
         Long startTimeMs,

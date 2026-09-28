@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.lyricsv2;
+package com.awesomengwin.kingfisher.lyrics;
 
 public interface TranslateLyricsService {
 

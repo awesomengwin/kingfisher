@@ -1,8 +1,8 @@
 package com.awesomengwin.kingfisher.openai;
 
-import com.awesomengwin.kingfisher.lyricsv2.TranslateLyricsRequest;
-import com.awesomengwin.kingfisher.lyricsv2.TranslateLyricsResponse;
-import com.awesomengwin.kingfisher.lyricsv2.TranslateLyricsService;
+import com.awesomengwin.kingfisher.lyrics.TranslateLyricsRequest;
+import com.awesomengwin.kingfisher.lyrics.TranslateLyricsResponse;
+import com.awesomengwin.kingfisher.lyrics.TranslateLyricsService;
 import com.awesomengwin.kingfisher.userpreferences.OpenAiApiKeyProvider;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.openai.OpenAiChatModel;
