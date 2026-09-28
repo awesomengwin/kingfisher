@@ -22,6 +22,11 @@ public class LyricsEntity {
     public LyricsEntity() {
     }
 
+    public LyricsEntity(String trackId, List<LyricsLineValueObject> lines) {
+        this.trackId = trackId;
+        this.lines = lines;
+    }
+
     public String getTrackId() {
         return trackId;
     }

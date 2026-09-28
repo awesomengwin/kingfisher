@@ -2,6 +2,8 @@ package com.awesomengwin.kingfisher.lyrics.infrastructure;
 
 public record TranslationLyricsLineValueObject(
         Long startTimeMs,
-        String translatedWords
+        String words,
+        String translatedWords,
+        Long endTimeMs
 ) {
 }

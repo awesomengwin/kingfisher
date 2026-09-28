@@ -4,7 +4,6 @@ import com.awesomengwin.kingfisher.lyrics.TranslationLyricsStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,8 @@ public class TranslationLyricsEntity {
 
     private void updateTranslateStatus() {
         boolean isPartialTranslated = this.lines.stream()
-                .anyMatch(line -> StringUtils.hasText(line.translatedWords()));
+                .anyMatch(line -> line.translatedWords() != null
+                        && !line.translatedWords().isBlank());
 
         if (!isPartialTranslated) {
             this.translateStatus = TranslationLyricsStatus.NONE;
@@ -47,7 +47,8 @@ public class TranslationLyricsEntity {
         }
 
         boolean isCompletedTranslated = this.lines.stream()
-                .allMatch(line -> StringUtils.hasText(line.translatedWords()));
+                .allMatch(line -> line.translatedWords() != null
+                        && !line.translatedWords().isBlank());
 
         if (isCompletedTranslated) {
             this.translateStatus = TranslationLyricsStatus.COMPLETED;
