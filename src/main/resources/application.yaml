@@ -43,7 +43,7 @@ spring:
     serviceclient:
       spotify:
         base-url: https://api.spotify.com/v1
-      lyrics:
+      nguyen-sp-lyrics:
         base-url: ${LYRICS_API_URL:your_lyrics_api_url}
       wiktionary:
         base-url: https://en.wiktionary.org/api/rest_v1
