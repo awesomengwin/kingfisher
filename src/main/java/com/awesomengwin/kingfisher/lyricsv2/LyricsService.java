@@ -1,8 +1,11 @@
 package com.awesomengwin.kingfisher.lyricsv2;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class LyricsService {
 
     private final LyricsRepository lyricsRepository;
