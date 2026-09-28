@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.userpreferences.web;
+package com.awesomengwin.kingfisher.userpreferences.controller;
 
 import com.awesomengwin.kingfisher.userpreferences.UserPreferencesService;
 import jakarta.validation.Valid;
