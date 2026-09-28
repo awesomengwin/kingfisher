@@ -3,9 +3,11 @@ package com.awesomengwin.kingfisher.lyricsv2.infrastructure;
 import com.awesomengwin.kingfisher.lyricsv2.LyricsLine;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface LyricsLineValueObjectMapper {
 
-    LyricsLine toValueObject(LyricsLineValueObject valueObject);
+    LyricsLine toLyricsLine(LyricsLineValueObject valueObject);
+
+    LyricsLineValueObject toValueObject(LyricsLine lines);
 
 }
