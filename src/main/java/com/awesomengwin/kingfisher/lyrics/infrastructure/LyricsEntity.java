@@ -1,0 +1,32 @@
+package com.awesomengwin.kingfisher.lyrics.infrastructure;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "lyrics")
+public class LyricsEntity {
+
+    @Id
+    private String trackId;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<LyricsLineValueObject> lines = new ArrayList<>();
+
+    public LyricsEntity() {
+    }
+
+    public String getTrackId() {
+        return trackId;
+    }
+
+    public List<LyricsLineValueObject> getLines() {
+        return lines;
+    }
+}

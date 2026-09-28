@@ -1,6 +1,6 @@
 package com.awesomengwin.kingfisher.nguyensplyrics;
 
-import com.awesomengwin.kingfisher.lyricsv2.LyricsLine;
+import com.awesomengwin.kingfisher.lyrics.LyricsLine;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
