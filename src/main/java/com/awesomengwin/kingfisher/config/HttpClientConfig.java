@@ -4,8 +4,8 @@ import com.awesomengwin.kingfisher.common.ApiClientException;
 import com.awesomengwin.kingfisher.common.ApiClientNotFoundException;
 import com.awesomengwin.kingfisher.common.ApiServerException;
 import com.awesomengwin.kingfisher.common.wikimedia.WiktionaryClient;
-import com.awesomengwin.kingfisher.lyrics.client.LyricsApiErrorResponse;
-import com.awesomengwin.kingfisher.lyrics.client.LyricsClient;
+import com.awesomengwin.kingfisher.nguyensplyrics.NguyenSpLyricsApiError;
+import com.awesomengwin.kingfisher.nguyensplyrics.NguyenSpLyricsClient;
 import com.awesomengwin.kingfisher.spotify.SpotifyApiError;
 import com.awesomengwin.kingfisher.spotify.SpotifyClient;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +24,7 @@ import java.io.InputStream;
 
 @Configuration
 @ImportHttpServices(group = "spotify", types = SpotifyClient.class)
-@ImportHttpServices(group = "lyrics", types = LyricsClient.class)
+@ImportHttpServices(group = "nguyen-sp-lyrics", types = NguyenSpLyricsClient.class)
 @ImportHttpServices(group = "wiktionary", types = WiktionaryClient.class)
 public class HttpClientConfig {
 
@@ -61,8 +61,8 @@ public class HttpClientConfig {
     private static String getErrorMessage(String groupName, ClientHttpResponse response, JsonMapper jsonMapper) {
         if ("spotify".equals(groupName)) {
             return getResponseBodyAs(SpotifyApiError.class, response, jsonMapper).error().message();
-        } else if ("lyrics".equals(groupName)) {
-            return getResponseBodyAs(LyricsApiErrorResponse.class, response, jsonMapper).message();
+        } else if ("nguyen-sp-lyrics".equals(groupName)) {
+            return getResponseBodyAs(NguyenSpLyricsApiError.class, response, jsonMapper).message();
         } else throw new RuntimeException("Unknown group name");
     }
 

@@ -3,7 +3,6 @@ package com.awesomengwin.kingfisher.spotify;
 import com.awesomengwin.kingfisher.player.PlayerService;
 import com.awesomengwin.kingfisher.player.RepeatMode;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 @Service
 public class SpotifyPlayerService implements PlayerService {
@@ -16,13 +15,13 @@ public class SpotifyPlayerService implements PlayerService {
 
     @Override
     public void play(String userId, String deviceId, String contextUri, String uri) {
-        if (StringUtils.hasText(contextUri)) {
-            client.startPlayback(deviceId, new SpotifyStartPlaybackRequest(contextUri, uri));
+        if (contextUri == null || contextUri.isBlank()) {
+            client.startPlayback(deviceId,
+                    new SpotifyStartPlaybackRequest("spotify:user:%s:collection".formatted(userId), uri));
             return;
         }
 
-        client.startPlayback(deviceId,
-                new SpotifyStartPlaybackRequest("spotify:user:%s:collection".formatted(userId), uri));
+        client.startPlayback(deviceId, new SpotifyStartPlaybackRequest(contextUri, uri));
     }
 
     @Override

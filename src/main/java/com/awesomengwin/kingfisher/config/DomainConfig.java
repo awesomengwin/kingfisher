@@ -10,23 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class DomainConfig {
 
     @Bean
-    LibraryService libraryService(SpotifyClient spotifyClient,
-                                  SpotifyUserSavedTrackMapper spotifyUserSavedTrackMapper,
-                                  SpotifyUserSavedAlbumMapper spotifyUserSavedAlbumMapper,
-                                  SpotifyUserPlaylistMapper spotifyUserPlaylistMapper,
-                                  SpotifyPlaylistTrackMapper spotifyPlaylistTrackMapper,
-                                  SpotifyAlbumTrackMapper spotifyAlbumTrackMapper,
-                                  SpotifyTrackMapper spotifyTrackMapper) {
-        SpotifyLibraryService spotifyLibraryService = new SpotifyLibraryService(
-                spotifyClient,
-                spotifyUserSavedTrackMapper,
-                spotifyUserSavedAlbumMapper,
-                spotifyUserPlaylistMapper,
-                spotifyPlaylistTrackMapper,
-                spotifyAlbumTrackMapper,
-                spotifyTrackMapper
-        );
-
-        return new CaffeineLibraryService(spotifyLibraryService);
+    LibraryService libraryService(SpotifyClient spotifyClient) {
+        return new CaffeineLibraryService(new SpotifyLibraryService(spotifyClient));
     }
 }

@@ -2,53 +2,87 @@ package com.awesomengwin.kingfisher.spotify;
 
 import com.awesomengwin.kingfisher.library.*;
 
+import java.util.function.Function;
+
 public class SpotifyLibraryService implements LibraryService {
 
     private final SpotifyClient client;
-    private final SpotifyUserSavedTrackMapper spotifyUserSavedTrackMapper;
-    private final SpotifyUserSavedAlbumMapper spotifyUserSavedAlbumMapper;
-    private final SpotifyUserPlaylistMapper spotifyUserPlaylistMapper;
-    private final SpotifyPlaylistTrackMapper spotifyPlaylistTrackMapper;
-    private final SpotifyAlbumTrackMapper spotifyAlbumTrackMapper;
-    private final SpotifyTrackMapper spotifyTrackMapper;
 
-    public SpotifyLibraryService(SpotifyClient client, SpotifyUserSavedTrackMapper spotifyUserSavedTrackMapper, SpotifyUserSavedAlbumMapper spotifyUserSavedAlbumMapper, SpotifyUserPlaylistMapper spotifyUserPlaylistMapper, SpotifyPlaylistTrackMapper spotifyPlaylistTrackMapper, SpotifyAlbumTrackMapper spotifyAlbumTrackMapper, SpotifyTrackMapper spotifyTrackMapper) {
+    public SpotifyLibraryService(SpotifyClient client) {
         this.client = client;
-        this.spotifyUserSavedTrackMapper = spotifyUserSavedTrackMapper;
-        this.spotifyUserSavedAlbumMapper = spotifyUserSavedAlbumMapper;
-        this.spotifyUserPlaylistMapper = spotifyUserPlaylistMapper;
-        this.spotifyPlaylistTrackMapper = spotifyPlaylistTrackMapper;
-        this.spotifyAlbumTrackMapper = spotifyAlbumTrackMapper;
-        this.spotifyTrackMapper = spotifyTrackMapper;
     }
 
     @Override
     public Page<UserSavedTrack> getUserSavedTracks(String userId, Pageable p) {
-        return spotifyUserSavedTrackMapper.toPage(client.getUserSavedTracks(p.limit(), p.offset()));
+        SpotifyPage<SpotifyUserSavedTrack> page = client.getUserSavedTracks(p.limit(), p.offset());
+
+        return toPage(page, sp -> new UserSavedTrack(sp.addedAt(), toTrack(sp.track())));
     }
 
     @Override
     public Page<UserSavedAlbum> getUserSavedAlbums(String userId, Pageable p) {
-        return spotifyUserSavedAlbumMapper.toPage(client.getUserSavedAlbums(p.limit(), p.offset()));
+        SpotifyPage<SpotifyUserSavedAlbum> page = client.getUserSavedAlbums(p.limit(), p.offset());
+
+        return toPage(page, sp -> new UserSavedAlbum(sp.addedAt(), toAlbum(sp.album())));
     }
 
     @Override
     public Page<UserPlaylist> getUserPlaylists(String userId, Pageable p) {
-        return spotifyUserPlaylistMapper.toPage(client.getUserPlaylists(p.limit(), p.offset()));
+        SpotifyPage<SpotifyUserPlaylist> page = client.getUserPlaylists(p.limit(), p.offset());
+
+        return toPage(page, sp -> new UserPlaylist(
+                sp.id(), sp.name(), sp.owner().displayName(), sp.items().total()));
     }
 
     @Override
     public Page<Track> getPlaylistTracks(String playlistId, String userId, Pageable p) {
-        return spotifyPlaylistTrackMapper.toPage(client.getPlaylistTracks(playlistId, p.limit(), p.offset()));
+        SpotifyPage<SpotifyPlaylistTrack> page = client.getPlaylistTracks(playlistId, p.limit(), p.offset());
+
+        return toPage(page, sp -> toTrack(sp.item()));
     }
 
     @Override
     public Page<AlbumTrack> getAlbumTracks(String albumId, Pageable p) {
-        return spotifyAlbumTrackMapper.toPage(client.getAlbumTracks(albumId, p.limit(), p.offset()));
+        SpotifyPage<SpotifyAlbumTrack> page = client.getAlbumTracks(albumId, p.limit(), p.offset());
+
+        return toPage(page, sp -> new AlbumTrack(sp.name(), sp.artists().stream()
+                .map(this::toArtist)
+                .toList()));
     }
 
     @Override
     public Track getTrack(String trackId) {
-        return spotifyTrackMapper.map(client.getTrack(trackId));
+        return toTrack(client.getTrack(trackId));
+    }
+
+    private Track toTrack(SpotifyTrack spTrack) {
+        return new Track(
+                spTrack.uri(),
+                spTrack.name(),
+                toAlbum(spTrack.album()),
+                spTrack.artists().stream()
+                        .map(this::toArtist)
+                        .toList());
+    }
+
+    private Album toAlbum(SpotifyAlbum spAlbum) {
+        return new Album(spAlbum.name(), spAlbum.images().stream()
+                .map(spImg -> new Image(spImg.url()))
+                .toList());
+    }
+
+    private Artist toArtist(SpotifyArtist spArtist) {
+        return new Artist(spArtist.name());
+    }
+
+    private <S, T> Page<T> toPage(SpotifyPage<S> spotifyPage, Function<S, T> itemsMapper) {
+        return new Page<>(
+                spotifyPage.offset() / spotifyPage.limit(),
+                spotifyPage.limit(),
+                (spotifyPage.total() + spotifyPage.limit() - 1) / spotifyPage.limit(),
+                spotifyPage.total(),
+                spotifyPage.items().stream()
+                        .map(itemsMapper)
+                        .toList());
     }
 }
