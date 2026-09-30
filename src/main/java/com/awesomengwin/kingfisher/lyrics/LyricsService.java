@@ -2,67 +2,68 @@ package com.awesomengwin.kingfisher.lyrics;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class LyricsService {
 
     private final LyricsRepository lyricsRepository;
     private final LyricsProvider lyricsProvider;
-    private final TranslationLyricsRepository translationLyricsRepository;
+    private final TranslationRepository translationRepository;
     private final TranslateLyricsService translateLyricsService;
 
     public LyricsService(LyricsRepository lyricsRepository, LyricsProvider lyricsProvider,
-                         TranslationLyricsRepository translationLyricsRepository,
+                         TranslationRepository translationRepository,
                          TranslateLyricsService translateLyricsService) {
         this.lyricsRepository = lyricsRepository;
         this.lyricsProvider = lyricsProvider;
-        this.translationLyricsRepository = translationLyricsRepository;
+        this.translationRepository = translationRepository;
         this.translateLyricsService = translateLyricsService;
     }
 
-    public Lyrics getLyrics(String trackId) {
-        Lyrics savedLyrics = lyricsRepository.findLyrics(trackId).orElse(null);
+    public Lyrics getLyrics(String trackId, String userId) {
+        Lyrics savedLyrics = lyricsRepository.findById(trackId).orElse(null);
 
         if (savedLyrics != null) {
+            Translation translation = translationRepository
+                    .findByTrackIdAndUserId(trackId, userId).orElse(null);
+
+            if (translation != null) {
+                return savedLyrics.withTranslationLines(translation.lines());
+            }
+
             return savedLyrics;
         }
 
         Lyrics lyrics = lyricsProvider.getLyrics(trackId);
 
-        lyricsRepository.saveLyrics(lyrics);
+        lyricsRepository.save(lyrics);
 
         return lyrics;
     }
 
-    public TranslationLyrics getTranslationLyrics(String trackId, String userId) {
-        return translationLyricsRepository.findTranslationLyrics(trackId, userId)
-                .orElseThrow(() -> new TranslationLyricsNotFoundException(trackId, userId));
-    }
-
-    public TranslationLyrics translateLyrics(String trackId, String userId) {
-        Lyrics lyrics = lyricsRepository.findLyrics(trackId)
+    public Lyrics translateLyrics(String trackId, String userId) {
+        Lyrics lyrics = lyricsRepository.findById(trackId)
                 .orElseThrow(() -> new LyricsNotFoundException(trackId));
 
-        TranslateLyricsResponse translateLyricsResponse =
-                translateLyricsService.translate(TranslateLyricsRequest.from(lyrics.lines(), userId));
+        TranslateLyricsResponse resp = translateLyricsService.translate(
+                TranslateLyricsRequest.from(lyrics, userId));
 
-        Map<Long, String> byStartTimeMs = translateLyricsResponse.byStartTimeMs();
+        Translation translation = new Translation(trackId, userId, toTranslationLines(resp));
 
-        List<TranslationLyricsLine> translationLyricsLines = lyrics.lines().stream()
-                .map(line -> new TranslationLyricsLine(
-                        line.startTimeMs(),
-                        line.words(),
-                        byStartTimeMs.get(line.startTimeMs()),
-                        line.endTimeMs()
-                ))
+        translationRepository.save(translation);
+
+        return lyrics.withTranslationLines(translation.lines());
+    }
+
+    public List<TranslationLine> toTranslationLines(TranslateLyricsResponse resp) {
+        if (resp == null) {
+            return Collections.emptyList();
+        }
+
+        return resp.lines().stream()
+                .map(l -> new TranslationLine(l.startTimeMs(), l.translatedWords()))
                 .toList();
-
-        TranslationLyrics translationLyrics = new TranslationLyrics(trackId, userId, translationLyricsLines);
-
-        translationLyricsRepository.saveTranslationLyrics(translationLyrics);
-
-        return translationLyrics;
     }
 }

@@ -135,7 +135,7 @@ export const initPlayingBar = () => {
       return;
     }
 
-    htmx.ajax('PUT', `/lyrics/translate?trackId=${trackId}`, {
+    htmx.ajax('POST', `/lyrics/translate?trackId=${trackId}`, {
       target: 'main',
       select: 'main',
       swap: 'outerHTML'
@@ -237,9 +237,9 @@ const syncLyricsState = () => {
   ui.lyricsToggle.setAttribute('aria-pressed', String(isOnLyricsPage));
 
   if (lyricsRoot) {
-    const translateStatus = lyricsRoot.dataset.translateStatus;
+    const status = lyricsRoot.dataset.translationStatus;
 
-    ui.translateLyrics.disabled = !translateStatus;
+    ui.translateLyrics.disabled = !status;
   }
 }
 

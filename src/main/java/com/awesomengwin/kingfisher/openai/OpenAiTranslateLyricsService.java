@@ -9,8 +9,6 @@ import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class OpenAiTranslateLyricsService implements TranslateLyricsService {
 
@@ -49,19 +47,15 @@ public class OpenAiTranslateLyricsService implements TranslateLyricsService {
                                 Lyrics:
                                 {lyrics}
                                 """)
-                        .param("lyrics", getLinesPromptFormatted(request.lines())))
+                        .param("lyrics", formatLines(request)))
                 .call()
                 .entity(TranslateLyricsResponse.class);
     }
 
-    private String getLinesPromptFormatted(List<TranslateLyricsRequest.TranslateLyricsLine> lines) {
-        if (lines == null || lines.isEmpty()) {
-            throw new IllegalArgumentException("lines must not be null or empty");
-        }
-
+    private String formatLines(TranslateLyricsRequest request) {
         StringBuilder sb = new StringBuilder();
 
-        for (TranslateLyricsRequest.TranslateLyricsLine line : lines) {
+        for (TranslateLyricsRequest.Line line : request.lines()) {
             Long startTimeMs = line.startTimeMs();
             String words = line.words();
 

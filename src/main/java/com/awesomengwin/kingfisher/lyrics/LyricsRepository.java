@@ -4,8 +4,8 @@ import java.util.Optional;
 
 public interface LyricsRepository {
 
-    Optional<Lyrics> findLyrics(String trackId);
+    Optional<Lyrics> findById(String trackId);
 
-    void saveLyrics(Lyrics lyrics);
+    void save(Lyrics lyrics);
 
 }
