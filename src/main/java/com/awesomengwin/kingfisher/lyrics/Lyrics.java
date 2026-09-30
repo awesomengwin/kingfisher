@@ -13,7 +13,7 @@ public record Lyrics(
         Map<Long, String> byStartTimeMs = translationLines.stream()
                 .collect(Collectors.toMap(
                         TranslationLine::startTimeMs,
-                        TranslationLine::words));
+                        TranslationLine::translatedWords));
 
         return new Lyrics(trackId, lines.stream()
                 .map(l -> l.withTranslatedWords(byStartTimeMs.get(l.startTimeMs())))

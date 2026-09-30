@@ -35,7 +35,7 @@ public class TranslationRepositoryImpl implements TranslationRepository {
                 lyrics.lines().stream()
                         .map(line -> new TranslationEntity.Line(
                                 line.startTimeMs(),
-                                line.words()
+                                line.translatedWords()
                         )).toList());
 
         repository.save(entity);

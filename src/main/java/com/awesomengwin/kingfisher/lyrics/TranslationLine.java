@@ -1,4 +1,4 @@
 package com.awesomengwin.kingfisher.lyrics;
 
-public record TranslationLine(Long startTimeMs, String words) {
+public record TranslationLine(Long startTimeMs, String translatedWords) {
 }
