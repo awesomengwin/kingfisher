@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.caffeine;
+package com.awesomengwin.kingfisher.library.caffeine;
 
 public record AlbumTracksKey(String albumId, int page, int size) {
 }

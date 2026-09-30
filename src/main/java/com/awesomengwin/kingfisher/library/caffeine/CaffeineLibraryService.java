@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.caffeine;
+package com.awesomengwin.kingfisher.library.caffeine;
 
 import com.awesomengwin.kingfisher.library.*;
 import com.github.benmanes.caffeine.cache.CacheLoader;
