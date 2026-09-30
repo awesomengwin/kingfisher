@@ -21,15 +21,13 @@ public record Lyrics(
     }
 
     public TranslationStatus translationStatus() {
-        boolean isPartial = lines.stream().anyMatch(l -> l.translatedWords() != null
-                && !l.translatedWords().isBlank());
+        boolean isPartial = lines.stream().anyMatch(l -> l.translatedWords() != null);
 
         if (!isPartial) {
             return TranslationStatus.NONE;
         }
 
-        boolean completed = lines.stream().allMatch(l -> l.translatedWords() != null
-                && !l.translatedWords().isBlank());
+        boolean completed = lines.stream().allMatch(l -> l.translatedWords() != null);
 
         return completed ? TranslationStatus.COMPLETED : TranslationStatus.PARTIAL;
     }
