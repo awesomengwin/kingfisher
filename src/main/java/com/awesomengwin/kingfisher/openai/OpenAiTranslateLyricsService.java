@@ -3,14 +3,11 @@ package com.awesomengwin.kingfisher.openai;
 import com.awesomengwin.kingfisher.lyrics.TranslateLyricsRequest;
 import com.awesomengwin.kingfisher.lyrics.TranslateLyricsResponse;
 import com.awesomengwin.kingfisher.lyrics.TranslateLyricsService;
-import com.awesomengwin.kingfisher.lyrics.TranslationLine;
 import com.awesomengwin.kingfisher.userpreferences.OpenAiApiKeyProvider;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class OpenAiTranslateLyricsService implements TranslateLyricsService {
@@ -50,19 +47,15 @@ public class OpenAiTranslateLyricsService implements TranslateLyricsService {
                                 Lyrics:
                                 {lyrics}
                                 """)
-                        .param("lyrics", getLinesPromptFormatted(request.lines())))
+                        .param("lyrics", formatLines(request)))
                 .call()
                 .entity(TranslateLyricsResponse.class);
     }
 
-    private String getLinesPromptFormatted(List<TranslationLine> lines) {
-        if (lines == null || lines.isEmpty()) {
-            throw new IllegalArgumentException("lines must not be null or empty");
-        }
-
+    private String formatLines(TranslateLyricsRequest request) {
         StringBuilder sb = new StringBuilder();
 
-        for (TranslationLine line : lines) {
+        for (TranslateLyricsRequest.Line line : request.lines()) {
             Long startTimeMs = line.startTimeMs();
             String words = line.words();
 

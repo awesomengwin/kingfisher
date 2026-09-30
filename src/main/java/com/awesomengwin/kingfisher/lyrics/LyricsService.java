@@ -2,6 +2,9 @@ package com.awesomengwin.kingfisher.lyrics;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 public class LyricsService {
 
@@ -45,12 +48,22 @@ public class LyricsService {
                 .orElseThrow(() -> new LyricsNotFoundException(trackId));
 
         TranslateLyricsResponse resp = translateLyricsService.translate(
-                TranslateLyricsRequest.from(lyrics.lines(), userId));
+                TranslateLyricsRequest.from(lyrics, userId));
 
-        Translation translation = new Translation(trackId, userId, resp.lines());
+        Translation translation = new Translation(trackId, userId, toTranslationLines(resp));
 
         translationRepository.save(translation);
 
-        return lyrics.withTranslationLines(resp.lines());
+        return lyrics.withTranslationLines(translation.lines());
+    }
+
+    public List<TranslationLine> toTranslationLines(TranslateLyricsResponse resp) {
+        if (resp == null) {
+            return Collections.emptyList();
+        }
+
+        return resp.lines().stream()
+                .map(l -> new TranslationLine(l.startTimeMs(), l.translatedWords()))
+                .toList();
     }
 }
