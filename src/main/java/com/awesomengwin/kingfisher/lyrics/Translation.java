@@ -2,7 +2,7 @@ package com.awesomengwin.kingfisher.lyrics;
 
 import java.util.List;
 
-public record TranslationLyrics(
+public record Translation(
         String trackId,
         String userId,
         List<TranslationLine> lines

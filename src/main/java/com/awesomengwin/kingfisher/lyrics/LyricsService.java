@@ -7,15 +7,15 @@ public class LyricsService {
 
     private final LyricsRepository lyricsRepository;
     private final LyricsProvider lyricsProvider;
-    private final TranslationLyricsRepository translationLyricsRepository;
+    private final TranslationRepository translationRepository;
     private final TranslateLyricsService translateLyricsService;
 
     public LyricsService(LyricsRepository lyricsRepository, LyricsProvider lyricsProvider,
-                         TranslationLyricsRepository translationLyricsRepository,
+                         TranslationRepository translationRepository,
                          TranslateLyricsService translateLyricsService) {
         this.lyricsRepository = lyricsRepository;
         this.lyricsProvider = lyricsProvider;
-        this.translationLyricsRepository = translationLyricsRepository;
+        this.translationRepository = translationRepository;
         this.translateLyricsService = translateLyricsService;
     }
 
@@ -23,7 +23,7 @@ public class LyricsService {
         Lyrics savedLyrics = lyricsRepository.findById(trackId).orElse(null);
 
         if (savedLyrics != null) {
-            TranslationLyrics translation = translationLyricsRepository
+            Translation translation = translationRepository
                     .findByTrackIdAndUserId(trackId, userId).orElse(null);
 
             if (translation != null) {
@@ -47,9 +47,9 @@ public class LyricsService {
         TranslateLyricsResponse resp = translateLyricsService.translate(
                 TranslateLyricsRequest.from(lyrics.lines(), userId));
 
-        TranslationLyrics translation = new TranslationLyrics(trackId, userId, resp.lines());
+        Translation translation = new Translation(trackId, userId, resp.lines());
 
-        translationLyricsRepository.save(translation);
+        translationRepository.save(translation);
 
         return lyrics.withTranslationLines(resp.lines());
     }

@@ -1,25 +1,25 @@
 package com.awesomengwin.kingfisher.lyrics.infrastructure;
 
 import com.awesomengwin.kingfisher.lyrics.TranslationLine;
-import com.awesomengwin.kingfisher.lyrics.TranslationLyrics;
-import com.awesomengwin.kingfisher.lyrics.TranslationLyricsRepository;
+import com.awesomengwin.kingfisher.lyrics.Translation;
+import com.awesomengwin.kingfisher.lyrics.TranslationRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
-public class TranslationLyricsRepositoryImpl implements TranslationLyricsRepository {
+public class TranslationRepositoryImpl implements TranslationRepository {
 
-    private final TranslationLyricsJpaRepository repository;
+    private final TranslationJpaRepository repository;
 
-    public TranslationLyricsRepositoryImpl(TranslationLyricsJpaRepository repository) {
+    public TranslationRepositoryImpl(TranslationJpaRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public Optional<TranslationLyrics> findByTrackIdAndUserId(String trackId, String userId) {
-        return repository.findById(new TranslationLyricsEntity.Id(trackId, userId))
-                .map(e -> new TranslationLyrics(
+    public Optional<Translation> findByTrackIdAndUserId(String trackId, String userId) {
+        return repository.findById(new TranslationEntity.Id(trackId, userId))
+                .map(e -> new Translation(
                         e.getId().trackId(),
                         e.getId().userId(),
                         e.getLines().stream()
@@ -28,12 +28,12 @@ public class TranslationLyricsRepositoryImpl implements TranslationLyricsReposit
     }
 
     @Override
-    public void save(TranslationLyrics lyrics) {
-        TranslationLyricsEntity entity = new TranslationLyricsEntity(
+    public void save(Translation lyrics) {
+        TranslationEntity entity = new TranslationEntity(
                 lyrics.trackId(),
                 lyrics.userId(),
                 lyrics.lines().stream()
-                        .map(line -> new TranslationLyricsEntity.Line(
+                        .map(line -> new TranslationEntity.Line(
                                 line.startTimeMs(),
                                 line.words()
                         )).toList());

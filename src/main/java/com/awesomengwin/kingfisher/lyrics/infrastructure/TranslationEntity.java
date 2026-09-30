@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "translation_lyrics")
-public class TranslationLyricsEntity {
+public class TranslationEntity {
 
     @EmbeddedId
     private Id id;
@@ -20,10 +20,10 @@ public class TranslationLyricsEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     private List<Line> lines = new ArrayList<>();
 
-    public TranslationLyricsEntity() {
+    public TranslationEntity() {
     }
 
-    public TranslationLyricsEntity(String trackId, String userId, List<Line> lines) {
+    public TranslationEntity(String trackId, String userId, List<Line> lines) {
         this.id = new Id(trackId, userId);
         this.lines = lines;
     }
