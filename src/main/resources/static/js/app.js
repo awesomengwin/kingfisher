@@ -35,6 +35,10 @@ htmx.on('htmx:config:request', ({ detail: { ctx } }) => {
 
     ctx.request.headers[csrfHeader] = csrfToken;
   }
+
+  if (ctx.request.action.startsWith('/lyrics/translate')) {
+    ctx.request.timeout = 10 * 60 * 1000;
+  }
 });
 
 htmx.onLoad(elt => {
