@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.lyrics.infrastructure;
+package com.awesomengwin.kingfisher.lyrics.jpa;
 
 import com.awesomengwin.kingfisher.lyrics.TranslationLine;
 import com.awesomengwin.kingfisher.lyrics.Translation;

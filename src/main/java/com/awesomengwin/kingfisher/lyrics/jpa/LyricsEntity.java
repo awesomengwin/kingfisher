@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.lyrics.infrastructure;
+package com.awesomengwin.kingfisher.lyrics.jpa;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

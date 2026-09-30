@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.lyrics.infrastructure;
+package com.awesomengwin.kingfisher.lyrics.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
