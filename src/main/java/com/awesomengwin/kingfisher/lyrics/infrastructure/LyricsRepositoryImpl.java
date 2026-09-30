@@ -17,29 +17,29 @@ public class LyricsRepositoryImpl implements LyricsRepository {
     }
 
     @Override
-    public Optional<Lyrics> findLyrics(String trackId) {
+    public Optional<Lyrics> findById(String trackId) {
         return repository.findById(trackId)
-                .map(entity -> new Lyrics(
-                        entity.getTrackId(),
-                        entity.getLines().stream()
-                                .map(vo -> new LyricsLine(
-                                        vo.startTimeMs(),
-                                        vo.words(),
-                                        vo.endTimeMs()))
+                .map(e -> new Lyrics(
+                        e.getTrackId(),
+                        e.getLines().stream()
+                                .map(l -> new LyricsLine(
+                                        l.startTimeMs(),
+                                        l.words(),
+                                        l.endTimeMs()))
                                 .toList()));
     }
 
     @Override
-    public void saveLyrics(Lyrics lyrics) {
-        LyricsEntity lyricsEntity = new LyricsEntity(
+    public void save(Lyrics lyrics) {
+        LyricsEntity entity = new LyricsEntity(
                 lyrics.trackId(),
                 lyrics.lines().stream()
-                        .map(line -> new LyricsLineValueObject(
-                                line.startTimeMs(),
-                                line.words(),
-                                line.endTimeMs()))
+                        .map(l -> new LyricsEntity.Line(
+                                l.startTimeMs(),
+                                l.words(),
+                                l.endTimeMs()))
                         .toList());
 
-        repository.save(lyricsEntity);
+        repository.save(entity);
     }
 }

@@ -5,6 +5,6 @@ import java.util.List;
 public record TranslationLyrics(
         String trackId,
         String userId,
-        List<TranslationLyricsLine> lines
+        List<TranslationLine> lines
 ) {
 }

@@ -18,7 +18,7 @@ public class NguyenSpLyricsLyricsProvider implements LyricsProvider {
     public Lyrics getLyrics(String trackId) {
         NguyenSpLyricsLyrics ngSpLyrics = client.getLyrics(trackId);
 
-        return new Lyrics(ngSpLyrics.trackId(), ngSpLyrics.lines().stream()
+        return new Lyrics(trackId, ngSpLyrics.lines().stream()
                 .map(l -> new LyricsLine(l.startTimeMs(), l.words(), l.endTimeMs()))
                 .toList());
     }

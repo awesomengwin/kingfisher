@@ -2,9 +2,6 @@ package com.awesomengwin.kingfisher.lyrics;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-
 @Service
 public class LyricsService {
 
@@ -22,47 +19,38 @@ public class LyricsService {
         this.translateLyricsService = translateLyricsService;
     }
 
-    public Lyrics getLyrics(String trackId) {
-        Lyrics savedLyrics = lyricsRepository.findLyrics(trackId).orElse(null);
+    public Lyrics getLyrics(String trackId, String userId) {
+        Lyrics savedLyrics = lyricsRepository.findById(trackId).orElse(null);
 
         if (savedLyrics != null) {
+            TranslationLyrics translation = translationLyricsRepository
+                    .findByTrackIdAndUserId(trackId, userId).orElse(null);
+
+            if (translation != null) {
+                return savedLyrics.withTranslationLines(translation.lines());
+            }
+
             return savedLyrics;
         }
 
         Lyrics lyrics = lyricsProvider.getLyrics(trackId);
 
-        lyricsRepository.saveLyrics(lyrics);
+        lyricsRepository.save(lyrics);
 
         return lyrics;
     }
 
-    public TranslationLyrics getTranslationLyrics(String trackId, String userId) {
-        return translationLyricsRepository.findTranslationLyrics(trackId, userId)
-                .orElseThrow(() -> new TranslationLyricsNotFoundException(trackId, userId));
-    }
-
-    public TranslationLyrics translateLyrics(String trackId, String userId) {
-        Lyrics lyrics = lyricsRepository.findLyrics(trackId)
+    public Lyrics translateLyrics(String trackId, String userId) {
+        Lyrics lyrics = lyricsRepository.findById(trackId)
                 .orElseThrow(() -> new LyricsNotFoundException(trackId));
 
-        TranslateLyricsResponse translateLyricsResponse =
-                translateLyricsService.translate(TranslateLyricsRequest.from(lyrics.lines(), userId));
+        TranslateLyricsResponse resp = translateLyricsService.translate(
+                TranslateLyricsRequest.from(lyrics.lines(), userId));
 
-        Map<Long, String> byStartTimeMs = translateLyricsResponse.byStartTimeMs();
+        TranslationLyrics translation = new TranslationLyrics(trackId, userId, resp.lines());
 
-        List<TranslationLyricsLine> translationLyricsLines = lyrics.lines().stream()
-                .map(line -> new TranslationLyricsLine(
-                        line.startTimeMs(),
-                        line.words(),
-                        byStartTimeMs.get(line.startTimeMs()),
-                        line.endTimeMs()
-                ))
-                .toList();
+        translationLyricsRepository.save(translation);
 
-        TranslationLyrics translationLyrics = new TranslationLyrics(trackId, userId, translationLyricsLines);
-
-        translationLyricsRepository.saveTranslationLyrics(translationLyrics);
-
-        return translationLyrics;
+        return lyrics.withTranslationLines(resp.lines());
     }
 }

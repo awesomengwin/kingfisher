@@ -7,7 +7,7 @@
 <body>
 <th:block th:fragment="content">
     <div class="w-100 d-flex flex-column gap-3">
-        <div class="flex-grow-1 overflow-y-auto" data-lyrics th:data-translate-status="${lyrics.translateStatus()}">
+        <div class="flex-grow-1 overflow-y-auto" data-lyrics th:data-translation-status="${lyrics.translationStatus()}">
             <th:block th:if="${#lists.isEmpty(lyrics.lines())}">
                 <p class="fs-2">No lyrics available.</p>
             </th:block>

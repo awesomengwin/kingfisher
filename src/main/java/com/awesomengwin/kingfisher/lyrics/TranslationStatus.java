@@ -1,5 +1,5 @@
 package com.awesomengwin.kingfisher.lyrics;
 
-public enum TranslationLyricsStatus {
+public enum TranslationStatus {
     NONE, PARTIAL, COMPLETED
 }

@@ -2,7 +2,6 @@ package com.awesomengwin.kingfisher.lyrics.controller;
 
 import com.awesomengwin.kingfisher.lyrics.Lyrics;
 import com.awesomengwin.kingfisher.lyrics.LyricsService;
-import com.awesomengwin.kingfisher.lyrics.TranslationLyrics;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -24,20 +23,10 @@ public class LyricsController {
     }
 
     @GetMapping
-    public String getLyrics(@RequestParam String trackId, Model model, HttpServletResponse resp) {
-        Lyrics lyrics = lyricsService.getLyrics(trackId);
+    public String getLyrics(@AuthenticationPrincipal OAuth2User currentUser,
+                            @RequestParam String trackId, Model model, HttpServletResponse resp) {
+        Lyrics lyrics = lyricsService.getLyrics(trackId, currentUser.getName());
         model.addAttribute("lyrics", lyrics);
-
-        resp.addHeader("HX-Trigger", "lyrics:init");
-
-        return "lyrics/lyrics";
-    }
-
-    @GetMapping("/translation")
-    public String getTranslationLyrics(@AuthenticationPrincipal OAuth2User currentUser,
-                                       @RequestParam String trackId, Model model, HttpServletResponse resp) {
-        TranslationLyrics translationLyrics = lyricsService.getTranslationLyrics(trackId, currentUser.getName());
-        model.addAttribute("lyrics", translationLyrics);
 
         resp.addHeader("HX-Trigger", "lyrics:init");
 
@@ -47,8 +36,8 @@ public class LyricsController {
     @PostMapping("/translate")
     public String translateLyrics(@AuthenticationPrincipal OAuth2User currentUser,
                                   @RequestParam String trackId, Model model, HttpServletResponse resp) {
-        TranslationLyrics translationLyrics = lyricsService.translateLyrics(trackId, currentUser.getName());
-        model.addAttribute("lyrics", translationLyrics);
+        Lyrics lyrics = lyricsService.translateLyrics(trackId, currentUser.getName());
+        model.addAttribute("lyrics", lyrics);
 
         resp.addHeader("HX-Trigger", "lyrics:init");
 

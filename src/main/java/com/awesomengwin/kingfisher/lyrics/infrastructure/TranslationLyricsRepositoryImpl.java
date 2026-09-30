@@ -1,7 +1,7 @@
 package com.awesomengwin.kingfisher.lyrics.infrastructure;
 
+import com.awesomengwin.kingfisher.lyrics.TranslationLine;
 import com.awesomengwin.kingfisher.lyrics.TranslationLyrics;
-import com.awesomengwin.kingfisher.lyrics.TranslationLyricsLine;
 import com.awesomengwin.kingfisher.lyrics.TranslationLyricsRepository;
 import org.springframework.stereotype.Component;
 
@@ -17,33 +17,27 @@ public class TranslationLyricsRepositoryImpl implements TranslationLyricsReposit
     }
 
     @Override
-    public Optional<TranslationLyrics> findTranslationLyrics(String trackId, String userId) {
-        return repository.findByTrackIdAndUserId(trackId, userId)
-                .map(entity -> new TranslationLyrics(
-                        entity.getTrackId(),
-                        entity.getUserId(),
-                        entity.getLines().stream()
-                                .map(vo -> new TranslationLyricsLine(
-                                        vo.startTimeMs(),
-                                        vo.words(),
-                                        vo.translatedWords(),
-                                        vo.endTimeMs()
-                                )).toList()));
+    public Optional<TranslationLyrics> findByTrackIdAndUserId(String trackId, String userId) {
+        return repository.findById(new TranslationLyricsEntity.Id(trackId, userId))
+                .map(e -> new TranslationLyrics(
+                        e.getId().trackId(),
+                        e.getId().userId(),
+                        e.getLines().stream()
+                                .map(l -> new TranslationLine(l.startTimeMs(), l.translatedWords()))
+                                .toList()));
     }
 
     @Override
-    public void saveTranslationLyrics(TranslationLyrics lyrics) {
-        TranslationLyricsEntity translationLyricsEntity = new TranslationLyricsEntity(
+    public void save(TranslationLyrics lyrics) {
+        TranslationLyricsEntity entity = new TranslationLyricsEntity(
                 lyrics.trackId(),
                 lyrics.userId(),
                 lyrics.lines().stream()
-                        .map(line -> new TranslationLyricsLineValueObject(
+                        .map(line -> new TranslationLyricsEntity.Line(
                                 line.startTimeMs(),
-                                line.words(),
-                                line.translatedWords(),
-                                line.endTimeMs()
+                                line.words()
                         )).toList());
 
-        repository.save(translationLyricsEntity);
+        repository.save(entity);
     }
 }

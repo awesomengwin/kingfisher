@@ -17,12 +17,12 @@ public class LyricsEntity {
     private String trackId;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<LyricsLineValueObject> lines = new ArrayList<>();
+    private List<Line> lines = new ArrayList<>();
 
     public LyricsEntity() {
     }
 
-    public LyricsEntity(String trackId, List<LyricsLineValueObject> lines) {
+    public LyricsEntity(String trackId, List<Line> lines) {
         this.trackId = trackId;
         this.lines = lines;
     }
@@ -31,7 +31,10 @@ public class LyricsEntity {
         return trackId;
     }
 
-    public List<LyricsLineValueObject> getLines() {
+    public List<Line> getLines() {
         return lines;
+    }
+
+    public record Line(Long startTimeMs, String words, Long endTimeMs) {
     }
 }
