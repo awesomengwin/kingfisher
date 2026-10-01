@@ -18,6 +18,10 @@ public class NguyenSpLyricsLyricsProvider implements LyricsProvider {
     public Lyrics getLyrics(String trackId) {
         NguyenSpLyricsLyrics ngSpLyrics = client.getLyrics(trackId);
 
+        if (ngSpLyrics.lines() == null) {
+            throw new IllegalStateException("lines must not be null");
+        }
+
         return new Lyrics(trackId, ngSpLyrics.lines().stream()
                 .map(l -> new LyricsLine(l.startTimeMs(), l.words(), l.endTimeMs()))
                 .toList());

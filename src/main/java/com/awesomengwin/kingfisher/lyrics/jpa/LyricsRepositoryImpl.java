@@ -31,6 +31,14 @@ public class LyricsRepositoryImpl implements LyricsRepository {
 
     @Override
     public void save(Lyrics lyrics) {
+        if (lyrics == null) {
+            throw new IllegalArgumentException("lyrics must not be null");
+        }
+
+        if (lyrics.lines() == null) {
+            throw new IllegalStateException("lines must not be null");
+        }
+
         LyricsEntity entity = new LyricsEntity(
                 lyrics.trackId(),
                 lyrics.lines().stream()
