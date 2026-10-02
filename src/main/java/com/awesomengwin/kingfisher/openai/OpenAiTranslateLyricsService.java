@@ -1,10 +1,12 @@
 package com.awesomengwin.kingfisher.openai;
 
+import com.awesomengwin.kingfisher.document.DocumentService;
 import com.awesomengwin.kingfisher.lyrics.TranslateLyricsRequest;
 import com.awesomengwin.kingfisher.lyrics.TranslateLyricsResponse;
 import com.awesomengwin.kingfisher.lyrics.TranslateLyricsService;
 import com.awesomengwin.kingfisher.userpreferences.OpenAiApiKeyProvider;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,11 @@ import org.springframework.stereotype.Service;
 public class OpenAiTranslateLyricsService implements TranslateLyricsService {
 
     private final OpenAiApiKeyProvider openAiApiKeyProvider;
+    private final DocumentService documentService;
 
-    public OpenAiTranslateLyricsService(OpenAiApiKeyProvider openAiApiKeyProvider) {
+    public OpenAiTranslateLyricsService(OpenAiApiKeyProvider openAiApiKeyProvider, DocumentService documentService) {
         this.openAiApiKeyProvider = openAiApiKeyProvider;
+        this.documentService = documentService;
     }
 
     @Override
@@ -41,6 +45,8 @@ public class OpenAiTranslateLyricsService implements TranslateLyricsService {
                 """).build();
 
         return chatClient.prompt()
+                .advisors(new SimpleLoggerAdvisor())
+                .tools(new DocumentTools(documentService))
                 .user(u -> u.text("""
                                 Translate this track.
                                 
