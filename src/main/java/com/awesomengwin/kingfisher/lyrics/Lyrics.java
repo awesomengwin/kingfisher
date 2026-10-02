@@ -10,6 +10,10 @@ public record Lyrics(
 ) {
 
     public Lyrics withTranslationLines(List<TranslationLine> translationLines) {
+        if (translationLines == null) {
+            throw new IllegalArgumentException("translation lines must not be null");
+        }
+
         Map<Long, String> byStartTimeMs = translationLines.stream()
                 .collect(Collectors.toMap(
                         TranslationLine::startTimeMs,

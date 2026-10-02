@@ -28,11 +28,19 @@ public class TranslationRepositoryImpl implements TranslationRepository {
     }
 
     @Override
-    public void save(Translation lyrics) {
+    public void save(Translation translation) {
+        if (translation == null) {
+            throw new IllegalArgumentException("translation must not be null");
+        }
+
+        if (translation.lines() == null) {
+            throw new IllegalStateException("lines must not be null");
+        }
+
         TranslationEntity entity = new TranslationEntity(
-                lyrics.trackId(),
-                lyrics.userId(),
-                lyrics.lines().stream()
+                translation.trackId(),
+                translation.userId(),
+                translation.lines().stream()
                         .map(line -> new TranslationEntity.Line(
                                 line.startTimeMs(),
                                 line.translatedWords()
