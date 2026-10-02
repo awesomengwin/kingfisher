@@ -10,6 +10,6 @@ public interface WikipediaClient {
     @GetExchange("?action=query&list=search&format=json")
     WikipediaSearchResponse search(@RequestParam("srsearch") String q);
 
-    @GetExchange("?action=query&prop=extracts&exlimit=max&explaintext")
+    @GetExchange("?action=query&prop=extracts&exlimit=max&explaintext&format=json")
     WikipediaPageExtractResponse getPageExtractContent(@RequestParam("pageids") String pageIds);
 }
