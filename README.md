@@ -22,6 +22,7 @@ export SPOTIFY_CLIENT_ID=your_spotify_client_id
 export SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
 export LYRICS_API_URL=your_lyrics_api_url
 export KINGFISHER_SECRET_KEY="$(openssl rand -base64 32)"
+export KINGFISHER_USER_AGENT=your_app_user_agent_info
 ```
 
 ```shell
@@ -30,6 +31,7 @@ docker run --rm \
 -e SPOTIFY_CLIENT_SECRET="$SPOTIFY_CLIENT_SECRET" \
 -e LYRICS_API_URL="$LYRICS_API_URL" \
 -e KINGFISHER_SECRET_KEY="$KINGFISHER_SECRET_KEY" \
+-e KINGFISHER_USER_AGENT="$KINGFISHER_USER_AGENT" \
 -e DB_URL=jdbc:postgresql://host.docker.internal:5432/kingfisher \
 -p 8080:8080 ghcr.io/awesomengwin/kingfisher:latest
 ```
