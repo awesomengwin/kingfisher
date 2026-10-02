@@ -3,13 +3,15 @@ package com.awesomengwin.kingfisher.config;
 import com.awesomengwin.kingfisher.common.ApiClientException;
 import com.awesomengwin.kingfisher.common.ApiClientNotFoundException;
 import com.awesomengwin.kingfisher.common.ApiServerException;
-import com.awesomengwin.kingfisher.common.wikimedia.WiktionaryClient;
 import com.awesomengwin.kingfisher.lyrics.spotifylyrics.SpotifyLyricsApiError;
 import com.awesomengwin.kingfisher.lyrics.spotifylyrics.SpotifyLyricsClient;
 import com.awesomengwin.kingfisher.spotify.SpotifyApiError;
 import com.awesomengwin.kingfisher.spotify.SpotifyClient;
+import com.awesomengwin.kingfisher.wikipedia.WikipediaClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
@@ -25,13 +27,20 @@ import java.io.InputStream;
 @Configuration
 @ImportHttpServices(group = "spotify", types = SpotifyClient.class)
 @ImportHttpServices(group = "lyrics", types = SpotifyLyricsClient.class)
-@ImportHttpServices(group = "wiktionary", types = WiktionaryClient.class)
+@ImportHttpServices(group = "wikipedia", types = WikipediaClient.class)
 public class HttpClientConfig {
 
     @Bean
     OAuth2RestClientHttpServiceGroupConfigurer oauth2RestClientConfigurer(
             OAuth2AuthorizedClientManager manager) {
         return OAuth2RestClientHttpServiceGroupConfigurer.from(manager);
+    }
+
+    @Bean
+    RestClientHttpServiceGroupConfigurer wikipediaUserAgentInterceptor(@Value("${kingfisher.user-agent}") String userAgent) {
+        return groups -> groups.filterByName("wikipedia")
+                .forEachClient((group, clientBuilder) -> clientBuilder
+                        .defaultHeader(HttpHeaders.USER_AGENT, userAgent));
     }
 
     @Bean
