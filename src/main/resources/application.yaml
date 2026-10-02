@@ -53,3 +53,4 @@ spring:
 
 kingfisher:
   secret-key: ${KINGFISHER_SECRET_KEY}
+  user-agent: ${KINGFISHER_USER_AGENT}
