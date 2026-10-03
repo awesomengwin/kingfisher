@@ -18,6 +18,8 @@
                     }|'
                     hx-swap="none" th:text="${track.name()}">
             </button>
+
+            <p th:if="${playlistTracks.totalElements() eq 0}">No tracks</p>
         </div>
         <th:block th:replace="~{fragments/pagination :: pagination(
             name='Playlist tracks',
