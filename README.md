@@ -1,7 +1,7 @@
 # kingfisher
 
 ![GitHub Release](https://img.shields.io/github/v/release/awesomengwin/kingfisher)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/awesomengwin/kingfisher/build-and-deploy.yml)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/awesomengwin/kingfisher/build-and-deploy.yml?logo=github&label=Build%20and%20Deploy)
 
 ## Development
 
