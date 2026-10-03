@@ -32,7 +32,7 @@ jobs:
           ./mvnw package
 
   deploy:
-    name: Build and Deploy Docker image via Ansible
+    name: Deploy Docker image via Ansible
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
 
