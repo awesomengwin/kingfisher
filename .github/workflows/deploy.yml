@@ -7,33 +7,10 @@ on:
       - dev
     tags:
       - "v*.*.*"
-  pull_request:
 
 jobs:
-  build:
-    name: Build and Test
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-          cache: maven
-
-      - name: Maven run package
-        run: |
-          chmod +x mvnw
-          ./mvnw package
-
   deploy:
     name: Deploy Docker image via Ansible
-    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
 
     permissions:
@@ -67,7 +44,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
