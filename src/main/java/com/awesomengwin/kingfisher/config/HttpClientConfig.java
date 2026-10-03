@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.web.client.support.OAuth2RestClientHttpServiceGroupConfigurer;
 import org.springframework.web.client.support.RestClientHttpServiceGroupConfigurer;
@@ -34,6 +35,12 @@ public class HttpClientConfig {
     OAuth2RestClientHttpServiceGroupConfigurer oauth2RestClientConfigurer(
             OAuth2AuthorizedClientManager manager) {
         return OAuth2RestClientHttpServiceGroupConfigurer.from(manager);
+    }
+
+    @Bean
+    RestClientHttpServiceGroupConfigurer requestFactoryConfigurer() {
+        return groups -> groups.forEachClient((group, clientBuilder) -> clientBuilder
+                .requestFactory(new JdkClientHttpRequestFactory()));
     }
 
     @Bean
