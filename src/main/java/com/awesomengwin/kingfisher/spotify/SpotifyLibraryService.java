@@ -2,6 +2,7 @@ package com.awesomengwin.kingfisher.spotify;
 
 import com.awesomengwin.kingfisher.library.*;
 
+import java.util.List;
 import java.util.function.Function;
 
 public class SpotifyLibraryService implements LibraryService {
@@ -75,14 +76,16 @@ public class SpotifyLibraryService implements LibraryService {
         return new Artist(spArtist.name());
     }
 
-    private <S, T> Page<T> toPage(SpotifyPage<S> spotifyPage, Function<S, T> itemsMapper) {
-        return new Page<>(
-                spotifyPage.offset() / spotifyPage.limit(),
-                spotifyPage.limit(),
-                (spotifyPage.total() + spotifyPage.limit() - 1) / spotifyPage.limit(),
-                spotifyPage.total(),
-                spotifyPage.items().stream()
-                        .map(itemsMapper)
-                        .toList());
+    private <S, T> Page<T> toPage(SpotifyPage<S> spPage, Function<S, T> itemsMapper) {
+        int limit = spPage.limit();
+
+        int page = limit == 0 ? 0 : spPage.offset() / limit;
+        int totalPages = limit == 0 ? 0 : (spPage.total() + limit - 1) / limit;
+
+        List<T> items = spPage.items().stream()
+                .map(itemsMapper)
+                .toList();
+
+        return new Page<>(page, limit, totalPages, spPage.total(), items);
     }
 }
