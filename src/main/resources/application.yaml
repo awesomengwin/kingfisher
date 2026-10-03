@@ -56,5 +56,5 @@ logging:
     org.springframework.ai: debug
 
 kingfisher:
-  secret-key: ${KINGFISHER_SECRET_KEY}
-  user-agent: ${KINGFISHER_USER_AGENT}
+  secret-key: ${KINGFISHER_SECRET_KEY:+rPgvXgnOPSTvoBJ9Up2UBV63O48ewAwvDdb6uU3ZLo=}
+  user-agent: ${KINGFISHER_USER_AGENT:your_app_user_agent_info}
