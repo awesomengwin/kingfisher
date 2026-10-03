@@ -1,15 +1,17 @@
 name: deploy
 
 on:
-  push:
-    branches:
-      - main
-      - dev
-    tags:
-      - "v*.*.*"
+  workflow_run:
+    workflows:
+      - build
+    types:
+      - completed
 
 jobs:
   deploy:
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event != 'pull_request'
     name: Deploy Docker image via Ansible
     runs-on: ubuntu-latest
 
