@@ -9,10 +9,10 @@
     </nav>
     <div class="btn-group btn-group-sm" role="group" th:aria-label="${name + ' page size'}">
         <a href="?size=20" class="btn btn-outline-primary"
-           th:classappend="${size eq 20 ? 'active' : ''}">20</a>
+           th:classappend="${totalPages eq 0 ? 'disabled' : (size eq 20 ? 'active' : '')}">20</a>
         <a href="?size=30" class="btn btn-outline-primary"
-           th:classappend="${size eq 30 ? 'active' : ''}">30</a>
+           th:classappend="${totalPages eq 0 ? 'disabled' : (size eq 30 ? 'active' : '')}">30</a>
         <a href="?size=50" class="btn btn-outline-primary"
-           th:classappend="${size eq 50 ? 'active' : ''}">50</a>
+           th:classappend="${totalPages eq 0 ? 'disabled' : (size eq 50 ? 'active' : '')}">50</a>
     </div>
 </div>

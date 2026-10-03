@@ -13,6 +13,8 @@
                class="list-group-item list-group-item-action"
                th:href="@{/library/playlists/{playlistId}/tracks(playlistId=${playlist.id()})}"
                th:text="${playlist.name()}"></a>
+
+            <p th:if="${userPlaylists.totalElements() eq 0}">No playlists</p>
         </div>
         <th:block th:replace="~{fragments/pagination :: pagination(
             name='User playlists',

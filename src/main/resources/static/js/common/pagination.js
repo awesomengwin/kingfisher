@@ -58,7 +58,7 @@ const createNextPageItem = (current, total, size) => {
   link.href = `?page=${current + 1}&size=${size}`;
   link.textContent = 'Next';
 
-  if (current === total - 1) {
+  if (total === 0 || current === total - 1) {
     li.classList.add('disabled');
   }
 
