@@ -38,6 +38,8 @@ public class OpenAiTranslateLyricsService implements TranslateLyricsService {
                 
                 Instructions:
                 - Never resolve ambiguity by adding detail absent from the source.
+                - Preserve non-semantic vocalizations and expressive interjections (e.g., "Ooh, Baby", "Ow", "Yeah", ...) \
+                rather than translating them literally.
                 - Preserve all punctuation, musical notation symbols, and blank lines.
                 - Preserve line order and count exactly as given so one translated line per source line, \
                 never merge, split, or omit lines.
