@@ -19,12 +19,13 @@ public class TranslationRepositoryImpl implements TranslationRepository {
     @Override
     public Optional<Translation> findByTrackIdAndUserId(String trackId, String userId) {
         return repository.findById(new TranslationEntity.Id(trackId, userId))
-                .map(e -> new Translation(
+                .map(e -> Translation.reconstitute(
                         e.getId().trackId(),
                         e.getId().userId(),
                         e.getLines().stream()
                                 .map(l -> new TranslationLine(l.startTimeMs(), l.translatedWords()))
-                                .toList()));
+                                .toList(),
+                        e.getStatus()));
     }
 
     @Override
@@ -33,18 +34,23 @@ public class TranslationRepositoryImpl implements TranslationRepository {
             throw new IllegalArgumentException("translation must not be null");
         }
 
-        if (translation.lines() == null) {
+        if (translation.getLines() == null) {
             throw new IllegalStateException("lines must not be null");
         }
 
         TranslationEntity entity = new TranslationEntity(
-                translation.trackId(),
-                translation.userId(),
-                translation.lines().stream()
+                translation.getTrackId(),
+                translation.getUserId(),
+                translation.getLines().stream()
                         .map(line -> new TranslationEntity.Line(
                                 line.startTimeMs(),
                                 line.translatedWords()
-                        )).toList());
+                        )).toList(),
+                translation.getStatus());
+
+        for (Object event : translation.pullDomainEvents()) {
+            entity.addDomainEvent(event);
+        }
 
         repository.save(entity);
     }

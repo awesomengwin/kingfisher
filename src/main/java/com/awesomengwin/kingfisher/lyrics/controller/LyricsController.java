@@ -2,6 +2,7 @@ package com.awesomengwin.kingfisher.lyrics.controller;
 
 import com.awesomengwin.kingfisher.lyrics.Lyrics;
 import com.awesomengwin.kingfisher.lyrics.LyricsService;
+import com.awesomengwin.kingfisher.lyrics.Translation;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -33,14 +34,27 @@ public class LyricsController {
         return "lyrics/lyrics";
     }
 
+    @GetMapping("/translation")
+    public String pollTranslation(@AuthenticationPrincipal OAuth2User currentUser,
+                                  @RequestParam String trackId, Model model, HttpServletResponse resp) {
+        Translation translation = lyricsService.getTranslation(trackId, currentUser.getName());
+        model.addAttribute("trackId", trackId);
+        model.addAttribute("isCompleted", translation.isCompleted());
+
+        if (translation.isCompleted()) {
+            resp.addHeader("HX-Trigger", "lyrics:translation:completed");
+        }
+
+        return "lyrics/lyrics-translation";
+    }
+
     @PostMapping("/translate")
     public String translateLyrics(@AuthenticationPrincipal OAuth2User currentUser,
-                                  @RequestParam String trackId, Model model, HttpServletResponse resp) {
-        Lyrics lyrics = lyricsService.translateLyrics(trackId, currentUser.getName());
-        model.addAttribute("lyrics", lyrics);
+                                  @RequestParam String trackId, Model model) {
+        lyricsService.translateLyrics(trackId, currentUser.getName());
+        model.addAttribute("trackId", trackId);
+        model.addAttribute("isCompleted", false);
 
-        resp.addHeader("HX-Trigger", "lyrics:init");
-
-        return "lyrics/lyrics";
+        return "lyrics/lyrics-translation";
     }
 }

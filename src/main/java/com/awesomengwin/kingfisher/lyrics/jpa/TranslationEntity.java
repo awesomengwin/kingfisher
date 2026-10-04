@@ -1,18 +1,18 @@
 package com.awesomengwin.kingfisher.lyrics.jpa;
 
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.awesomengwin.kingfisher.lyrics.TranslationStatus;
+import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
 @Table(name = "translation_lyrics")
-public class TranslationEntity {
+public class TranslationEntity extends AbstractAggregateRoot<TranslationEntity> {
 
     @EmbeddedId
     private Id id;
@@ -20,12 +20,20 @@ public class TranslationEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     private List<Line> lines = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private TranslationStatus status;
+
     public TranslationEntity() {
     }
 
-    public TranslationEntity(String trackId, String userId, List<Line> lines) {
+    public TranslationEntity(String trackId, String userId, List<Line> lines, TranslationStatus status) {
         this.id = new Id(trackId, userId);
-        this.lines = lines;
+        this.lines = new ArrayList<>(lines);
+        this.status = status;
+    }
+
+    public void addDomainEvent(Object event) {
+        registerEvent(event);
     }
 
     public Id getId() {
@@ -33,7 +41,11 @@ public class TranslationEntity {
     }
 
     public List<Line> getLines() {
-        return lines;
+        return Collections.unmodifiableList(lines);
+    }
+
+    public TranslationStatus getStatus() {
+        return status;
     }
 
     @Embeddable
