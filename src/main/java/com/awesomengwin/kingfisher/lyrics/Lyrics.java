@@ -6,8 +6,13 @@ import java.util.stream.Collectors;
 
 public record Lyrics(
         String trackId,
-        List<LyricsLine> lines
+        List<LyricsLine> lines,
+        boolean translated
 ) {
+
+    public Lyrics(String trackId, List<LyricsLine> lines) {
+        this(trackId, lines, false);
+    }
 
     public Lyrics withTranslationLines(List<TranslationLine> translationLines) {
         if (translationLines == null) {
@@ -21,18 +26,6 @@ public record Lyrics(
 
         return new Lyrics(trackId, lines.stream()
                 .map(l -> l.withTranslatedWords(byStartTimeMs.get(l.startTimeMs())))
-                .toList());
-    }
-
-    public TranslationStatus translationStatus() {
-        boolean isPartial = lines.stream().anyMatch(l -> l.translatedWords() != null);
-
-        if (!isPartial) {
-            return TranslationStatus.NONE;
-        }
-
-        boolean completed = lines.stream().allMatch(l -> l.translatedWords() != null);
-
-        return completed ? TranslationStatus.COMPLETED : TranslationStatus.PARTIAL;
+                .toList(), true);
     }
 }

@@ -136,9 +136,7 @@ export const initPlayingBar = () => {
     }
 
     htmx.ajax('POST', `/lyrics/translate?trackId=${trackId}`, {
-      target: 'main',
-      select: 'main',
-      swap: 'outerHTML'
+      swap: 'none'
     }).catch(err => setError(err));
   });
 
@@ -164,6 +162,16 @@ export const initPlayingBar = () => {
   startProgressLoop();
 
   htmx.on('htmx:after:swap', syncLyricsState);
+
+  // reload lyrics when translation polling done
+  htmx.on('lyrics:translation:completed', async () => {
+    const state = await getCurrentState();
+    const trackId = state?.track_window?.current_track?.id;
+
+    if (trackId) {
+      loadLyricsPage(trackId);
+    }
+  });
 }
 
 const handlePlayerStateChange = ({ detail: state }) => {
@@ -237,9 +245,7 @@ const syncLyricsState = () => {
   ui.lyricsToggle.setAttribute('aria-pressed', String(isOnLyricsPage));
 
   if (lyricsRoot) {
-    const status = lyricsRoot.dataset.translationStatus;
-
-    ui.translateLyrics.disabled = !status;
+    ui.translateLyrics.disabled = false;
   }
 }
 

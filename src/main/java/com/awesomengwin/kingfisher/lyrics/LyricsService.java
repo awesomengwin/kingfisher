@@ -8,15 +8,12 @@ public class LyricsService {
     private final LyricsRepository lyricsRepository;
     private final LyricsProvider lyricsProvider;
     private final TranslationRepository translationRepository;
-    private final TranslateLyricsService translateLyricsService;
 
     public LyricsService(LyricsRepository lyricsRepository, LyricsProvider lyricsProvider,
-                         TranslationRepository translationRepository,
-                         TranslateLyricsService translateLyricsService) {
+                         TranslationRepository translationRepository) {
         this.lyricsRepository = lyricsRepository;
         this.lyricsProvider = lyricsProvider;
         this.translationRepository = translationRepository;
-        this.translateLyricsService = translateLyricsService;
     }
 
     public Lyrics getLyrics(String trackId, String userId) {
@@ -27,7 +24,7 @@ public class LyricsService {
                     .findByTrackIdAndUserId(trackId, userId).orElse(null);
 
             if (translation != null) {
-                return savedLyrics.withTranslationLines(translation.lines());
+                return savedLyrics.withTranslationLines(translation.getLines());
             }
 
             return savedLyrics;
@@ -40,17 +37,12 @@ public class LyricsService {
         return lyrics;
     }
 
-    public Lyrics translateLyrics(String trackId, String userId) {
-        Lyrics lyrics = lyricsRepository.findById(trackId)
-                .orElseThrow(() -> new LyricsNotFoundException(trackId));
+    public void translateLyrics(String trackId, String userId) {
+        translationRepository.save(new Translation(trackId, userId));
+    }
 
-        TranslateLyricsResponse resp = translateLyricsService.translate(
-                TranslateLyricsRequest.from(lyrics, userId));
-
-        Translation translation = Translation.from(trackId, userId, resp);
-
-        translationRepository.save(translation);
-
-        return lyrics.withTranslationLines(translation.lines());
+    public Translation getTranslation(String trackId, String userId) {
+        return translationRepository.findByTrackIdAndUserId(trackId, userId)
+                .orElseThrow(() -> new TranslationNotFoundException(trackId, userId));
     }
 }
