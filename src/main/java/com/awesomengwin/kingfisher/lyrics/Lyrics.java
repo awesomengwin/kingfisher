@@ -23,16 +23,4 @@ public record Lyrics(
                 .map(l -> l.withTranslatedWords(byStartTimeMs.get(l.startTimeMs())))
                 .toList());
     }
-
-    public TranslationStatus translationStatus() {
-        boolean isPartial = lines.stream().anyMatch(l -> l.translatedWords() != null);
-
-        if (!isPartial) {
-            return TranslationStatus.NONE;
-        }
-
-        boolean completed = lines.stream().allMatch(l -> l.translatedWords() != null);
-
-        return completed ? TranslationStatus.COMPLETED : TranslationStatus.PARTIAL;
-    }
 }

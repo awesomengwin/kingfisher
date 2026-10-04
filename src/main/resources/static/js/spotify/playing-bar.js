@@ -235,12 +235,6 @@ const syncLyricsState = () => {
 
   ui.lyricsToggle.classList.toggle('active', isOnLyricsPage);
   ui.lyricsToggle.setAttribute('aria-pressed', String(isOnLyricsPage));
-
-  if (lyricsRoot) {
-    const status = lyricsRoot.dataset.translationStatus;
-
-    ui.translateLyrics.disabled = !status;
-  }
 }
 
 const startProgressLoop = () => {
