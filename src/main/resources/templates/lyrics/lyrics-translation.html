@@ -7,7 +7,7 @@
 </hx-partial>
 
 <th:block th:if="${isCompleted}">
-    <div th:replace="~{fragments/toast :: toast(title='Translation completed!', message='')}"></div>
+    <div th:replace="~{fragments/toast :: toast(title='', message='Translation completed!')}"></div>
     <hx-partial hx-target="#translation"></hx-partial>
 </th:block>
 
