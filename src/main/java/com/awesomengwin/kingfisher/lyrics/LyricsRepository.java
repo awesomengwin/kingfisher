@@ -8,4 +8,5 @@ public interface LyricsRepository {
 
     void save(Lyrics lyrics);
 
+    boolean existsById(String trackId);
 }

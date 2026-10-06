@@ -164,7 +164,7 @@ export const initPlayingBar = () => {
   htmx.on('htmx:after:swap', syncLyricsState);
 
   // reload lyrics when translation polling done
-  htmx.on('lyrics:translation:completed', async () => {
+  htmx.on('translation:completed', async () => {
     const state = await getCurrentState();
     const trackId = state?.track_window?.current_track?.id;
 

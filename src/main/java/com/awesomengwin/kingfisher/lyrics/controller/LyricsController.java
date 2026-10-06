@@ -38,11 +38,10 @@ public class LyricsController {
     public String pollTranslation(@AuthenticationPrincipal OAuth2User currentUser,
                                   @RequestParam String trackId, Model model, HttpServletResponse resp) {
         Translation translation = lyricsService.getTranslation(trackId, currentUser.getName());
-        model.addAttribute("trackId", trackId);
-        model.addAttribute("isCompleted", translation.isCompleted());
+        setupForTranslation(trackId, translation, model);
 
         if (translation.isCompleted()) {
-            resp.addHeader("HX-Trigger", "lyrics:translation:completed");
+            resp.addHeader("HX-Trigger", "translation:completed");
         }
 
         return "lyrics/lyrics-translation";
@@ -51,10 +50,16 @@ public class LyricsController {
     @PostMapping("/translate")
     public String translateLyrics(@AuthenticationPrincipal OAuth2User currentUser,
                                   @RequestParam String trackId, Model model) {
-        lyricsService.translateLyrics(trackId, currentUser.getName());
-        model.addAttribute("trackId", trackId);
-        model.addAttribute("isCompleted", false);
+        Translation translation = lyricsService.translateLyrics(trackId, currentUser.getName());
+        setupForTranslation(trackId, translation, model);
 
         return "lyrics/lyrics-translation";
+    }
+
+    private void setupForTranslation(String trackId, Translation translation, Model model) {
+        model.addAttribute("trackId", trackId);
+        model.addAttribute("isCompleted", translation.isCompleted());
+        model.addAttribute("isFailed", translation.isFailed());
+        model.addAttribute("failureReason", translation.getFailureReason());
     }
 }

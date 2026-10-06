@@ -25,7 +25,8 @@ public class TranslationRepositoryImpl implements TranslationRepository {
                         e.getLines().stream()
                                 .map(l -> new TranslationLine(l.startTimeMs(), l.translatedWords()))
                                 .toList(),
-                        e.getStatus()));
+                        e.getStatus(),
+                        e.getFailureReason()));
     }
 
     @Override
@@ -46,7 +47,8 @@ public class TranslationRepositoryImpl implements TranslationRepository {
                                 line.startTimeMs(),
                                 line.translatedWords()
                         )).toList(),
-                translation.getStatus());
+                translation.getStatus(),
+                translation.getFailureReason());
 
         for (Object event : translation.pullDomainEvents()) {
             entity.addDomainEvent(event);
