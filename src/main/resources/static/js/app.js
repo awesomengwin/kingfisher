@@ -23,7 +23,14 @@ htmx.on('lyrics:init', () => {
   cleanupLyricsFn = initLyrics();
 });
 
-htmx.on('htmx:before:swap', () => {
+htmx.on('htmx:before:swap', (evt) => {
+  // prevent reload lyrics page
+  const action = evt.detail.ctx.request.action;
+  if ([ '/lyrics/translate', '/lyrics/translation' ]
+    .some(prefix => action.startsWith(prefix))) {
+    return;
+  }
+
   cleanupLyricsFn?.();
   cleanupLyricsFn = null;
 });

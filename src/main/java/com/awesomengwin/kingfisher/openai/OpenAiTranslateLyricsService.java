@@ -1,0 +1,77 @@
+package com.awesomengwin.kingfisher.openai;
+
+import com.awesomengwin.kingfisher.document.DocumentService;
+import com.awesomengwin.kingfisher.lyrics.TranslateLyricsRequest;
+import com.awesomengwin.kingfisher.lyrics.TranslateLyricsResponse;
+import com.awesomengwin.kingfisher.lyrics.TranslateLyricsService;
+import com.awesomengwin.kingfisher.userpreferences.OpenAiApiKeyProvider;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.stereotype.Service;
+
+@Service
+public class OpenAiTranslateLyricsService implements TranslateLyricsService {
+
+    private final OpenAiApiKeyProvider openAiApiKeyProvider;
+    private final DocumentService documentService;
+
+    public OpenAiTranslateLyricsService(OpenAiApiKeyProvider openAiApiKeyProvider, DocumentService documentService) {
+        this.openAiApiKeyProvider = openAiApiKeyProvider;
+        this.documentService = documentService;
+    }
+
+    @Override
+    public TranslateLyricsResponse translate(TranslateLyricsRequest request) {
+        String apiKey = openAiApiKeyProvider.getApiKey(request.userId());
+
+        OpenAiChatModel openAiChatModel = OpenAiChatModel.builder()
+                .options(OpenAiChatOptions.builder()
+                        .apiKey(apiKey)
+                        .build())
+                .build();
+
+        ChatClient chatClient = ChatClient.builder(openAiChatModel).defaultSystem("""
+                You are a professional literary translator specializing in translating English song lyrics \
+                into natural, idiomatic Vietnamese.
+                
+                Instructions:
+                - Never resolve ambiguity by adding detail absent from the source.
+                - Preserve non-semantic vocalizations and expressive interjections (e.g., "Ooh, Baby", "Ow", "Yeah", ...) \
+                rather than translating them literally.
+                - Preserve all punctuation, musical notation symbols, and blank lines.
+                - Preserve line order and count exactly as given so one translated line per source line, \
+                never merge, split, or omit lines.
+                - Ensure consistency in capitalization between the translation and the original.
+                """).build();
+
+        return chatClient.prompt()
+                .advisors(new SimpleLoggerAdvisor())
+                .tools(new DocumentTools(documentService))
+                .user(u -> u.text("""
+                                Translate this track.
+                                
+                                Lyrics:
+                                {lyrics}
+                                """)
+                        .param("lyrics", formatLines(request)))
+                .call()
+                .entity(TranslateLyricsResponse.class);
+    }
+
+    private String formatLines(TranslateLyricsRequest request) {
+        StringBuilder sb = new StringBuilder();
+
+        for (TranslateLyricsRequest.Line line : request.lines()) {
+            Long startTimeMs = line.startTimeMs();
+            String words = line.words();
+
+            sb.append("[").append(startTimeMs).append("]")
+                    .append(words == null || words.isBlank() ? "" : words)
+                    .append("\n");
+        }
+
+        return sb.toString();
+    }
+}

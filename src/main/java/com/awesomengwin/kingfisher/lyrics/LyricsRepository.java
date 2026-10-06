@@ -1,10 +1,12 @@
 package com.awesomengwin.kingfisher.lyrics;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.Optional;
 
-public interface LyricsRepository extends JpaRepository<Lyrics, Long> {
+public interface LyricsRepository {
 
-    Optional<Lyrics> findByTrackId(String trackId);
+    Optional<Lyrics> findById(String trackId);
+
+    void save(Lyrics lyrics);
+
+    boolean existsById(String trackId);
 }

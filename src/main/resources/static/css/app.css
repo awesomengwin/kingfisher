@@ -11,3 +11,16 @@ main {
 [data-lyrics] [data-lyrics-line] {
     transition: opacity 0.2s;
 }
+
+/*HTMX indicator*/
+.htmx-indicator {
+    display: none !important;
+}
+
+.htmx-request .htmx-indicator {
+    display: flex !important;
+}
+
+.htmx-request.htmx-indicator {
+    display: flex !important;
+}

@@ -1,42 +1,35 @@
 package com.awesomengwin.kingfisher.lyrics;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-@Entity
-@Table(name = "lyrics")
-public class Lyrics {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String trackId;
-
-    @JdbcTypeCode(SqlTypes.JSON)
-    private List<LyricsLine> lines = new ArrayList<>();
-
-    public Lyrics() {
-    }
+public record Lyrics(
+        String trackId,
+        List<LyricsLine> lines,
+        boolean translated
+) {
 
     public Lyrics(String trackId, List<LyricsLine> lines) {
-        this.trackId = trackId;
-        this.lines = lines;
+        this(trackId, lines, false);
     }
 
-    public Long getId() {
-        return id;
+    public static Lyrics notFound(String trackId) {
+        return new Lyrics(trackId, List.of(), false);
     }
 
-    public String getTrackId() {
-        return trackId;
-    }
+    public Lyrics withTranslationLines(List<TranslationLine> translationLines) {
+        if (translationLines == null) {
+            throw new IllegalArgumentException("translation lines must not be null");
+        }
 
-    public List<LyricsLine> getLines() {
-        return lines;
+        Map<Long, String> byStartTimeMs = translationLines.stream()
+                .collect(Collectors.toMap(
+                        TranslationLine::startTimeMs,
+                        TranslationLine::translatedWords));
+
+        return new Lyrics(trackId, lines.stream()
+                .map(l -> l.withTranslatedWords(byStartTimeMs.get(l.startTimeMs())))
+                .toList(), true);
     }
 }

@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+      th:replace="~{layout :: layout(~{::title/text()}, ~{::content})}">
 <head>
     <title>user playlists</title>
 </head>
 <body>
 <th:block th:fragment="content">
     <aside hx-target:inherited="main" hx-select:inherited="main" hx-swap:inherited="outerHTML"
-           class="left-sidebar d-flex flex-column" data-user-playlists>
+           class="left-sidebar d-flex flex-grow-1 flex-lg-grow-0 flex-column" data-user-playlists>
         <div class="flex-grow-1 list-group overflow-auto">
             <a th:each="playlist: ${userPlaylists.items()}"
                class="list-group-item list-group-item-action"
                th:href="@{/library/playlists/{playlistId}/tracks(playlistId=${playlist.id()})}"
                th:text="${playlist.name()}"></a>
+
+            <p th:if="${userPlaylists.totalElements() eq 0}">No playlists</p>
         </div>
         <th:block th:replace="~{fragments/pagination :: pagination(
             name='User playlists',
-            currentPage=${userPlaylists.currentPage()},
-            totalPages=${userPlaylists.totalPages()},
-            limit=${userPlaylists.limit()})}"/>
+            page=${userPlaylists.page()},
+            size=${userPlaylists.size()},
+            totalPages=${userPlaylists.totalPages()})}"/>
     </aside>
-    <section class="flex-grow-1 overflow-auto">
+    <section class="d-none d-lg-block flex-grow-1 overflow-auto">
         blank
     </section>
 </th:block>

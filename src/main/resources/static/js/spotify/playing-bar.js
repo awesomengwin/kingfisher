@@ -10,10 +10,11 @@ import { setError } from "../common/popup.js";
 
 const playingBar = document.querySelector('[data-playing-bar]');
 const ui = {
-  trackAlbumCover: playingBar.querySelector('[data-track-album-cover]'),
+  trackAlbumCover: playingBar.querySelectorAll('[data-track-album-cover]'),
   trackName: playingBar.querySelector('[data-track-name]'),
   trackArtists: playingBar.querySelector('[data-track-artists]'),
   playerToggle: playingBar.querySelector('[data-player-toggle]'),
+  translateLyrics: playingBar.querySelector('[data-translate-lyrics]'),
   lyricsToggle: playingBar.querySelector('[data-lyrics-toggle]'),
   position: playingBar.querySelector('[data-position]'),
   duration: playingBar.querySelector('[data-duration]'),
@@ -34,6 +35,11 @@ let currentTrackId;
 
 let shuffle;
 let repeatMode;
+const REPEAT_MODE_ICONS = [
+  `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-repeat-off"><path d="M11.656 6H21l-4-4"/><path d="M17.898 17.898A4 4 0 0 1 17 18H3l4-4"/><path d="m2 2 20 20"/><path d="M21 13v1a4 4 0 0 1-.171 1.159"/><path d="m21 6-4 4"/><path d="M3 11v-1a4 4 0 0 1 3.102-3.898"/><path d="m7 22-4-4"/></svg>`,
+  `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-repeat"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>`,
+  `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-repeat-1"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/><path d="M11 10h1v4"/></svg>`
+];
 
 let isOnLyricsPage;
 
@@ -119,6 +125,21 @@ export const initPlayingBar = () => {
     isDragging = false;
   });
 
+  // Translate lyrics
+  ui.translateLyrics.addEventListener('click', async () => {
+    const state = await getCurrentState();
+
+    const trackId = state?.track_window?.current_track?.id;
+    if (!trackId) {
+      setError('Failed to obtain current track id');
+      return;
+    }
+
+    htmx.ajax('POST', `/lyrics/translate?trackId=${trackId}`, {
+      swap: 'none'
+    }).catch(err => setError(err));
+  });
+
   // Toggle lyrics
   ui.lyricsToggle.addEventListener('click', async () => {
     if (isOnLyricsPage) {
@@ -141,6 +162,16 @@ export const initPlayingBar = () => {
   startProgressLoop();
 
   htmx.on('htmx:after:swap', syncLyricsState);
+
+  // reload lyrics when translation polling done
+  htmx.on('translation:completed', async () => {
+    const state = await getCurrentState();
+    const trackId = state?.track_window?.current_track?.id;
+
+    if (trackId) {
+      loadLyricsPage(trackId);
+    }
+  });
 }
 
 const handlePlayerStateChange = ({ detail: state }) => {
@@ -169,17 +200,20 @@ const handlePlayerStateChange = ({ detail: state }) => {
   ui.playerShuffle.classList.toggle('active', shuffle);
   ui.playerShuffle.setAttribute('aria-pressed', String(shuffle));
 
-  const repeatLabelMap = [ "Repeat off", "Repeat on context", "Repeat on track" ];
-  ui.playerRepeat.textContent = repeatLabelMap[repeatMode];
+  ui.playerRepeat.innerHTML = REPEAT_MODE_ICONS[repeatMode];
   ui.playerRepeat.classList.toggle('active', !!repeatMode);
   ui.playerRepeat.setAttribute('aria-pressed', String(!!repeatMode));
 
-  ui.trackAlbumCover.src = currentTrack.album?.images?.[0]?.url;
-  ui.trackAlbumCover.alt = `Album cover for ${currentTrack.album?.name}`;
+  ui.trackAlbumCover.forEach(img => {
+    img.src = currentTrack.album?.images?.[0]?.url;
+    img.alt = `Album cover for ${currentTrack.album?.name}`;
+  });
   ui.trackName.textContent = currentTrack.name;
   ui.trackArtists.textContent = currentTrack.artists.map((artist) => artist.name).join(', ');
 
-  ui.playerToggle.textContent = state.paused ? 'Play' : 'Pause';
+  ui.playerToggle.innerHTML = state.paused
+    ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>`
+    : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>`;
   ui.lyricsToggle.disabled = !currentTrack.id;
 
   ui.duration.textContent = getTimeFormatted(durationMs);
@@ -203,10 +237,16 @@ const loadLyricsPage = (trackId) => {
 }
 
 const syncLyricsState = () => {
-  isOnLyricsPage = !!document.querySelector('[data-lyrics]');
+  const lyricsRoot = document.querySelector('[data-lyrics]');
+
+  isOnLyricsPage = !!lyricsRoot;
 
   ui.lyricsToggle.classList.toggle('active', isOnLyricsPage);
   ui.lyricsToggle.setAttribute('aria-pressed', String(isOnLyricsPage));
+
+  if (lyricsRoot) {
+    ui.translateLyrics.disabled = false;
+  }
 }
 
 const startProgressLoop = () => {

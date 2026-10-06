@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+      th:replace="~{layout :: layout(~{::title/text()}, ~{::content})}">
 <head>
     <title>playlist tracks</title>
 </head>
 <body>
 <th:block th:fragment="content">
-    <aside class="left-sidebar d-flex flex-column" data-playlist-tracks>
+    <aside class="left-sidebar d-flex flex-grow-1 flex-lg-grow-0 flex-column" data-playlist-tracks>
         <div class="flex-grow-1 list-group overflow-auto">
             <button th:each="track: ${playlistTracks.items()}"
                     class="list-group-item list-group-item-action"
-                    hx-put="/spotify/player/play" hx-trigger="dblclick"
+                    hx-put="/player/play" hx-trigger="dblclick"
                     th:hx-vals='|js:{
                         deviceId: document.body.dataset.deviceId,
                         contextUri: "${playlistUri}",
-                        uri: "${track.item().uri()}"
+                        uri: "${track.uri()}"
                     }|'
-                    hx-swap="none" th:text="${track.item().name()}">
+                    hx-swap="none" th:text="${track.name()}">
             </button>
+
+            <p th:if="${playlistTracks.totalElements() eq 0}">No tracks</p>
         </div>
         <th:block th:replace="~{fragments/pagination :: pagination(
             name='Playlist tracks',
-            currentPage=${playlistTracks.currentPage()},
-            totalPages=${playlistTracks.totalPages()},
-            limit=${playlistTracks.limit()})}"/>
+            page=${playlistTracks.page()},
+            size=${playlistTracks.size()},
+            totalPages=${playlistTracks.totalPages()})}"/>
     </aside>
-    <section class="flex-grow-1 overflow-auto">
+    <section class="d-none d-lg-block flex-grow-1 overflow-auto">
         blank
     </section>
 </th:block>

@@ -45,3 +45,16 @@ spring:
         base-url: https://api.spotify.com/v1
       lyrics:
         base-url: ${LYRICS_API_URL:your_lyrics_api_url}
+      wikipedia:
+        base-url: https://en.wikipedia.org/w/api.php
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+
+logging:
+  level:
+    org.springframework.ai: debug
+
+kingfisher:
+  secret-key: ${KINGFISHER_SECRET_KEY:+rPgvXgnOPSTvoBJ9Up2UBV63O48ewAwvDdb6uU3ZLo=}
+  user-agent: ${KINGFISHER_USER_AGENT:your_app_user_agent_info}
