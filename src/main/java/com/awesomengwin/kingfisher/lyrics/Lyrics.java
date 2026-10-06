@@ -14,6 +14,10 @@ public record Lyrics(
         this(trackId, lines, false);
     }
 
+    public static Lyrics notFound(String trackId) {
+        return new Lyrics(trackId, List.of(), false);
+    }
+
     public Lyrics withTranslationLines(List<TranslationLine> translationLines) {
         if (translationLines == null) {
             throw new IllegalArgumentException("translation lines must not be null");

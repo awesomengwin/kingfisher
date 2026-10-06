@@ -1,5 +1,6 @@
 package com.awesomengwin.kingfisher.lyrics;
 
+import com.awesomengwin.kingfisher.common.ApiClientNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,11 +31,15 @@ public class LyricsService {
             return savedLyrics;
         }
 
-        Lyrics lyrics = lyricsProvider.getLyrics(trackId);
+        try {
+            Lyrics lyrics = lyricsProvider.getLyrics(trackId);
 
-        lyricsRepository.save(lyrics);
+            lyricsRepository.save(lyrics);
 
-        return lyrics;
+            return lyrics;
+        } catch (ApiClientNotFoundException e) {
+            return Lyrics.notFound(trackId);
+        }
     }
 
     public Translation translateLyrics(String trackId, String userId) {
