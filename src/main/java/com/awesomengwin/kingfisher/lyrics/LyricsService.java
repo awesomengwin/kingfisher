@@ -43,6 +43,10 @@ public class LyricsService {
     }
 
     public Translation translateLyrics(String trackId, String userId) {
+        if (!lyricsRepository.existsById(trackId)) {
+            throw new LyricsNotFoundException(trackId);
+        }
+
         Translation translation = new Translation(trackId, userId);
 
         translationRepository.save(translation);

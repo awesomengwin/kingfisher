@@ -50,4 +50,9 @@ public class LyricsRepositoryImpl implements LyricsRepository {
 
         repository.save(entity);
     }
+
+    @Override
+    public boolean existsById(String trackId) {
+        return repository.existsById(trackId);
+    }
 }
