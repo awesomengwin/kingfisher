@@ -1,6 +1,6 @@
 <hx-partial hx-target="#translation">
-    <div th:hx-get="@{/lyrics/translation(trackId=${trackId})}" hx-trigger="every 5s"></div>
-    <div class="d-flex gap-2 align-items-center">
+    <div th:hx-get="@{/lyrics/translation(trackId=${trackId})}" hx-trigger="every 5s" hx-indicator="#translation"></div>
+    <div class="d-flex gap-2 align-items-center py-2">
         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         <span>Translating...</span>
     </div>

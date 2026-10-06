@@ -5,8 +5,10 @@
                 <strong th:text="${title}" class="me-auto">Bootstrap</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="toast-body">
+            <div class="toast-body d-flex align-items-center">
                 <span th:text="${message}"></span>
+                <button th:if="${#strings.isEmpty(title)}" type="button" class="btn-close me-2 m-auto"
+                        data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
     </hx-partial>
