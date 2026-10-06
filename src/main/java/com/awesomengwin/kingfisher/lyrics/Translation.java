@@ -55,10 +55,6 @@ public class Translation extends AggregateRoot {
         this.failureReason = failureReason;
     }
 
-    public boolean isProcessing() {
-        return status == TranslationStatus.PROCESSING;
-    }
-
     public boolean isCompleted() {
         return status == TranslationStatus.COMPLETED;
     }

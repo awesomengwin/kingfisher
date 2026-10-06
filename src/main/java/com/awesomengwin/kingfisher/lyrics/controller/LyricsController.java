@@ -58,7 +58,6 @@ public class LyricsController {
 
     private void setupForTranslation(String trackId, Translation translation, Model model) {
         model.addAttribute("trackId", trackId);
-        model.addAttribute("isProcessing", translation.isProcessing());
         model.addAttribute("isCompleted", translation.isCompleted());
         model.addAttribute("isFailed", translation.isFailed());
         model.addAttribute("failureReason", translation.getFailureReason());
