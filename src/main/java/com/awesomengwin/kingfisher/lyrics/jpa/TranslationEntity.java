@@ -23,13 +23,16 @@ public class TranslationEntity extends AbstractAggregateRoot<TranslationEntity> 
     @Enumerated(EnumType.STRING)
     private TranslationStatus status;
 
+    private String failureReason;
+
     public TranslationEntity() {
     }
 
-    public TranslationEntity(String trackId, String userId, List<Line> lines, TranslationStatus status) {
+    public TranslationEntity(String trackId, String userId, List<Line> lines, TranslationStatus status, String failureReason) {
         this.id = new Id(trackId, userId);
         this.lines = new ArrayList<>(lines);
         this.status = status;
+        this.failureReason = failureReason;
     }
 
     public void addDomainEvent(Object event) {
@@ -46,6 +49,10 @@ public class TranslationEntity extends AbstractAggregateRoot<TranslationEntity> 
 
     public TranslationStatus getStatus() {
         return status;
+    }
+
+    public String getFailureReason() {
+        return failureReason;
     }
 
     @Embeddable

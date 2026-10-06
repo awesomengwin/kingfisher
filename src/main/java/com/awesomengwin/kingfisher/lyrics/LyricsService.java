@@ -37,8 +37,12 @@ public class LyricsService {
         return lyrics;
     }
 
-    public void translateLyrics(String trackId, String userId) {
-        translationRepository.save(new Translation(trackId, userId));
+    public Translation translateLyrics(String trackId, String userId) {
+        Translation translation = new Translation(trackId, userId);
+
+        translationRepository.save(translation);
+
+        return translation;
     }
 
     public Translation getTranslation(String trackId, String userId) {

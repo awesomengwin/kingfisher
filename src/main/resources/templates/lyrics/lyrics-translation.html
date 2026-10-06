@@ -1,11 +1,29 @@
-<!--/*@thymesVar id="trackId" type="java.lang.String"*/-->
-<!--/*@thymesVar id="isCompleted" type="java.lang.Boolean"*/-->
-<th:block th:if="${!isCompleted}">
+<th:block th:if="${isProcessing}">
     <hx-partial hx-target="#translation">
-        <div th:hx-get="@{/lyrics/translation(trackId=${trackId})}" hx-trigger="every 2s" hx-indicator="#translation">
-            <div class="d-flex align-items-center gap-2 mt-3">
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <span>Translating...</span>
+        <div th:hx-get="@{/lyrics/translation(trackId=${trackId})}" hx-trigger="every 5s"></div>
+        <div class="d-flex gap-2 align-items-center">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span>Translating...</span>
+        </div>
+    </hx-partial>
+</th:block>
+
+<th:block th:if="${isCompleted}">
+    <hx-partial hx-target="#translation">
+        <div class="d-flex gap-2 align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check preview-icon"><path d="M20 6 9 17l-5-5"/></svg>
+            <span>Translation completed!</span>
+        </div>
+    </hx-partial>
+</th:block>
+
+<th:block th:if="${isFailed}">
+    <hx-partial hx-target="#translation">
+        <div class="d-flex gap-2 align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x preview-icon"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            <div class="d-flex flex-column justify-content-center">
+                <span>Translation failed!</span>
+                <span th:text="${failureReason}"></span>
             </div>
         </div>
     </hx-partial>

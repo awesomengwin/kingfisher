@@ -12,6 +12,7 @@ public class Translation extends AggregateRoot {
     private final String userId;
     private List<TranslationLine> lines = new ArrayList<>();
     private TranslationStatus status;
+    private String failureReason;
 
     public Translation(String trackId, String userId) {
         if (trackId == null) {
@@ -28,15 +29,16 @@ public class Translation extends AggregateRoot {
         registerEvent(new TranslationCreated(trackId, userId));
     }
 
-    private Translation(String trackId, String userId, List<TranslationLine> lines, TranslationStatus status) {
+    private Translation(String trackId, String userId, List<TranslationLine> lines, TranslationStatus status, String failureReason) {
         this.trackId = trackId;
         this.userId = userId;
         this.lines = new ArrayList<>(lines);
         this.status = status;
+        this.failureReason = failureReason;
     }
 
-    public static Translation reconstitute(String trackId, String userId, List<TranslationLine> lines, TranslationStatus status) {
-        return new Translation(trackId, userId, lines, status);
+    public static Translation reconstitute(String trackId, String userId, List<TranslationLine> lines, TranslationStatus status, String failureReason) {
+        return new Translation(trackId, userId, lines, status, failureReason);
     }
 
     public void markCompleted(List<TranslationLine> lines) {
@@ -48,8 +50,21 @@ public class Translation extends AggregateRoot {
         this.status = TranslationStatus.COMPLETED;
     }
 
+    public void markFailed(String failureReason) {
+        this.status = TranslationStatus.FAILED;
+        this.failureReason = failureReason;
+    }
+
+    public boolean isProcessing() {
+        return status == TranslationStatus.PROCESSING;
+    }
+
     public boolean isCompleted() {
         return status == TranslationStatus.COMPLETED;
+    }
+
+    public boolean isFailed() {
+        return status == TranslationStatus.FAILED;
     }
 
     public String getTrackId() {
@@ -66,5 +81,9 @@ public class Translation extends AggregateRoot {
 
     public TranslationStatus getStatus() {
         return status;
+    }
+
+    public String getFailureReason() {
+        return failureReason;
     }
 }

@@ -1,5 +1,6 @@
-package com.awesomengwin.kingfisher.lyrics;
+package com.awesomengwin.kingfisher.lyrics.jpa;
 
+import com.awesomengwin.kingfisher.lyrics.*;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 
@@ -24,25 +25,21 @@ public class DomainEventListener {
         Lyrics lyrics = lyricsRepository.findById(event.trackId())
                 .orElseThrow(() -> new LyricsNotFoundException(event.trackId()));
 
-        TranslateLyricsResponse resp = translateLyricsService.translate(
-                TranslateLyricsRequest.from(lyrics, event.userId()));
-
-        if (resp == null) {
-            throw new IllegalArgumentException("translate lyrics response must not be null");
-        }
-
-        if (resp.lines() == null) {
-            throw new IllegalStateException("lines must not be null");
-        }
-
-        List<TranslationLine> lines = resp.lines().stream()
-                .map(l -> new TranslationLine(l.startTimeMs(), l.translatedWords()))
-                .toList();
-
         Translation translation = translationRepository.findByTrackIdAndUserId(event.trackId(), event.userId())
                 .orElseThrow(() -> new TranslationNotFoundException(event.trackId(), event.userId()));
 
-        translation.markCompleted(lines);
+        try {
+            TranslateLyricsResponse resp = translateLyricsService.translate(
+                    TranslateLyricsRequest.from(lyrics, event.userId()));
+
+            List<TranslationLine> lines = resp.lines().stream()
+                    .map(l -> new TranslationLine(l.startTimeMs(), l.translatedWords()))
+                    .toList();
+
+            translation.markCompleted(lines);
+        } catch (Exception e) {
+            translation.markFailed(e.getMessage());
+        }
 
         translationRepository.save(translation);
     }
