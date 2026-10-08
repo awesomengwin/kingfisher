@@ -1,6 +1,6 @@
 const container = document.getElementById('app-toast');
 
-export const showToast = (title = 'Kingfisher', message) => {
+export const showToast = (message, title = 'Kingfisher') => {
   const el = document.createElement('div');
   el.className = 'toast';
   el.setAttribute('role', 'alert');
