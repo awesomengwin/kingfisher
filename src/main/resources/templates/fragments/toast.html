@@ -1,15 +1,11 @@
 <th:block th:fragment="toast(title, message)">
-    <hx-partial hx-target="#toast-container">
+    <hx-partial hx-target="#app-toast">
         <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header" th:if="${!#strings.isEmpty(title)}">
-                <strong th:text="${title}" class="me-auto">Bootstrap</strong>
+            <div class="toast-header">
+                <strong th:text="${title}" class="me-auto">Kingfisher</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="toast-body d-flex align-items-center">
-                <span th:text="${message}"></span>
-                <button th:if="${#strings.isEmpty(title)}" type="button" class="btn-close me-2 m-auto"
-                        data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
+            <div th:text="${message}" class="toast-body"></div>
         </div>
     </hx-partial>
 </th:block>
