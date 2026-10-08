@@ -11,9 +11,7 @@ export const showToast = (title = 'Kingfisher', message) => {
         <strong class="me-auto">${title}</strong>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
-    <div class="toast-body">
-        ${message}
-    </div>
+    <div class="toast-body">${message}</div>
   `;
 
   container.appendChild(el);
