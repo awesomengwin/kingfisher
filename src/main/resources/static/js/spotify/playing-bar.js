@@ -6,7 +6,7 @@ import {
   togglePlaybackShuffle,
   setRepeatMode, previousTrack, nextTrack
 } from "./player.js";
-import { setError } from "../common/popup.js";
+import { showToast } from "../common/toast.js";
 
 const playingBar = document.querySelector('[data-playing-bar]');
 const ui = {
@@ -60,7 +60,7 @@ export const initPlayingBar = () => {
     try {
       await togglePlay();
     } catch (err) {
-      setError(err);
+      showToast(err);
     }
   });
 
@@ -69,7 +69,7 @@ export const initPlayingBar = () => {
     try {
       await previousTrack();
     } catch (err) {
-      setError(err);
+      showToast(err);
     }
   });
 
@@ -78,7 +78,7 @@ export const initPlayingBar = () => {
     try {
       await nextTrack();
     } catch (err) {
-      setError(err);
+      showToast(err);
     }
   });
 
@@ -87,7 +87,7 @@ export const initPlayingBar = () => {
     try {
       await togglePlaybackShuffle(!shuffle);
     } catch (err) {
-      setError(err);
+      showToast(err);
     }
   });
 
@@ -99,7 +99,7 @@ export const initPlayingBar = () => {
 
       await setRepeatMode(repeatMap[next]);
     } catch (err) {
-      setError(err);
+      showToast(err);
     }
   });
 
@@ -117,7 +117,7 @@ export const initPlayingBar = () => {
     try {
       await seek(seekMs);
     } catch (err) {
-      setError(err);
+      showToast(err);
     }
     positionMs = seekMs;
     lastUpdateTimestamp = performance.now();
@@ -131,13 +131,13 @@ export const initPlayingBar = () => {
 
     const trackId = state?.track_window?.current_track?.id;
     if (!trackId) {
-      setError('Failed to obtain current track id');
+      showToast('Failed to obtain current track id');
       return;
     }
 
     htmx.ajax('POST', `/lyrics/translate?trackId=${trackId}`, {
       swap: 'none'
-    }).catch(err => setError(err));
+    }).catch(err => showToast(err));
   });
 
   // Toggle lyrics
@@ -151,7 +151,7 @@ export const initPlayingBar = () => {
 
     const trackId = state?.track_window?.current_track?.id;
     if (!trackId) {
-      setError('Failed to obtain current track id');
+      showToast('Failed to obtain current track id');
       return;
     }
 
@@ -233,7 +233,7 @@ const loadLyricsPage = (trackId) => {
     select: 'main',
     swap: 'outerHTML',
     push: url,
-  }).catch(err => setError(err));
+  }).catch(err => showToast(err));
 }
 
 const syncLyricsState = () => {
