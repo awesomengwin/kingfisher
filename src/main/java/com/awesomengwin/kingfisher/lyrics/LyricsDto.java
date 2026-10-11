@@ -15,7 +15,7 @@ public record LyricsDto(
     }
 
     public static LyricsDto notFound(String trackId) {
-        return new LyricsDto(trackId, List.of(), false);
+        return new LyricsDto(trackId, List.of());
     }
 
     public LyricsDto withTranslationLines(List<TranslationLine> translationLines) {
