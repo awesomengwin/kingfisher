@@ -10,6 +10,10 @@ public record LyricsDto(
         boolean translated
 ) {
 
+    public LyricsDto(String trackId, List<LyricsLineDto> lines) {
+        this(trackId, lines, false);
+    }
+
     public static LyricsDto notFound(String trackId) {
         return new LyricsDto(trackId, List.of(), false);
     }

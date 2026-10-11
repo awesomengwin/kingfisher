@@ -3,6 +3,8 @@ package com.awesomengwin.kingfisher.lyrics;
 import com.awesomengwin.kingfisher.common.ApiClientNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LyricsService {
 
@@ -81,10 +83,10 @@ public class LyricsService {
     }
 
     private LyricsDto toDto(Lyrics lyrics) {
-        return new LyricsDto(lyrics.trackId(),
-                lyrics.lines().stream()
-                        .map(l -> new LyricsLineDto(l.startTimeMs(), l.words(), l.endTimeMs(), null))
-                        .toList(),
-                false);
+        List<LyricsLineDto> lines = lyrics.lines().stream()
+                .map(l -> new LyricsLineDto(l.startTimeMs(), l.words(), l.endTimeMs()))
+                .toList();
+
+        return new LyricsDto(lyrics.trackId(), lines);
     }
 }
