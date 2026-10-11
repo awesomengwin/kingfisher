@@ -3,32 +3,45 @@ package com.awesomengwin.kingfisher.lyrics;
 import com.awesomengwin.kingfisher.common.ApiClientNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LyricsService {
 
     private final LyricsRepository lyricsRepository;
     private final LyricsProvider lyricsProvider;
     private final TranslationRepository translationRepository;
+    private final AnalysisRepository analysisRepository;
 
     public LyricsService(LyricsRepository lyricsRepository, LyricsProvider lyricsProvider,
-                         TranslationRepository translationRepository) {
+                         TranslationRepository translationRepository, AnalysisRepository analysisRepository) {
         this.lyricsRepository = lyricsRepository;
         this.lyricsProvider = lyricsProvider;
         this.translationRepository = translationRepository;
+        this.analysisRepository = analysisRepository;
     }
 
-    public Lyrics getLyrics(String trackId, String userId) {
+    public LyricsDto getLyrics(String trackId, String userId) {
         Lyrics savedLyrics = lyricsRepository.findById(trackId).orElse(null);
 
         if (savedLyrics != null) {
+            LyricsDto lyricsDto = toDto(savedLyrics);
+
             Translation translation = translationRepository
                     .findByTrackIdAndUserId(trackId, userId).orElse(null);
 
             if (translation != null) {
-                return savedLyrics.withTranslationLines(translation.getLines());
+                lyricsDto = lyricsDto.withTranslationLines(translation.getLines());
             }
 
-            return savedLyrics;
+            Analysis analysis = analysisRepository
+                    .findByTrackIdAndUserId(trackId, userId).orElse(null);
+
+            if (analysis != null) {
+                lyricsDto = lyricsDto.withAnnotatedLines(analysis.getAnnotations());
+            }
+
+            return lyricsDto;
         }
 
         try {
@@ -36,9 +49,9 @@ public class LyricsService {
 
             lyricsRepository.save(lyrics);
 
-            return lyrics;
+            return toDto(lyrics);
         } catch (ApiClientNotFoundException e) {
-            return Lyrics.notFound(trackId);
+            return LyricsDto.notFound(trackId);
         }
     }
 
@@ -57,5 +70,30 @@ public class LyricsService {
     public Translation getTranslation(String trackId, String userId) {
         return translationRepository.findByTrackIdAndUserId(trackId, userId)
                 .orElseThrow(() -> new TranslationNotFoundException(trackId, userId));
+    }
+
+    public Analysis analyzeLyrics(String trackId, String userId) {
+        if (!lyricsRepository.existsById(trackId)) {
+            throw new LyricsNotFoundException(trackId);
+        }
+
+        Analysis analysis = new Analysis(trackId, userId);
+
+        analysisRepository.save(analysis);
+
+        return analysis;
+    }
+
+    public Analysis getAnalysis(String trackId, String userId) {
+        return analysisRepository.findByTrackIdAndUserId(trackId, userId)
+                .orElseThrow(() -> new AnalysisNotFoundException(trackId, userId));
+    }
+
+    private LyricsDto toDto(Lyrics lyrics) {
+        List<LyricsLineDto> lines = lyrics.lines().stream()
+                .map(l -> new LyricsLineDto(l.startTimeMs(), l.words(), l.endTimeMs()))
+                .toList();
+
+        return new LyricsDto(lyrics.trackId(), lines);
     }
 }

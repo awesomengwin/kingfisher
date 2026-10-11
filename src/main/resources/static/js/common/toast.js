@@ -1,3 +1,5 @@
+import { Toast } from "../../bootstrap/js/bootstrap.bundle.min.js";
+
 const container = document.getElementById('app-toast');
 
 export const showToast = (message, title = 'Kingfisher') => {
@@ -16,7 +18,7 @@ export const showToast = (message, title = 'Kingfisher') => {
 
   container.appendChild(el);
 
-  const toast = new bootstrap.Toast(el);
+  const toast = new Toast(el);
   toast.show();
 
   el.addEventListener('hidden.bs.toast', () => el.remove());

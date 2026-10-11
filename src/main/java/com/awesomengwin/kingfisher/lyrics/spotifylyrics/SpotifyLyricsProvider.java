@@ -5,6 +5,8 @@ import com.awesomengwin.kingfisher.lyrics.LyricsLine;
 import com.awesomengwin.kingfisher.lyrics.LyricsProvider;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SpotifyLyricsProvider implements LyricsProvider {
 
@@ -22,8 +24,10 @@ public class SpotifyLyricsProvider implements LyricsProvider {
             throw new IllegalStateException("Spotify lyrics lines must not be null");
         }
 
-        return new Lyrics(trackId, lyrics.lines().stream()
+        List<LyricsLine> lines = lyrics.lines().stream()
                 .map(l -> new LyricsLine(l.startTimeMs(), l.words(), l.endTimeMs()))
-                .toList());
+                .toList();
+
+        return new Lyrics(trackId, lines);
     }
 }

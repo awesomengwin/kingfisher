@@ -6,20 +6,34 @@
 </head>
 <body>
 <th:block th:fragment="content">
-    <div class="w-100 d-flex flex-column gap-3">
+    <div class="w-100 d-flex flex-column gap-5">
         <div class="flex-grow-1 overflow-y-auto" data-lyrics>
             <th:block th:if="${#lists.isEmpty(lyrics.lines())}">
-                <p class="fs-2">No lyrics available.</p>
+                <p class="fs-3xl">No lyrics available.</p>
             </th:block>
             <th:block th:unless="${#lists.isEmpty(lyrics.lines())}">
-                <div th:each="line : ${lyrics.lines()}" class="opacity-25 mb-4" data-lyrics-line
-                     th:data-start-time-ms="${line.startTimeMs}">
-                    <p class="text-break fs-1 fw-bold m-0" th:text="${line.words}"></p>
-                    <p class="text-break fs-3 fw-normal m-0 opacity-75"
+                <div th:each="line : ${lyrics.lines()}" class="opacity-25 mb-7" data-lyrics-line
+                     th:data-start-time-ms="${line.startTimeMs}"
+                     th:data-annotation-id="${line.annotationFromTimeMs}"
+                     th:data-annotation-body="${line.annotationBody}"
+                     th:role="${line.annotationFromTimeMs != null} ? 'button'">
+                    <p class="text-break fs-4xl fw-bold m-0"
+                       th:classappend="${line.annotationFromTimeMs} ? 'text-decoration-underline'"
+                       th:text="${line.words}"></p>
+                    <p class="text-break fs-2xl fw-normal m-0 opacity-75"
                        th:if="${line.translatedWords()}" th:text="${line.translatedWords()}"></p>
                 </div>
             </th:block>
         </div>
     </div>
+    <dialog class="drawer drawer-start" tabindex="-1" id="annotationDrawer" aria-labelledby="annotationDrawerLabel">
+        <div class="drawer-header">
+            <h5 class="drawer-title" id="annotationDrawerLabel">Lyrics annotation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="drawer" aria-label="Close"></button>
+        </div>
+        <div class="drawer-body">
+            <p data-annotation-body></p>
+        </div>
+    </dialog>
 </th:block>
 </body>
