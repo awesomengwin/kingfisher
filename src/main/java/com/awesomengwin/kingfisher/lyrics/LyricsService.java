@@ -25,13 +25,20 @@ public class LyricsService {
         Lyrics savedLyrics = lyricsRepository.findById(trackId).orElse(null);
 
         if (savedLyrics != null) {
+            LyricsDto lyricsDto = toDto(savedLyrics);
+
             Translation translation = translationRepository
                     .findByTrackIdAndUserId(trackId, userId).orElse(null);
 
-            LyricsDto lyricsDto = toDto(savedLyrics);
-
             if (translation != null) {
-                return lyricsDto.withTranslationLines(translation.getLines());
+                lyricsDto = lyricsDto.withTranslationLines(translation.getLines());
+            }
+
+            Analysis analysis = analysisRepository
+                    .findByTrackIdAndUserId(trackId, userId).orElse(null);
+
+            if (analysis != null) {
+                lyricsDto = lyricsDto.withAnnotatedLines(analysis.getAnnotations());
             }
 
             return lyricsDto;

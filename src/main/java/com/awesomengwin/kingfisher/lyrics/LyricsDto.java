@@ -32,4 +32,24 @@ public record LyricsDto(
                 .map(l -> l.withTranslatedWords(byStartTimeMs.get(l.startTimeMs())))
                 .toList(), true);
     }
+
+    public LyricsDto withAnnotatedLines(List<AnalysisAnnotation> analysisAnnotations) {
+        if (analysisAnnotations == null) {
+            throw new IllegalArgumentException("analysisAnnotations must not be null");
+        }
+
+        List<LyricsLineDto> annotatedLines = lines.stream()
+                .map(l -> {
+                    String annotationBody = analysisAnnotations.stream()
+                            .filter(a -> l.startTimeMs() >= a.fromTimeMs() && l.startTimeMs() <= a.toTimeMs())
+                            .findFirst()
+                            .map(AnalysisAnnotation::body)
+                            .orElse(null);
+
+                    return annotationBody != null ? l.withAnnotation(annotationBody) : l;
+                })
+                .toList();
+
+        return new LyricsDto(trackId, annotatedLines, translated);
+    }
 }
