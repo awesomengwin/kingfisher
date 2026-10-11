@@ -1,6 +1,6 @@
 <div th:fragment="pagination(name, page, size, totalPages)"
      hx-target:inherited="main" hx-select:inherited="main" hx-swap:inherited="outerHTML"
-     class="mt-5 d-flex justify-content-between">
+     class="mt-5 d-flex flex-column align-items-start gap-3 md:flex-row md:justify-content-between">
     <nav th:aria-label="${name + ' page'}">
         <ul data-pagination class="pagination pagination-sm mb-0"
             th:data-current-page="${page}"
