@@ -18,10 +18,44 @@ export const initLyrics = () => {
 
   currentActiveIdx = -1;
 
+  initAnnotations(root);
+
   // Loop
   startSyncLoop();
 
   return () => stopSyncLoop();
+}
+
+const initAnnotations = (root) => {
+  let hoveredId;
+
+  const highlight = (id, on) => {
+    if (!id) return;
+
+    root.querySelectorAll(`[data-annotation-id="${id}"]`)
+      .forEach(el => {
+        el.classList.toggle('bg-warning-subtle', on);
+      });
+  }
+
+  root.addEventListener('mouseover', (e) => {
+    const id = e.target.closest('[data-annotation-id]')?.dataset.annotationId;
+    if (id === hoveredId) return;
+
+    highlight(hoveredId, false);
+    highlight(id, true);
+    hoveredId = id;
+  });
+
+  root.addEventListener('mouseleave', () => {
+    highlight(hoveredId, false);
+    hoveredId = undefined;
+  });
+
+  root.addEventListener('click', (e) => {
+    const lineEl = e.target.closest('[data-annotation-id]');
+    if (lineEl) console.log('Annotation click ', lineEl.dataset.annotationId)
+  });
 }
 
 const startSyncLoop = () => {

@@ -13,7 +13,10 @@
             </th:block>
             <th:block th:unless="${#lists.isEmpty(lyrics.lines())}">
                 <div th:each="line : ${lyrics.lines()}" class="opacity-25 mb-7" data-lyrics-line
-                     th:data-start-time-ms="${line.startTimeMs}">
+                     th:data-start-time-ms="${line.startTimeMs}"
+                     th:data-annotation-id="${line.annotationFromTimeMs}"
+                     th:data-annotation-body="${line.annotationBody}"
+                     th:role="${line.annotationFromTimeMs != null} ? 'button'">
                     <p class="text-break fs-4xl fw-bold m-0" th:text="${line.words}"></p>
                     <p class="text-break fs-2xl fw-normal m-0 opacity-75"
                        th:if="${line.translatedWords()}" th:text="${line.translatedWords()}"></p>
