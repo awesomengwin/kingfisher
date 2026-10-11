@@ -1,3 +1,4 @@
+import { Drawer } from "../../bootstrap/js/bootstrap.bundle.min.js";
 import { getPositionMs } from "../spotify/playing-bar.js";
 
 let rafId;
@@ -27,6 +28,7 @@ export const initLyrics = () => {
 }
 
 const initAnnotations = (root) => {
+  const drawerEl = document.getElementById('annotationDrawer');
   let hoveredId;
 
   const highlight = (id, on) => {
@@ -55,7 +57,11 @@ const initAnnotations = (root) => {
 
   root.addEventListener('click', (e) => {
     const lineEl = e.target.closest('[data-annotation-id]');
-    if (lineEl) console.log('Annotation click ', lineEl.dataset.annotationId)
+    if (!lineEl) return;
+
+    drawerEl.querySelector('[data-annotation-body]').innerHTML = lineEl.dataset.annotationBody;
+
+    Drawer.getOrCreateInstance(drawerEl).show();
   });
 }
 

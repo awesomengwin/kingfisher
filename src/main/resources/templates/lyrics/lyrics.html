@@ -24,5 +24,14 @@
             </th:block>
         </div>
     </div>
+    <dialog class="drawer drawer-start" tabindex="-1" id="annotationDrawer" aria-labelledby="annotationDrawerLabel">
+        <div class="drawer-header">
+            <h5 class="drawer-title" id="annotationDrawerLabel">Lyrics annotation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="drawer" aria-label="Close"></button>
+        </div>
+        <div class="drawer-body">
+            <p data-annotation-body></p>
+        </div>
+    </dialog>
 </th:block>
 </body>
