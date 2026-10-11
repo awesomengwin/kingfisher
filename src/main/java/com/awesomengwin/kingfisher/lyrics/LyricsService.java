@@ -19,18 +19,20 @@ public class LyricsService {
         this.analysisRepository = analysisRepository;
     }
 
-    public Lyrics getLyrics(String trackId, String userId) {
+    public LyricsDto getLyrics(String trackId, String userId) {
         Lyrics savedLyrics = lyricsRepository.findById(trackId).orElse(null);
 
         if (savedLyrics != null) {
             Translation translation = translationRepository
                     .findByTrackIdAndUserId(trackId, userId).orElse(null);
 
+            LyricsDto lyricsDto = toDto(savedLyrics);
+
             if (translation != null) {
-                return savedLyrics.withTranslationLines(translation.getLines());
+                return lyricsDto.withTranslationLines(translation.getLines());
             }
 
-            return savedLyrics;
+            return lyricsDto;
         }
 
         try {
@@ -38,9 +40,9 @@ public class LyricsService {
 
             lyricsRepository.save(lyrics);
 
-            return lyrics;
+            return toDto(lyrics);
         } catch (ApiClientNotFoundException e) {
-            return Lyrics.notFound(trackId);
+            return LyricsDto.notFound(trackId);
         }
     }
 
@@ -76,5 +78,13 @@ public class LyricsService {
     public Analysis getAnalysis(String trackId, String userId) {
         return analysisRepository.findByTrackIdAndUserId(trackId, userId)
                 .orElseThrow(() -> new AnalysisNotFoundException(trackId, userId));
+    }
+
+    private LyricsDto toDto(Lyrics lyrics) {
+        return new LyricsDto(lyrics.trackId(),
+                lyrics.lines().stream()
+                        .map(l -> new LyricsLineDto(l.startTimeMs(), l.words(), l.endTimeMs(), null))
+                        .toList(),
+                false);
     }
 }

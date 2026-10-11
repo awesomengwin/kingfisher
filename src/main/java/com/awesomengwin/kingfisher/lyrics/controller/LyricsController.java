@@ -1,7 +1,7 @@
 package com.awesomengwin.kingfisher.lyrics.controller;
 
 import com.awesomengwin.kingfisher.lyrics.Analysis;
-import com.awesomengwin.kingfisher.lyrics.Lyrics;
+import com.awesomengwin.kingfisher.lyrics.LyricsDto;
 import com.awesomengwin.kingfisher.lyrics.LyricsService;
 import com.awesomengwin.kingfisher.lyrics.Translation;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,7 +27,7 @@ public class LyricsController {
     @GetMapping
     public String getLyrics(@AuthenticationPrincipal OAuth2User currentUser,
                             @RequestParam String trackId, Model model, HttpServletResponse resp) {
-        Lyrics lyrics = lyricsService.getLyrics(trackId, currentUser.getName());
+        LyricsDto lyrics = lyricsService.getLyrics(trackId, currentUser.getName());
         model.addAttribute("lyrics", lyrics);
 
         resp.addHeader("HX-Trigger", "lyrics:init");
