@@ -40,13 +40,12 @@ public record LyricsDto(
 
         List<LyricsLineDto> annotatedLines = lines.stream()
                 .map(l -> {
-                    String annotationBody = analysisAnnotations.stream()
+                    AnalysisAnnotation annotation = analysisAnnotations.stream()
                             .filter(a -> l.startTimeMs() >= a.fromTimeMs() && l.startTimeMs() <= a.toTimeMs())
                             .findFirst()
-                            .map(AnalysisAnnotation::body)
                             .orElse(null);
 
-                    return annotationBody != null ? l.withAnnotation(annotationBody) : l;
+                    return annotation != null ? l.withAnnotation(annotation.body(), annotation.fromTimeMs()) : l;
                 })
                 .toList();
 

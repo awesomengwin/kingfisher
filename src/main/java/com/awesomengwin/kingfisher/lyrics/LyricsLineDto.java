@@ -5,18 +5,19 @@ public record LyricsLineDto(
         String words,
         Long endTimeMs,
         String translatedWords,
-        String annotation
+        String annotationBody,
+        Long annotationFromTimeMs
 ) {
 
     public LyricsLineDto(Long startTimeMs, String words, Long endTimeMs) {
-        this(startTimeMs, words, endTimeMs, null, null);
+        this(startTimeMs, words, endTimeMs, null, null, null);
     }
 
     public LyricsLineDto withTranslatedWords(String translatedWords) {
-        return new LyricsLineDto(startTimeMs, words, endTimeMs, translatedWords, annotation);
+        return new LyricsLineDto(startTimeMs, words, endTimeMs, translatedWords, annotationBody, annotationFromTimeMs);
     }
 
-    public LyricsLineDto withAnnotation(String annotationBody) {
-        return new LyricsLineDto(startTimeMs, words, endTimeMs, translatedWords, annotationBody);
+    public LyricsLineDto withAnnotation(String body, Long fromTimeMs) {
+        return new LyricsLineDto(startTimeMs, words, endTimeMs, translatedWords, body, fromTimeMs);
     }
 }
