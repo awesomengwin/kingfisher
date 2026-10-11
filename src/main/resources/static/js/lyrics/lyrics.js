@@ -34,7 +34,8 @@ const initAnnotations = (root) => {
 
     root.querySelectorAll(`[data-annotation-id="${id}"]`)
       .forEach(el => {
-        el.classList.toggle('bg-warning-subtle', on);
+        el.classList.toggle('bg-subtle-warning', on);
+        el.classList.toggle('opacity-75', on);
       });
   }
 
