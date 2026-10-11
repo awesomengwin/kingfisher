@@ -1,6 +1,6 @@
 <hx-partial hx-target="#analysis">
     <div th:hx-get="@{/lyrics/analysis(trackId=${trackId})}" hx-trigger="every 5s" hx-indicator="#analysis"></div>
-    <div class="d-flex gap-2 align-items-center py-2">
+    <div class="d-flex gap-3 align-items-center py-3">
         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         <span>Analyzing...</span>
     </div>
