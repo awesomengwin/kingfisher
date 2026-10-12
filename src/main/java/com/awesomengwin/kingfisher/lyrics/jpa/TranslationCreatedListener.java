@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class DomainEventListener {
+public class TranslationCreatedListener {
 
     private final LyricsRepository lyricsRepository;
     private final TranslationRepository translationRepository;
     private final TranslateLyricsService translateLyricsService;
     private final LibraryService libraryService;
 
-    public DomainEventListener(LyricsRepository lyricsRepository, TranslationRepository translationRepository,
-                               TranslateLyricsService translateLyricsService, LibraryService libraryService) {
+    public TranslationCreatedListener(LyricsRepository lyricsRepository, TranslationRepository translationRepository,
+                                      TranslateLyricsService translateLyricsService, LibraryService libraryService) {
         this.lyricsRepository = lyricsRepository;
         this.translationRepository = translationRepository;
         this.translateLyricsService = translateLyricsService;
@@ -26,14 +26,14 @@ public class DomainEventListener {
     }
 
     @ApplicationModuleListener
-    public void handleTranslationCreated(TranslationCreated event) {
-        Lyrics lyrics = lyricsRepository.findById(event.trackId())
-                .orElseThrow(() -> new LyricsNotFoundException(event.trackId()));
+    public void handleTranslationCreated(TranslationCreated e) {
+        Lyrics lyrics = lyricsRepository.findById(e.trackId())
+                .orElseThrow(() -> new LyricsNotFoundException(e.trackId()));
 
-        Translation translation = translationRepository.findByTrackIdAndUserId(event.trackId(), event.userId())
-                .orElseThrow(() -> new TranslationNotFoundException(event.trackId(), event.userId()));
+        Translation translation = translationRepository.findByTrackIdAndUserId(e.trackId(), e.userId())
+                .orElseThrow(() -> new TranslationNotFoundException(e.trackId(), e.userId()));
 
-        Track track = libraryService.getTrack(event.trackId());
+        Track track = libraryService.getTrack(e.trackId());
 
         try {
             TrackMetadata trackMetadata = new TrackMetadata(
@@ -43,15 +43,15 @@ public class DomainEventListener {
                             .map(Artist::name)
                             .toList());
 
-            TranslateLyricsResponse resp = translateLyricsService.translate(lyrics, event.userId(), trackMetadata);
+            TranslateLyricsResponse resp = translateLyricsService.translate(lyrics, e.userId(), trackMetadata);
 
             List<TranslationLine> lines = resp.lines().stream()
                     .map(l -> new TranslationLine(l.startTimeMs(), l.translatedWords()))
                     .toList();
 
             translation.markCompleted(lines);
-        } catch (Exception e) {
-            translation.markFailed(e.getMessage());
+        } catch (Exception ex) {
+            translation.markFailed(ex.getMessage());
         }
 
         translationRepository.save(translation);
