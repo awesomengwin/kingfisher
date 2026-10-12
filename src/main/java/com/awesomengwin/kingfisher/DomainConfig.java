@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.config;
+package com.awesomengwin.kingfisher;
 
 import com.awesomengwin.kingfisher.library.caffeine.CaffeineLibraryService;
 import com.awesomengwin.kingfisher.library.LibraryService;
