@@ -82,23 +82,8 @@ public class OpenAiAnalyzeLyricsService implements AnalyzeLyricsService {
                         .param("trackName", trackMetadata.trackName())
                         .param("artistNames", String.join(", ", trackMetadata.artistNames()))
                         .param("albumName", trackMetadata.albumName())
-                        .param("lines", formatLines(lyrics)))
+                        .param("lines", LyricsFormatter.formatLines(lyrics)))
                 .call()
                 .entity(AnalyzeLyricsResponse.class);
-    }
-
-    public String formatLines(Lyrics lyrics) {
-        StringBuilder sb = new StringBuilder();
-
-        for (LyricsLine line : lyrics.lines()) {
-            Long startTimeMs = line.startTimeMs();
-            String words = line.words();
-
-            sb.append("[").append(startTimeMs).append("]")
-                    .append(words == null || words.isBlank() ? "" : words)
-                    .append("\n");
-        }
-
-        return sb.toString();
     }
 }
