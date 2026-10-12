@@ -104,7 +104,7 @@ const buildPageList = (c, m) => {
   }
 
   for (let i of range) {
-    if (l) {
+    if (l !== undefined) {
       if (i - l === 2) {
         rangeWithDots.push(l + 1);
       } else if (i - l !== 1) {
