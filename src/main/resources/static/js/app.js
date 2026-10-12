@@ -27,7 +27,7 @@ htmx.on('lyrics:init', () => {
 htmx.on('htmx:before:swap', (evt) => {
   // prevent reload lyrics page
   const action = evt.detail.ctx.request.action;
-  if ([ '/lyrics/translate', '/lyrics/translation' ]
+  if ([ '/lyrics/translate', '/lyrics/translation', '/lyrics/analyze', '/lyrics/analysis' ]
     .some(prefix => action.startsWith(prefix))) {
     return;
   }
