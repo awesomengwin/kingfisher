@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.config;
+package com.awesomengwin.kingfisher;
 
 import com.awesomengwin.kingfisher.common.ApiClientException;
 import com.awesomengwin.kingfisher.common.ApiClientNotFoundException;
