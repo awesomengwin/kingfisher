@@ -2,6 +2,6 @@ package com.awesomengwin.kingfisher.lyrics;
 
 public interface TranslateLyricsService {
 
-    TranslateLyricsResponse translate(TranslateLyricsRequest request);
+    TranslateLyricsResponse translate(Lyrics lyrics, String userId, TrackMetadata trackMetadata);
 
 }

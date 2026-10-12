@@ -1,9 +1,7 @@
 package com.awesomengwin.kingfisher.openai;
 
 import com.awesomengwin.kingfisher.document.DocumentService;
-import com.awesomengwin.kingfisher.lyrics.TranslateLyricsRequest;
-import com.awesomengwin.kingfisher.lyrics.TranslateLyricsResponse;
-import com.awesomengwin.kingfisher.lyrics.TranslateLyricsService;
+import com.awesomengwin.kingfisher.lyrics.*;
 import com.awesomengwin.kingfisher.userpreferences.OpenAiApiKeyProvider;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
@@ -23,8 +21,8 @@ public class OpenAiTranslateLyricsService implements TranslateLyricsService {
     }
 
     @Override
-    public TranslateLyricsResponse translate(TranslateLyricsRequest request) {
-        String apiKey = openAiApiKeyProvider.getApiKey(request.userId());
+    public TranslateLyricsResponse translate(Lyrics lyrics, String userId, TrackMetadata trackMetadata) {
+        String apiKey = openAiApiKeyProvider.getApiKey(userId);
 
         OpenAiChatModel openAiChatModel = OpenAiChatModel.builder()
                 .options(OpenAiChatOptions.builder()
@@ -50,28 +48,16 @@ public class OpenAiTranslateLyricsService implements TranslateLyricsService {
                 .advisors(new SimpleLoggerAdvisor())
                 .tools(new DocumentTools(documentService))
                 .user(u -> u.text("""
-                                Translate this track.
+                                Translate {trackName} by {artistNames} from the album {albumName}.
                                 
                                 Lyrics:
-                                {lyrics}
+                                {lines}
                                 """)
-                        .param("lyrics", formatLines(request)))
+                        .param("trackName", trackMetadata.trackName())
+                        .param("artistNames", String.join(", ", trackMetadata.artistNames()))
+                        .param("albumName", trackMetadata.albumName())
+                        .param("lines", LyricsFormatter.formatLines(lyrics)))
                 .call()
                 .entity(TranslateLyricsResponse.class);
-    }
-
-    private String formatLines(TranslateLyricsRequest request) {
-        StringBuilder sb = new StringBuilder();
-
-        for (TranslateLyricsRequest.Line line : request.lines()) {
-            Long startTimeMs = line.startTimeMs();
-            String words = line.words();
-
-            sb.append("[").append(startTimeMs).append("]")
-                    .append(words == null || words.isBlank() ? "" : words)
-                    .append("\n");
-        }
-
-        return sb.toString();
     }
 }
