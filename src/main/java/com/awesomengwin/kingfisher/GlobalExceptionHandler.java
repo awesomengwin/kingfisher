@@ -1,12 +1,15 @@
-package com.awesomengwin.kingfisher.common;
+package com.awesomengwin.kingfisher;
 
+import com.awesomengwin.kingfisher.common.ApiClientException;
+import com.awesomengwin.kingfisher.common.ApiClientNotFoundException;
+import com.awesomengwin.kingfisher.common.ApiServerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
-public class ApiExceptionHandler {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(ApiClientException.class)
     public ModelAndView handleApiClientException(ApiClientException e) {
