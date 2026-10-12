@@ -1,9 +1,7 @@
 package com.awesomengwin.kingfisher.openai;
 
 import com.awesomengwin.kingfisher.document.DocumentService;
-import com.awesomengwin.kingfisher.lyrics.AnalyzeLyricsRequest;
-import com.awesomengwin.kingfisher.lyrics.AnalyzeLyricsResponse;
-import com.awesomengwin.kingfisher.lyrics.AnalyzeLyricsService;
+import com.awesomengwin.kingfisher.lyrics.*;
 import com.awesomengwin.kingfisher.userpreferences.OpenAiApiKeyProvider;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
@@ -23,8 +21,8 @@ public class OpenAiAnalyzeLyricsService implements AnalyzeLyricsService {
     }
 
     @Override
-    public AnalyzeLyricsResponse analyze(AnalyzeLyricsRequest request) {
-        String apiKey = openAiApiKeyProvider.getApiKey(request.userId());
+    public AnalyzeLyricsResponse analyze(Lyrics lyrics, String userId, TrackMetadata trackMetadata) {
+        String apiKey = openAiApiKeyProvider.getApiKey(userId);
 
         OpenAiChatModel openAiChatModel = OpenAiChatModel.builder()
                 .options(OpenAiChatOptions.builder()
@@ -76,20 +74,23 @@ public class OpenAiAnalyzeLyricsService implements AnalyzeLyricsService {
                 .advisors(new SimpleLoggerAdvisor())
                 .tools(new DocumentTools(documentService))
                 .user(u -> u.text("""
-                                Analyze this track.
+                                Analyze {trackName} by {artistNames} from the album {albumName}.
                                 
                                 Lyrics:
-                                {lyrics}
+                                {lines}
                                 """)
-                        .param("lyrics", formatLines(request)))
+                        .param("trackName", trackMetadata.trackName())
+                        .param("artistNames", String.join(", ", trackMetadata.artistNames()))
+                        .param("albumName", trackMetadata.albumName())
+                        .param("lines", formatLines(lyrics)))
                 .call()
                 .entity(AnalyzeLyricsResponse.class);
     }
 
-    public String formatLines(AnalyzeLyricsRequest request) {
+    public String formatLines(Lyrics lyrics) {
         StringBuilder sb = new StringBuilder();
 
-        for (AnalyzeLyricsRequest.Line line : request.lines()) {
+        for (LyricsLine line : lyrics.lines()) {
             Long startTimeMs = line.startTimeMs();
             String words = line.words();
 
