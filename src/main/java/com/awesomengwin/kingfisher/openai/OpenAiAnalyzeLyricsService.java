@@ -10,9 +10,11 @@ import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -36,6 +38,7 @@ public class OpenAiAnalyzeLyricsService implements AnalyzeLyricsService {
         OpenAiChatModel openAiChatModel = OpenAiChatModel.builder()
                 .options(OpenAiChatOptions.builder()
                         .apiKey(apiKey)
+                        .model("gpt-6.1-sol")
                         .build())
                 .build();
 
@@ -51,7 +54,7 @@ public class OpenAiAnalyzeLyricsService implements AnalyzeLyricsService {
                 .defaultSystem(analyzeLyricsPrompt)
                 .build();
 
-        return chatClient.prompt()
+        List<AnalyzeLyricsResponse.Annotation> annotations = chatClient.prompt()
                 .advisors(new SimpleLoggerAdvisor())
                 .user(u -> u.text("""
                                 Analyze {trackName} by {artistNames} from the album {albumName}.
@@ -64,6 +67,9 @@ public class OpenAiAnalyzeLyricsService implements AnalyzeLyricsService {
                         .param("albumName", trackMetadata.albumName())
                         .param("lines", LyricsFormatter.formatLines(lyrics)))
                 .call()
-                .entity(AnalyzeLyricsResponse.class);
+                .entity(new ParameterizedTypeReference<>() {
+                });
+
+        return new AnalyzeLyricsResponse(annotations);
     }
 }
