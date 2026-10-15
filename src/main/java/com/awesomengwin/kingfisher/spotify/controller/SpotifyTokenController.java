@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.common;
+package com.awesomengwin.kingfisher.spotify.controller;
 
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class CommonController {
+public class SpotifyTokenController {
 
     @PostMapping("/token")
     public String getSpotifyOAuth2Token(

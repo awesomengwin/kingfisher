@@ -1,6 +1,5 @@
 package com.awesomengwin.kingfisher.userpreferences;
 
-import com.awesomengwin.kingfisher.common.EncryptionService;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import org.springframework.stereotype.Component;

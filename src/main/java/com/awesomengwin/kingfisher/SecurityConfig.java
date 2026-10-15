@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.config;
+package com.awesomengwin.kingfisher;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

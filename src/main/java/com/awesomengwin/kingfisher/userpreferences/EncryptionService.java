@@ -1,4 +1,4 @@
-package com.awesomengwin.kingfisher.common;
+package com.awesomengwin.kingfisher.userpreferences;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

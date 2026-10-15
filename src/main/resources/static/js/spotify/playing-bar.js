@@ -6,7 +6,7 @@ import {
   togglePlaybackShuffle,
   setRepeatMode, previousTrack, nextTrack
 } from "./player.js";
-import { setError } from "../common/popup.js";
+import { showToast } from "../common/toast.js";
 
 const playingBar = document.querySelector('[data-playing-bar]');
 const ui = {
@@ -14,6 +14,7 @@ const ui = {
   trackName: playingBar.querySelector('[data-track-name]'),
   trackArtists: playingBar.querySelector('[data-track-artists]'),
   playerToggle: playingBar.querySelector('[data-player-toggle]'),
+  analyzeLyrics: playingBar.querySelector('[data-analyze-lyrics]'),
   translateLyrics: playingBar.querySelector('[data-translate-lyrics]'),
   lyricsToggle: playingBar.querySelector('[data-lyrics-toggle]'),
   position: playingBar.querySelector('[data-position]'),
@@ -60,7 +61,7 @@ export const initPlayingBar = () => {
     try {
       await togglePlay();
     } catch (err) {
-      setError(err);
+      showToast(err);
     }
   });
 
@@ -69,7 +70,7 @@ export const initPlayingBar = () => {
     try {
       await previousTrack();
     } catch (err) {
-      setError(err);
+      showToast(err);
     }
   });
 
@@ -78,7 +79,7 @@ export const initPlayingBar = () => {
     try {
       await nextTrack();
     } catch (err) {
-      setError(err);
+      showToast(err);
     }
   });
 
@@ -87,7 +88,7 @@ export const initPlayingBar = () => {
     try {
       await togglePlaybackShuffle(!shuffle);
     } catch (err) {
-      setError(err);
+      showToast(err);
     }
   });
 
@@ -99,7 +100,7 @@ export const initPlayingBar = () => {
 
       await setRepeatMode(repeatMap[next]);
     } catch (err) {
-      setError(err);
+      showToast(err);
     }
   });
 
@@ -117,12 +118,27 @@ export const initPlayingBar = () => {
     try {
       await seek(seekMs);
     } catch (err) {
-      setError(err);
+      showToast(err);
     }
     positionMs = seekMs;
     lastUpdateTimestamp = performance.now();
 
     isDragging = false;
+  });
+
+  // Analyze lyrics
+  ui.analyzeLyrics.addEventListener('click', async () => {
+    const state = await getCurrentState();
+
+    const trackId = state?.track_window?.current_track?.id;
+    if (!trackId) {
+      showToast('Failed to obtain current track id');
+      return;
+    }
+
+    htmx.ajax('POST', `/lyrics/analyze?trackId=${trackId}`, {
+      swap: 'none'
+    }).catch(err => showToast(err));
   });
 
   // Translate lyrics
@@ -131,13 +147,13 @@ export const initPlayingBar = () => {
 
     const trackId = state?.track_window?.current_track?.id;
     if (!trackId) {
-      setError('Failed to obtain current track id');
+      showToast('Failed to obtain current track id');
       return;
     }
 
     htmx.ajax('POST', `/lyrics/translate?trackId=${trackId}`, {
       swap: 'none'
-    }).catch(err => setError(err));
+    }).catch(err => showToast(err));
   });
 
   // Toggle lyrics
@@ -151,7 +167,7 @@ export const initPlayingBar = () => {
 
     const trackId = state?.track_window?.current_track?.id;
     if (!trackId) {
-      setError('Failed to obtain current track id');
+      showToast('Failed to obtain current track id');
       return;
     }
 
@@ -162,6 +178,16 @@ export const initPlayingBar = () => {
   startProgressLoop();
 
   htmx.on('htmx:after:swap', syncLyricsState);
+
+  // reload lyrics when analysis polling done
+  htmx.on('analysis:completed', async () => {
+    const state = await getCurrentState();
+    const trackId = state?.track_window?.current_track?.id;
+
+    if (trackId) {
+      loadLyricsPage(trackId);
+    }
+  });
 
   // reload lyrics when translation polling done
   htmx.on('translation:completed', async () => {
@@ -233,7 +259,7 @@ const loadLyricsPage = (trackId) => {
     select: 'main',
     swap: 'outerHTML',
     push: url,
-  }).catch(err => setError(err));
+  }).catch(err => showToast(err));
 }
 
 const syncLyricsState = () => {
@@ -244,9 +270,8 @@ const syncLyricsState = () => {
   ui.lyricsToggle.classList.toggle('active', isOnLyricsPage);
   ui.lyricsToggle.setAttribute('aria-pressed', String(isOnLyricsPage));
 
-  if (lyricsRoot) {
-    ui.translateLyrics.disabled = false;
-  }
+  ui.translateLyrics.disabled = !lyricsRoot;
+  ui.analyzeLyrics.disabled = !lyricsRoot;
 }
 
 const startProgressLoop = () => {

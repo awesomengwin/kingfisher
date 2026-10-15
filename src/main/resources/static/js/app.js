@@ -1,3 +1,4 @@
+import { Toast } from "../bootstrap/js/bootstrap.bundle.min.js";
 import { initSpotifyPlayer } from "./spotify/player.js";
 import { initUserSavedTracks } from "./library/user-saved-tracks.js";
 import { initPlayingBar } from "./spotify/playing-bar.js";
@@ -26,7 +27,7 @@ htmx.on('lyrics:init', () => {
 htmx.on('htmx:before:swap', (evt) => {
   // prevent reload lyrics page
   const action = evt.detail.ctx.request.action;
-  if ([ '/lyrics/translate', '/lyrics/translation' ]
+  if ([ '/lyrics/translate', '/lyrics/translation', '/lyrics/analyze', '/lyrics/analysis' ]
     .some(prefix => action.startsWith(prefix))) {
     return;
   }
@@ -46,6 +47,6 @@ htmx.on('htmx:config:request', ({ detail: { ctx } }) => {
 
 htmx.onLoad(elt => {
   if (elt.matches('.toast')) {
-    new bootstrap.Toast(elt).show();
+    new Toast(elt).show();
   }
 });
