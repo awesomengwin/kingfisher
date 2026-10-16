@@ -1,7 +1,6 @@
 package com.awesomengwin.kingfisher.spotify;
 
-import com.awesomengwin.kingfisher.player.PlayerService;
-import com.awesomengwin.kingfisher.player.RepeatMode;
+import com.awesomengwin.kingfisher.player.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,5 +39,25 @@ public class SpotifyPlayerService implements PlayerService {
         }
 
         client.setRepeatMode(deviceId, state);
+    }
+
+    @Override
+    public CurrentPlayback getCurrentPlayback() {
+        SpotifyCurrentPlayback spCurrentPlayback = client.getCurrentPlayback();
+
+        return new CurrentPlayback(toDevice(spCurrentPlayback.device()), spCurrentPlayback.isPlaying());
+    }
+
+    @Override
+    public AvailableDevices getAvailableDevices() {
+        SpotifyAvailableDevices spAvailableDevices = client.getAvailableDevices();
+
+        return new AvailableDevices(spAvailableDevices.devices().stream()
+                .map(this::toDevice)
+                .toList());
+    }
+
+    private Device toDevice(SpotifyDevice spDevice) {
+        return new Device(spDevice.id(), spDevice.name(), spDevice.isActive());
     }
 }

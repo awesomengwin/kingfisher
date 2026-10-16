@@ -8,4 +8,8 @@ public interface PlayerService {
 
     void repeat(String deviceId, RepeatMode mode);
 
+    CurrentPlayback getCurrentPlayback();
+
+    AvailableDevices getAvailableDevices();
+
 }
