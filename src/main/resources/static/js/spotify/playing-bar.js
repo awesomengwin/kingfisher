@@ -5,7 +5,7 @@ import {
   getCurrentState,
   togglePlaybackShuffle,
   setRepeatMode, previousTrack, nextTrack
-} from "./player.js";
+} from "./spotify-player.js";
 import { showToast } from "../common/toast.js";
 
 const playingBar = document.querySelector('[data-playing-bar]');

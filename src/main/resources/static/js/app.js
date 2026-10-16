@@ -1,5 +1,5 @@
 import { Toast } from "../bootstrap/js/bootstrap.bundle.min.js";
-import { initSpotifyPlayer } from "./spotify/player.js";
+import { initSpotifyPlayer } from "./spotify/spotify-player.js";
 import { initUserSavedTracks } from "./library/user-saved-tracks.js";
 import { initPlayingBar } from "./spotify/playing-bar.js";
 import { getCsrfHeader, getCsrfToken } from "./utils/csrf.js";
