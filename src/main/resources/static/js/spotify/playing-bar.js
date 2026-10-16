@@ -171,7 +171,7 @@ export const initPlayingBar = () => {
       return;
     }
 
-    loadLyricsPage(trackId);
+    loadLyricsPage(trackId, true);
   });
 
   // Loop
@@ -251,14 +251,14 @@ const handlePlayerStateChange = ({ detail: state }) => {
   }
 }
 
-const loadLyricsPage = (trackId) => {
+const loadLyricsPage = (trackId, pushUrl = false) => {
   const url = `/lyrics?trackId=${trackId}`;
 
   htmx.ajax('GET', url, {
     target: 'main',
     select: 'main',
     swap: 'outerHTML',
-    push: url,
+    push: pushUrl ? url : false,
   }).catch(err => showToast(err));
 }
 
