@@ -1,7 +1,7 @@
 // noinspection JSUnresolvedReference
 
-import { post, put } from "../utils/http.js";
-import { showToast } from "../common/toast.js";
+import { post, put } from "./utils/http.js";
+import { showToast } from "./common/toast.js";
 
 let player;
 
