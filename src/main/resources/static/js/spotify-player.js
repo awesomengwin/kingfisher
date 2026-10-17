@@ -22,7 +22,6 @@ export const initSpotifyPlayer = () => {
         const token = await resp.text();
         cb(token);
       },
-      volume: 0.5
     });
 
     // noinspection JSDeprecatedSymbols, JSCheckFunctionSignatures
