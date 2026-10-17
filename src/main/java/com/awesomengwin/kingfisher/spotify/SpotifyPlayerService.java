@@ -3,6 +3,8 @@ package com.awesomengwin.kingfisher.spotify;
 import com.awesomengwin.kingfisher.player.*;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SpotifyPlayerService implements PlayerService {
 
@@ -45,12 +47,20 @@ public class SpotifyPlayerService implements PlayerService {
     public CurrentPlayback getCurrentPlayback() {
         SpotifyCurrentPlayback spCurrentPlayback = client.getCurrentPlayback();
 
+        if (spCurrentPlayback == null) {
+            return new CurrentPlayback(new Device(null, null, false), false);
+        }
+
         return new CurrentPlayback(toDevice(spCurrentPlayback.device()), spCurrentPlayback.isPlaying());
     }
 
     @Override
     public AvailableDevices getAvailableDevices() {
         SpotifyAvailableDevices spAvailableDevices = client.getAvailableDevices();
+
+        if (spAvailableDevices == null) {
+            return new AvailableDevices(List.of());
+        }
 
         return new AvailableDevices(spAvailableDevices.devices().stream()
                 .map(this::toDevice)
