@@ -12,4 +12,5 @@ public interface PlayerService {
 
     AvailableDevices getAvailableDevices();
 
+    void transferPlayback(String deviceId);
 }

@@ -57,6 +57,11 @@ public class SpotifyPlayerService implements PlayerService {
                 .toList());
     }
 
+    @Override
+    public void transferPlayback(String deviceId) {
+        client.transferPlayback(new SpotifyTransferPlaybackRequest(deviceId));
+    }
+
     private Device toDevice(SpotifyDevice spDevice) {
         return new Device(spDevice.id(), spDevice.name(), spDevice.isActive());
     }

@@ -54,4 +54,8 @@ public interface SpotifyClient {
     @GetExchange("/me/player/devices")
     @ClientRegistrationId("spotify-login")
     SpotifyAvailableDevices getAvailableDevices();
+
+    @PutExchange("/me/player")
+    @ClientRegistrationId("spotify-login")
+    void transferPlayback(@RequestBody SpotifyTransferPlaybackRequest request);
 }

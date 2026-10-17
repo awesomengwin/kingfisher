@@ -50,4 +50,9 @@ public class PlayerController {
     public AvailableDevices getAvailableDevices() {
         return playerService.getAvailableDevices();
     }
+
+    @PutMapping
+    public void transferPlayback(@RequestParam String deviceId) {
+        playerService.transferPlayback(deviceId);
+    }
 }
