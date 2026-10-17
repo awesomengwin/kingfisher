@@ -6,10 +6,12 @@ import { getCsrfHeader, getCsrfToken } from "./utils/csrf.js";
 import { initLyrics } from "./lyrics/lyrics.js";
 import { initUserPlaylists } from "./library/user-playlists.js";
 import { initPlaylistTracks } from "./library/playlist-tracks.js";
+import { initPlayer } from "./player.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   initSpotifyPlayer();
   initPlayingBar();
+  initPlayer();
   initUserSavedTracks();
   initUserPlaylists();
   initPlaylistTracks();
