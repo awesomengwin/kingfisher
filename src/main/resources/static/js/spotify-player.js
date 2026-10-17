@@ -1,6 +1,6 @@
 // noinspection JSUnresolvedReference
 
-import { post, put } from "./utils/http.js";
+import { post } from "./utils/http.js";
 import { showToast } from "./common/toast.js";
 
 let player;
@@ -68,24 +68,6 @@ export const seek = (seekMs) => {
 
 export const getCurrentState = () => {
   return player.getCurrentState();
-}
-
-export const togglePlaybackShuffle = (enabled) => {
-  const params = new URLSearchParams({
-    deviceId: document.body.dataset.deviceId,
-    enabled,
-  });
-
-  return put(`/player/shuffle?${params}`);
-}
-
-export const setRepeatMode = (mode) => {
-  const params = new URLSearchParams({
-    deviceId: document.body.dataset.deviceId,
-    mode,
-  });
-
-  return put(`/player/repeat?${params}`);
 }
 
 export const nextTrack = () => {

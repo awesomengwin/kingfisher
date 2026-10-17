@@ -86,3 +86,21 @@ const getCurrentPlayback = async () => {
     showToast(err);
   }
 }
+
+export const togglePlaybackShuffle = (enabled) => {
+  const params = new URLSearchParams({
+    deviceId: document.body.dataset.deviceId,
+    enabled,
+  });
+
+  return put(`/player/shuffle?${params}`);
+}
+
+export const setRepeatMode = (mode) => {
+  const params = new URLSearchParams({
+    deviceId: document.body.dataset.deviceId,
+    mode,
+  });
+
+  return put(`/player/repeat?${params}`);
+}
