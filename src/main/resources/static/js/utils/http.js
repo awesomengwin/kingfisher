@@ -1,5 +1,9 @@
 import { getCsrfHeader, getCsrfToken } from "./csrf.js";
 
+export const get = async (url, headers) => {
+  return doFetch(url, 'GET', headers);
+}
+
 export const post = async (url, headers, body) => {
   return doFetch(url, 'POST', headers, body);
 }

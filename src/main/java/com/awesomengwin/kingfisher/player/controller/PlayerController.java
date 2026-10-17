@@ -1,5 +1,7 @@
 package com.awesomengwin.kingfisher.player.controller;
 
+import com.awesomengwin.kingfisher.player.AvailableDevices;
+import com.awesomengwin.kingfisher.player.CurrentPlayback;
 import com.awesomengwin.kingfisher.player.PlayerService;
 import com.awesomengwin.kingfisher.player.RepeatMode;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,5 +39,15 @@ public class PlayerController {
     @PutMapping("/repeat")
     public void repeat(@RequestParam String deviceId, @RequestParam RepeatMode mode) {
         playerService.repeat(deviceId, mode);
+    }
+
+    @GetMapping
+    public CurrentPlayback getCurrentPlayback() {
+        return playerService.getCurrentPlayback();
+    }
+
+    @GetMapping("/devices")
+    public AvailableDevices getAvailableDevices() {
+        return playerService.getAvailableDevices();
     }
 }

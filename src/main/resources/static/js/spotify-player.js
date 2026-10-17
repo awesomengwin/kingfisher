@@ -6,7 +6,8 @@ import { showToast } from "./common/toast.js";
 let player;
 
 export const SpotifyPlayerEvent = {
-  STATE_CHANGED: 'spotify-player:state-changed'
+  STATE_CHANGED: 'spotify-player:state-changed',
+  READY: 'spotify-player:ready'
 }
 
 export const initSpotifyPlayer = () => {
@@ -30,6 +31,8 @@ export const initSpotifyPlayer = () => {
       document.body.dataset.deviceId = device_id;
 
       showToast('Spotify Player is ready and connected.', 'Spotify Player');
+
+      document.dispatchEvent(new CustomEvent(SpotifyPlayerEvent.READY));
     });
 
     // noinspection JSDeprecatedSymbols, JSCheckFunctionSignatures
