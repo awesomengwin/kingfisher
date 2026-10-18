@@ -1,6 +1,7 @@
 import { SpotifyPlayerEvent } from "./spotify-player.js";
 import { showToast } from "./common/toast.js";
 import { get, put } from "./utils/http.js";
+import { getCurrentDeviceId } from "./playback.js";
 
 const container = document.querySelector('[data-playback-state]');
 const ui = {
@@ -89,7 +90,7 @@ const getCurrentPlayback = async () => {
 
 export const togglePlaybackShuffle = (enabled) => {
   const params = new URLSearchParams({
-    deviceId: document.body.dataset.deviceId,
+    deviceId: getCurrentDeviceId(),
     enabled,
   });
 
@@ -98,7 +99,7 @@ export const togglePlaybackShuffle = (enabled) => {
 
 export const setRepeatMode = (mode) => {
   const params = new URLSearchParams({
-    deviceId: document.body.dataset.deviceId,
+    deviceId: getCurrentDeviceId(),
     mode,
   });
 
