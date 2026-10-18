@@ -3,10 +3,10 @@ import {
   togglePlay,
   seek,
   getCurrentState,
-  togglePlaybackShuffle,
-  setRepeatMode, previousTrack, nextTrack
-} from "./player.js";
-import { showToast } from "../common/toast.js";
+  previousTrack, nextTrack
+} from "./spotify-player.js";
+import { showToast } from "./common/toast.js";
+import { setRepeatMode, togglePlaybackShuffle } from "./player.js";
 
 const playingBar = document.querySelector('[data-playing-bar]');
 const ui = {
@@ -179,25 +179,9 @@ export const initPlayingBar = () => {
 
   htmx.on('htmx:after:swap', syncLyricsState);
 
-  // reload lyrics when analysis polling done
-  htmx.on('analysis:completed', async () => {
-    const state = await getCurrentState();
-    const trackId = state?.track_window?.current_track?.id;
-
-    if (trackId) {
-      loadLyricsPage(trackId);
-    }
-  });
-
-  // reload lyrics when translation polling done
-  htmx.on('translation:completed', async () => {
-    const state = await getCurrentState();
-    const trackId = state?.track_window?.current_track?.id;
-
-    if (trackId) {
-      loadLyricsPage(trackId);
-    }
-  });
+  // reload lyrics when analysis or translation polling done
+  htmx.on('analysis:completed', handlePostAnalyzeOrTranslateLyrics);
+  htmx.on('translation:completed', handlePostAnalyzeOrTranslateLyrics);
 }
 
 const handlePlayerStateChange = ({ detail: state }) => {
@@ -260,6 +244,15 @@ const loadLyricsPage = (trackId, pushUrl = false) => {
     swap: 'outerHTML',
     push: pushUrl ? url : false,
   }).catch(err => showToast(err));
+}
+
+const handlePostAnalyzeOrTranslateLyrics = async () => {
+  const state = await getCurrentState();
+  const trackId = state?.track_window?.current_track?.id;
+
+  if (trackId) {
+    loadLyricsPage(trackId);
+  }
 }
 
 const syncLyricsState = () => {

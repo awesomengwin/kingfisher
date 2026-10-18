@@ -33,6 +33,7 @@ spring:
               - user-library-read
               - playlist-read-private
               - user-modify-playback-state
+              - user-read-playback-state
               - streaming
           spotify-service:
             provider: spotify

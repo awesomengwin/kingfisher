@@ -1,12 +1,14 @@
 // noinspection JSUnresolvedReference
 
-import { post, put } from "../utils/http.js";
-import { showToast } from "../common/toast.js";
+import { post } from "./utils/http.js";
+import { showToast } from "./common/toast.js";
+import { setDeviceId } from "./playback.js";
 
 let player;
 
 export const SpotifyPlayerEvent = {
-  STATE_CHANGED: 'spotify-player:state-changed'
+  STATE_CHANGED: 'spotify-player:state-changed',
+  READY: 'spotify-player:ready'
 }
 
 export const initSpotifyPlayer = () => {
@@ -21,15 +23,16 @@ export const initSpotifyPlayer = () => {
         const token = await resp.text();
         cb(token);
       },
-      volume: 0.5
     });
 
     // noinspection JSDeprecatedSymbols, JSCheckFunctionSignatures
     player.addListener('ready', ({ device_id }) => {
       console.log('Connected with Device ID', device_id);
-      document.body.dataset.deviceId = device_id;
+      setDeviceId(device_id);
 
       showToast('Spotify Player is ready and connected.', 'Spotify Player');
+
+      document.dispatchEvent(new CustomEvent(SpotifyPlayerEvent.READY));
     });
 
     // noinspection JSDeprecatedSymbols, JSCheckFunctionSignatures
@@ -65,24 +68,6 @@ export const seek = (seekMs) => {
 
 export const getCurrentState = () => {
   return player.getCurrentState();
-}
-
-export const togglePlaybackShuffle = (enabled) => {
-  const params = new URLSearchParams({
-    deviceId: document.body.dataset.deviceId,
-    enabled,
-  });
-
-  return put(`/player/shuffle?${params}`);
-}
-
-export const setRepeatMode = (mode) => {
-  const params = new URLSearchParams({
-    deviceId: document.body.dataset.deviceId,
-    mode,
-  });
-
-  return put(`/player/repeat?${params}`);
 }
 
 export const nextTrack = () => {

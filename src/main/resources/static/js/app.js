@@ -1,15 +1,17 @@
 import { Toast } from "../bootstrap/js/bootstrap.bundle.min.js";
-import { initSpotifyPlayer } from "./spotify/player.js";
+import { initSpotifyPlayer } from "./spotify-player.js";
 import { initUserSavedTracks } from "./library/user-saved-tracks.js";
-import { initPlayingBar } from "./spotify/playing-bar.js";
+import { initPlayingBar } from "./playing-bar.js";
 import { getCsrfHeader, getCsrfToken } from "./utils/csrf.js";
 import { initLyrics } from "./lyrics/lyrics.js";
 import { initUserPlaylists } from "./library/user-playlists.js";
 import { initPlaylistTracks } from "./library/playlist-tracks.js";
+import { initPlayer } from "./player.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   initSpotifyPlayer();
   initPlayingBar();
+  initPlayer();
   initUserSavedTracks();
   initUserPlaylists();
   initPlaylistTracks();

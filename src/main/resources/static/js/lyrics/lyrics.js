@@ -1,5 +1,5 @@
 import { Drawer } from "../../bootstrap/js/bootstrap.bundle.min.js";
-import { getPositionMs } from "../spotify/playing-bar.js";
+import { getPositionMs } from "../playing-bar.js";
 
 let rafId;
 let currentActiveIdx = -1;

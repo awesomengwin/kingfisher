@@ -46,4 +46,16 @@ public interface SpotifyClient {
     @PutExchange("/me/player/repeat")
     @ClientRegistrationId("spotify-login")
     void setRepeatMode(@RequestParam("device_id") String deviceId, @RequestParam String state);
+
+    @GetExchange("/me/player")
+    @ClientRegistrationId("spotify-login")
+    SpotifyCurrentPlayback getCurrentPlayback();
+
+    @GetExchange("/me/player/devices")
+    @ClientRegistrationId("spotify-login")
+    SpotifyAvailableDevices getAvailableDevices();
+
+    @PutExchange("/me/player")
+    @ClientRegistrationId("spotify-login")
+    void transferPlayback(@RequestBody SpotifyTransferPlaybackRequest request);
 }
