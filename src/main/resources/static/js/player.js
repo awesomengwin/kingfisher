@@ -1,7 +1,7 @@
 import { SpotifyPlayerEvent } from "./spotify-player.js";
 import { showToast } from "./common/toast.js";
 import { get, put } from "./utils/http.js";
-import { getCurrentDeviceId } from "./playback.js";
+import { getCurrentDeviceId, setDeviceId } from "./playback.js";
 
 const container = document.querySelector('[data-playback-state]');
 const ui = {
@@ -62,6 +62,7 @@ const initPlaybackState = async () => {
       await put(`/player?${params}`);
 
       currentDeviceId = newDeviceId;
+      setDeviceId(newDeviceId);
     } catch (err) {
       showToast(err);
     } finally {
